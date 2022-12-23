@@ -1,9 +1,3 @@
-theme(panel.background = element_rect(fill = "#253962", color = "#69B4A7"),
-      panel.grid.major = element_line(color = 'grey50', size=0.2, linetype = 'dotted'),
-      panel.grid.minor = element_line(color = 'grey50', size = 0.2)))
-
-
-
 #' Information component
 #'
 #' Calculates the information component ("IC") used in disproportionality analysis.
