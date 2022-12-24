@@ -17,4 +17,3 @@ custom_colours <- function(colour = c("blue", "green")){
 }
 
 gitcreds::gitcreds_set()
-
