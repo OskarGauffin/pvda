@@ -20,11 +20,19 @@ custom_colours <- function(colour = c("blue", "green")){
   ifelse(colour == "blue", umc_blue, umc_green)
 }
 
+#' Add custom colour theme
+#'
+#' This function provides a custom colour ggplot2-theme for blue and green in "Uppsala Monitoring Centre - style"
+#'
+#' @return None
+#'
+#' @examples
+library("ggplot2")
+ggplot(mtcars, aes(mpg, disp)) + geom_point() + custom_ggtheme()
+
 custom_ggtheme <- function(){
 theme(panel.background = element_rect(fill = custom_colours("blue"), color = custom_colours("green")),
       panel.grid.major = element_line(color = custom_colours("green"), size=0.1, linetype = 'dotted'),
       panel.grid.minor = element_line(color = custom_colours("green"), size = 0.1))
 }
 
-library("ggplot2")
-ggplot2::ggplot(mtcars, aes(mpg, disp)) + geom_point() + custom_ggtheme()
