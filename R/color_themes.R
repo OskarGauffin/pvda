@@ -27,8 +27,8 @@ custom_colours <- function(colour = c("blue", "green")){
 #' @return None
 #'
 #' @examples
-library("ggplot2")
-ggplot(mtcars, aes(mpg, disp)) + geom_point() + custom_ggtheme()
+#' library("ggplot2")
+#' ggplot(mtcars, aes(mpg, disp)) + geom_point() + custom_ggtheme()
 
 custom_ggtheme <- function(){
 theme(panel.background = element_rect(fill = custom_colours("blue"), color = custom_colours("green")),
