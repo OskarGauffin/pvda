@@ -8,3 +8,4 @@
 ^pvutils\.Rcheck$
 ^pvutils.*\.tar\.gz$
 ^pvutils.*\.tgz$
+^LICENSE\.md$

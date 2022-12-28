@@ -1,13 +1,16 @@
 #' Get custom colours
 #'
-#' So far, this function provides hex codes for blue and green in "Uppsala Monitoring Centre - style"
+#' @description So far, this function provides hex codes for blue and green in
+#' "Uppsala Monitoring Centre - style"
 #'
 #' @param colour A character string, must be either "blue" or "green".
 #' @return A hex code as a string.
 #'
 #' @examples
 #' par(lwd = 5)
-#' hist(runif(30), col = custom_colours("blue"), border = custom_colours("green"))
+#' hist(runif(30),
+#'      col = pvutils:::custom_colours("blue"),
+#'      border = pvutils:::custom_colours("green"))
 #'
 custom_colours <- function(colour = c("blue", "green")) {
   checkmate::assert_string(colour)
@@ -21,7 +24,8 @@ custom_colours <- function(colour = c("blue", "green")) {
 
 #' Add custom colour theme
 #'
-#' This function provides a custom colour ggplot2-theme for blue and green in "Uppsala Monitoring Centre - style"
+#' @description This function provides a custom colour ggplot2-theme for blue
+#' and green in "Uppsala Monitoring Centre - style"
 #'
 #' @return None
 #'
@@ -29,17 +33,26 @@ custom_colours <- function(colour = c("blue", "green")) {
 #' library("ggplot2")
 #' ggplot(mtcars, aes(mpg, disp)) +
 #'   geom_point() +
-#'   custom_ggtheme()
+#'   pvutils:::custom_ggtheme()
 #'
 custom_ggtheme <- function() {
-  theme(
-    panel.background = element_rect(fill = custom_colours("blue"), color = custom_colours("green")),
-    panel.grid.major = element_line(color = custom_colours("green"), size = 0.1, linetype = "dotted"),
-    panel.grid.minor = element_line(color = custom_colours("green"), size = 0.1)
+  ggplot2::theme(
+    panel.background = ggplot2::element_rect(
+      fill = pvutils:::custom_colours("blue"),
+      color = pvutils:::custom_colours("green")),
+
+    panel.grid.major = ggplot2::element_line(
+      color = pvutils:::custom_colours("green"),
+      size = 0.1,
+      linetype = "dotted"),
+
+    panel.grid.minor = ggplot2::element_line(
+      color = pvutils:::custom_colours("green"),
+      size = 0.1)
   )
 }
 
-# Should probably use something like the below instead:
+# Should perhaps use something like the below instead:
 # theme_gray
 # function (base_size = 11, base_family = "")
 # {

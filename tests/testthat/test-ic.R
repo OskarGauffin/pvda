@@ -1,5 +1,4 @@
 test_that("IC works", {
-
   test_df <- ic(1, 1)
 
   expected_output <- tibble::tribble(

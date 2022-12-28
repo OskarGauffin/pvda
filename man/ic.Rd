@@ -4,14 +4,16 @@
 \alias{ic}
 \title{Information component}
 \usage{
-ic(obs, exp, sign_lvl = 0.95)
+ic(obs, exp, shrinkage = 0.5, sign_lvl = 0.95)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports for the selected drug-event-combination.}
 
 \item{exp}{A numeric vector with expected counts, i.e. number of reports to be expected given a comparator or \emph{background}.}
 
-\item{sign_lvl}{Significance level of credibility interval, defaults to 0.95 (i.e. 95 //% credibility interval)}
+\item{shrinkage}{A non-negative numeric of length 1, to be added to observed and expected count. Default is 0.5.}
+
+\item{sign_lvl}{Significance level of credibility interval. Default is 0.95 (i.e. 95 \% credibility interval)}
 }
 \value{
 A tibble with a row for each observed-to-expected pair provided.
@@ -20,7 +22,7 @@ A tibble with a row for each observed-to-expected pair provided.
 Calculates the information component ("IC") used in disproportionality analysis.
 }
 \examples{
-obs = 20
-exp = 10
-ic(obs=20, exp=10)
+obs <- 20
+exp <- 10
+ic(obs = 20, exp = 10)
 }
