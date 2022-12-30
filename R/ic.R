@@ -1,7 +1,24 @@
 #' @title Information component
 #'
-#' @description Calculates the information component ("IC") used in
-#' disproportionality analysis.
+#' @description Calculates the information component ("IC") and credibility
+#' interval, used in disproportionality analysis.
+#'
+#' @details The IC is based on the relative reporting rate, but modified with
+#' an addition of "shrinkage" (typically of 0.5) to protect against spurious
+#' associations from low expected scores.
+#'
+#' \deqn{IC = log_{2}(\frac{O+0.5}{E+0.5})}
+#'
+#' where \eqn{O} = observed number of reports, and expected =
+#'
+#' \deqn{ E = }
+#'
+#' The \eqn{log_{2}} is applied to the "observed-to-expected"-ratio for the purpose
+#' of convenient plotting of multiple ic-values side-by-side.
+#'
+#' From a bayesian perspective, the credibility interval of the IC is constructed
+#' from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
+#' observed and expected equal to 0.5.
 #'
 #' @param obs A numeric vector with observed counts, i.e. number of reports
 #' for the selected drug-event-combination.

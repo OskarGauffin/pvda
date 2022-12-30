@@ -7,19 +7,38 @@
 ic(obs, exp, shrinkage = 0.5, sign_lvl = 0.95)
 }
 \arguments{
-\item{obs}{A numeric vector with observed counts, i.e. number of reports for the selected drug-event-combination.}
+\item{obs}{A numeric vector with observed counts, i.e. number of reports
+for the selected drug-event-combination.}
 
-\item{exp}{A numeric vector with expected counts, i.e. number of reports to be expected given a comparator or \emph{background}.}
+\item{exp}{A numeric vector with expected counts, i.e. number of reports
+to be expected given a comparator or \emph{background}.}
 
-\item{shrinkage}{A non-negative numeric of length 1, to be added to observed and expected count. Default is 0.5.}
+\item{shrinkage}{A non-negative numeric of length 1, to be added to
+observed and expected count. Default is 0.5.}
 
-\item{sign_lvl}{Significance level of credibility interval. Default is 0.95 (i.e. 95 \% credibility interval)}
+\item{sign_lvl}{Significance level of credibility interval. Default is
+0.95 (i.e. 95 \% credibility interval)}
 }
 \value{
 A tibble with a row for each observed-to-expected pair provided.
 }
 \description{
-Calculates the information component ("IC") used in disproportionality analysis.
+Calculates the information component ("IC") and credibility
+interval, used in disproportionality analysis.
+}
+\details{
+The information component is based on the relative reporting rate,
+but modified with an addition of "shrinkage" (typically of 0.5) to protect against spurious
+associations from low expected scores.
+
+\deqn{IC = log_{2}(\frac{O+0.5}{E+0.5})}
+
+The \eqn{log_{2}} is applied to the "observed-to-expected"-ratio for the purpose
+of convenient plotting of multiple ic-values side-by-side.
+
+From a bayesian perspective, the credibility interval of the IC is constructed
+from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
+observed and expected equal to 0.5.
 }
 \examples{
 obs <- 20
