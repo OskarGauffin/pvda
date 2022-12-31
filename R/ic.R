@@ -3,22 +3,24 @@
 #' @description Calculates the information component ("IC") and credibility
 #' interval, used in disproportionality analysis.
 #'
-#' @details The IC is based on the relative reporting rate, but modified with
+#' @details The IC is based on the relative reporting rate (RRR), but modified with
 #' an addition of "shrinkage" (typically of 0.5) to protect against spurious
-#' associations from low expected scores.
+#' associations.
 #'
-#' \deqn{IC = log_{2}(\frac{O+0.5}{E+0.5})}
+#' \deqn{\hat{IC} = log_{2}(\frac{\hat{O}+0.5}{\hat{E}+0.5})}
 #'
-#' where \eqn{O} = observed number of reports, and expected =
+#' where \eqn{\hat{O}} = observed number of reports, and expected \eqn{\hat{E}}
+#' is (for RRR, and using the entire database as \emph{background}) estimated as
 #'
-#' \deqn{ E = }
+#' \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
 #'
-#' The \eqn{log_{2}} is applied to the "observed-to-expected"-ratio for the purpose
-#' of convenient plotting of multiple ic-values side-by-side.
+#' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of reports with the drug,
+#' the event, and in the whole database respectively.
 #'
 #' From a bayesian perspective, the credibility interval of the IC is constructed
 #' from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
-#' observed and expected equal to 0.5.
+#' observed and expected equal to 0.5. The point of \eqn{log_{2}} is to provide
+#' a log-scale for convenient plotting of multiple IC values side-by-side.
 #'
 #' @param obs A numeric vector with observed counts, i.e. number of reports
 #' for the selected drug-event-combination.
@@ -38,6 +40,7 @@
 #' @export
 
 ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
+
   # Run input checks
   checkmate::qassert(obs, "N+[0,)")
   checkmate::qassert(exp, "N+[0,)")
@@ -46,8 +49,7 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 
   ic <- tibble::tibble("ic" = log2((obs + shrinkage) / (exp + shrinkage)))
 
-  # Calculate credibility interval, stats::qgamma allows vectorized inputs
-  # for shape and rate
+  # Note, stats::qgamma allows vectorized inputs for shape and rate
   get_quantiles <- function(quantile) {
     output <- log2(stats::qgamma(p = quantile,
                                  shape = obs + shrinkage,
@@ -55,7 +57,7 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
     return(output)
   }
 
-  # Hence, we calculate IC bounds in two calls (lower and upper)
+  # Therefore we produce quantiles for each bound (lower and upper)
   quantiles <- c((1 - sign_lvl) / 2, (1 + sign_lvl) / 2)
   names(quantiles) <- c("lower bound", "upper bound")
   credibility_intervals <- purrr::map_dfc(quantiles, get_quantiles)

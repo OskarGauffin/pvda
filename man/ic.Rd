@@ -27,18 +27,24 @@ Calculates the information component ("IC") and credibility
 interval, used in disproportionality analysis.
 }
 \details{
-The information component is based on the relative reporting rate,
-but modified with an addition of "shrinkage" (typically of 0.5) to protect against spurious
-associations from low expected scores.
+The IC is based on the relative reporting rate (RRR), but modified with
+an addition of "shrinkage" (typically of 0.5) to protect against spurious
+associations.
 
-\deqn{IC = log_{2}(\frac{O+0.5}{E+0.5})}
+\deqn{\hat{IC} = log_{2}(\frac{\hat{O}+0.5}{\hat{E}+0.5})}
 
-The \eqn{log_{2}} is applied to the "observed-to-expected"-ratio for the purpose
-of convenient plotting of multiple ic-values side-by-side.
+where \eqn{\hat{O}} = observed number of reports, and expected \eqn{\hat{E}}
+is (for RRR, and using the entire database as \emph{background}) estimated as
+
+\deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
+
+where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of reports with the drug,
+the event, and in the whole database respectively.
 
 From a bayesian perspective, the credibility interval of the IC is constructed
 from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
-observed and expected equal to 0.5.
+observed and expected equal to 0.5. The point of \eqn{log_{2}} is to provide
+a log-scale for convenient plotting of multiple IC values side-by-side.
 }
 \examples{
 obs <- 20
