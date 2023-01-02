@@ -1,3 +1,53 @@
+#' @title Reporting Odds Ratio
+#'
+#' @description Calculates the Reporting Odds Ratio ("ROR") and confidence interval
+#' interval, used in disproportionality analysis.
+#'
+#' @details The ROR is an odds ratio calculated from reporting counts. The
+#' R for Reporting in ROR is meant to emphasize an interpretation of reporting,
+#' as the ROR is calculated from a reporting database.
+#'
+#' @param a Number of reports for the specific drug and event (i.e. the
+#' observed count)
+#' @param b Number of reports with the drug, without the event
+#' @param c Number of reports without the drug, with the event
+#' @param d Number of reports without the drug, without the event
+#' @param sign_lvl Significance level of confidence interval. Default is
+#' 0.95 (i.e. 95 \% confidence interval)
+#' @return A tibble with three columns (point estimate and confidence bounds)
+#' with each row for each observed-to-expected pair provided.
+#'
+#' @examples
+#'
+#' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
+#'
+#' @export
+#'
+ror <- function(a, b, c, d, sign_lvl = 0.95){
+
+# Run input checks
+checkmate::qassert(c(a,b,c,d), "N+[0,)")
+checkmate::qassert(sign_lvl, "N1[0,1]")
+
+sign_lvl_quantile <-  (1 - (1 - sign_lvl)/2)
+
+ror <- tibble::tibble("ror" = a*d/(b*c))
+
+ror_w_ci <- function(a, b, c, d, sign_lvl_quantile) {
+output <- exp(log(a*d/(b*c) +
+                    c(-1,0,1) * qnorm(sign_lvl_quantile) *
+                      sqrt(1/a + 1/b + 1/c + 1/d)))
+return(output)
+}
+
+credibility_intervals <- purrr::pmap(a,b,c,d,ror_w_ci, get_quantiles)
+
+credibility_intervals |>
+  dplyr::bind_cols(ic) |>
+  dplyr::select("lower bound", ic, "upper bound")
+
+}
+
 #' @title Information component
 #'
 #' @description Calculates the information component ("IC") and credibility
@@ -42,8 +92,7 @@
 ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 
   # Run input checks
-  checkmate::qassert(obs, "N+[0,)")
-  checkmate::qassert(exp, "N+[0,)")
+  checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
   checkmate::qassert(sign_lvl, "N1[0,1]")
 
