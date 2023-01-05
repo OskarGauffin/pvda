@@ -25,28 +25,34 @@
 #'
 ror <- function(a, b, c, d, sign_lvl = 0.95){
 
-# Run input checks
-checkmate::qassert(c(a,b,c,d), "N+[0,)")
-checkmate::qassert(sign_lvl, "N1[0,1]")
+  checkmate::qassert(c(a, b, c, d), "N+[0,)")
+  checkmate::qassert(sign_lvl, "N1[0,1]")
 
-sign_lvl_quantile <-  (1 - (1 - sign_lvl)/2)
+  # Check that all vectors have the same length, seemed
+  # hard to do in checkmate.
+  if(!all(purrr::map(list(b,c,d), \(x){length(x)}) == length(a))){
+    stop("Vectors a, b, c and d are not of equal length.")
+  }
 
-ror <- tibble::tibble("ror" = a*d/(b*c))
+  lower_quantile <- (1 - sign_lvl) / 2
+  upper_quantile <- 1 - lower_quantile
 
-ror_w_ci <- function(a, b, c, d, sign_lvl_quantile) {
-output <- exp(log(a*d/(b*c) +
-                    c(-1,0,1) * qnorm(sign_lvl_quantile) *
-                      sqrt(1/a + 1/b + 1/c + 1/d)))
-return(output)
+  # Define a function for the bounds
+  ci_for_ror <- function(a, b, c, d, sign_lvl_quantile) {
+
+        exp(log(a * d/(b * c)) + qnorm(sign_lvl_quantile) *
+              sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+  }
+
+  output <- tibble::tibble(
+                "lower bound" = ci_for_ror(a, b, c, d, lower_quantile),
+                "ror" = a * d / (b * c),
+                "upper bound" = ci_for_ror(a, b, c, d, upper_quantile))
+
+    return(output)
 }
 
-credibility_intervals <- purrr::pmap(a,b,c,d,ror_w_ci, get_quantiles)
 
-credibility_intervals |>
-  dplyr::bind_cols(ic) |>
-  dplyr::select("lower bound", ic, "upper bound")
-
-}
 
 #' @title Information component
 #'
