@@ -1,9 +1,20 @@
+#' @title Confidence intervals for ROR
+#' @description Produces (symmetric normality based) confidence intervals
+#' for Reporting Odds Ratio
+#' @param sign_lvl_quantile Argument passed from sign_lvl in \code{\link{ror}}. If \code.95
+#' @seealso ror
+#' @inheritParams ror
+#' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_quantile) {
 
   exp(log(a * d/(b * c)) + qnorm(sign_lvl_quantile) *
         sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
+#' @title Credibility intervals for IC
+#' @description Produces credibility intervals for Information Component.
+#' @inheritParams ic
+#' @export
 ci_for_ic <- function(obs, exp, sign_lvl_quantile, shrinkage) {
   output <- log2(stats::qgamma(p = sign_lvl_quantile,
                                shape = obs + shrinkage,
