@@ -47,7 +47,9 @@ observed and expected equal to 0.5. The point of \eqn{log_{2}} is to provide
 a log-scale for convenient plotting of multiple IC values side-by-side.
 }
 \examples{
-obs <- 20
-exp <- 10
-ic(obs = 20, exp = 10)
+pvutils::ic(obs = 20, exp = 10)
+
+# Note that obs and exp can be vectors (of equal length, no recycling)
+pvutils::ic(obs=c(20,30), exp=c(10, 10))
+
 }

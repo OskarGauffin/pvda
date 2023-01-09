@@ -1,22 +1,33 @@
-#' @title Confidence intervals for ROR
-#' @description Produces (symmetric normality based) confidence intervals
-#' for Reporting Odds Ratio
-#' @param sign_lvl_quantile Argument passed from sign_lvl in \code{\link{ror}}. If \code.95
-#' @seealso ror
+#' @title Confidence intervals for Reporting Odds Ratio
+#' @description Produces (symmetric, normality based) confidence bounds
+#' for the ROR, for a passed probability. If called twice with adequate
+#' parameters, these bounds create a confidence interval.
+#' @param sign_lvl_probs The probabilities of the normal distribution, based on
+#' a passed significance level (\code{sign_lvl}) in \code{\link{ror}}. If
+#' \code{sgn_lvl = .95} in \code{ror}, quantiles of the normal distribution will
+#' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
+#' @seealso ror, base::qnorm
 #' @inheritParams ror
 #' @export
-ci_for_ror <- function(a, b, c, d, sign_lvl_quantile) {
+ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
 
-  exp(log(a * d/(b * c)) + qnorm(sign_lvl_quantile) *
+  exp(log((a * d)/(b * c)) + qnorm(sign_lvl_probs) *
         sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
-#' @title Credibility intervals for IC
-#' @description Produces credibility intervals for Information Component.
+#' @title Confidence intervals for Information Component (IC)
+#' @description Produces quantiles of the posterior gamma distribution. If
+#' called twice with adequate parameters, these bounds create a credibility
+#' interval.
+#' @param sign_lvl_probs The probabilities of the posterior, based on
+#' a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For
+#' instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
+#' extracted at \code{sgn_lvl_probs} 0.025 and 0.975.
+#' @seealso ic, base::qgamma
 #' @inheritParams ic
 #' @export
-ci_for_ic <- function(obs, exp, sign_lvl_quantile, shrinkage) {
-  output <- log2(stats::qgamma(p = sign_lvl_quantile,
+ci_for_ic <- function(obs, exp, sign_lvl_probs, shrinkage) {
+  output <- log2(stats::qgamma(p = sign_lvl_probs,
                                shape = obs + shrinkage,
                                rate = exp + shrinkage))
   return(output)
@@ -32,7 +43,7 @@ ci_for_ic <- function(obs, exp, sign_lvl_quantile, shrinkage) {
 #' as the ROR is calculated from a reporting database.
 #'
 #' @param a Number of reports for the specific drug and event (i.e. the
-#' observed count)
+#' observed count).
 #' @param b Number of reports with the drug, without the event
 #' @param c Number of reports without the drug, with the event
 #' @param d Number of reports without the drug, without the event
@@ -45,6 +56,8 @@ ci_for_ic <- function(obs, exp, sign_lvl_quantile, shrinkage) {
 #'
 #' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
 #'
+#' # Note that a, b, c and d can be vectors (of equal length, no recycling)
+#' pvutils::ror(a = c(5, 10), b = c(10, 20), c = (15, 30), d = (10000, 10000))
 #' @export
 #'
 ror <- function(a, b, c, d, sign_lvl = 0.95){
@@ -106,9 +119,11 @@ ror <- function(a, b, c, d, sign_lvl = 0.95){
 #' @return A tibble with a row for each observed-to-expected pair provided.
 #'
 #' @examples
-#' obs <- 20
-#' exp <- 10
-#' ic(obs = 20, exp = 10)
+#' pvutils::ic(obs = 20, exp = 10)
+#'
+#' # Note that obs and exp can be vectors (of equal length, no recycling)
+#' pvutils::ic(obs=c(20,30), exp=c(10, 10))
+#'
 #' @export
 
 ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
@@ -117,6 +132,10 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
   checkmate::qassert(sign_lvl, "N1[0,1]")
+
+  if(! length(obs == length(exp))){
+    stop("Vectors 'obs' and 'exp' are not of equal length.")
+  }
 
   ic <- tibble::tibble("ic" = log2((obs + shrinkage) / (exp + shrinkage)))
 

@@ -2,9 +2,9 @@
 % Please edit documentation in R/ic.R
 \name{ci_for_ic}
 \alias{ci_for_ic}
-\title{Credibility intervals for IC}
+\title{Confidence intervals for Information Component (IC)}
 \usage{
-ci_for_ic(obs, exp, sign_lvl_quantile, shrinkage)
+ci_for_ic(obs, exp, sign_lvl_probs, shrinkage)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports
@@ -13,9 +13,19 @@ for the selected drug-event-combination.}
 \item{exp}{A numeric vector with expected counts, i.e. number of reports
 to be expected given a comparator or \emph{background}.}
 
+\item{sign_lvl_probs}{The probabilities of the posterior, based on
+a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For
+instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
+extracted at \code{sgn_lvl_probs} 0.025 and 0.975.}
+
 \item{shrinkage}{A non-negative numeric of length 1, to be added to
 observed and expected count. Default is 0.5.}
 }
 \description{
-Produces credibility intervals for Information Component.
+Produces quantiles of the posterior gamma distribution. If
+called twice with adequate parameters, these bounds create a credibility
+interval.
+}
+\seealso{
+ic, base::qgamma
 }

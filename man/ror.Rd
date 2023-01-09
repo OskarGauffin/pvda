@@ -8,7 +8,7 @@ ror(a, b, c, d, sign_lvl = 0.95)
 }
 \arguments{
 \item{a}{Number of reports for the specific drug and event (i.e. the
-observed count)}
+observed count).}
 
 \item{b}{Number of reports with the drug, without the event}
 
@@ -36,4 +36,6 @@ as the ROR is calculated from a reporting database.
 
 pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
 
+# Note that a, b, c and d can be vectors (of equal length, no recycling)
+pvutils::ror(a = c(5, 10), b = c(10, 20), c = (15, 30), d = (10000, 10000))
 }

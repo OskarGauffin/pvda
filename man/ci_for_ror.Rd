@@ -2,13 +2,13 @@
 % Please edit documentation in R/ic.R
 \name{ci_for_ror}
 \alias{ci_for_ror}
-\title{Confidence intervals for ROR}
+\title{Confidence intervals for Reporting Odds Ratio}
 \usage{
-ci_for_ror(a, b, c, d, sign_lvl_quantile)
+ci_for_ror(a, b, c, d, sign_lvl_probs)
 }
 \arguments{
 \item{a}{Number of reports for the specific drug and event (i.e. the
-observed count)}
+observed count).}
 
 \item{b}{Number of reports with the drug, without the event}
 
@@ -16,12 +16,16 @@ observed count)}
 
 \item{d}{Number of reports without the drug, without the event}
 
-\item{sign_lvl_quantile}{Argument passed from sign_lvl in \code{\link{ror}}}
+\item{sign_lvl_probs}{The probabilities of the normal distribution, based on
+a passed significance level (\code{sign_lvl}) in \code{\link{ror}}. If
+\code{sgn_lvl = .95} in \code{ror}, quantiles of the normal distribution will
+be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.}
 }
 \description{
-Produces (symmetric normality based) confidence intervals
-for Reporting Odds Ratio
+Produces (symmetric, normality based) confidence bounds
+for the ROR, for a passed probability. If called twice with adequate
+parameters, these bounds create a confidence interval.
 }
 \seealso{
-ror
+ror, base::qnorm
 }
