@@ -22,10 +22,10 @@ extracted at \code{sgn_lvl_probs} 0.025 and 0.975.}
 observed and expected count. Default is 0.5.}
 }
 \description{
-Produces quantiles of the posterior gamma distribution. If
-called twice with adequate parameters, these bounds create a credibility
-interval.
+Mainly used in \code{link{ic}}. Produces quantiles of the
+posterior gamma distribution. Called twice in \code{ic} to create a
+credibility interval.
 }
 \seealso{
-ic, base::qgamma
+\code{\link{ic}}, \code{\link{base::qgamma}}
 }
