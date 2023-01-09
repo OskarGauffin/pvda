@@ -99,8 +99,8 @@ ror <- function(a, b, c, d, sign_lvl = 0.95){
 #' is (for RRR, and using the entire database as \emph{background}) estimated as
 #'
 #' \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
-#'
-#' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of reports with the drug,
+#'µ
+#' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of repµorts with the drug,
 #' the event, and in the whole database respectively.
 #'
 #' From a bayesian perspective, the credibility interval of the IC is constructed

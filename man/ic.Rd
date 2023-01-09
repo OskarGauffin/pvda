@@ -20,7 +20,7 @@ observed and expected count. Default is 0.5.}
 0.95 (i.e. 95 \% credibility interval)}
 }
 \value{
-A tibble with a row for each observed-to-expected pair provided.
+A tibble with three columns (point estimate and credibility bounds).
 }
 \description{
 Calculates the information component ("IC") and credibility
@@ -37,14 +37,16 @@ where \eqn{\hat{O}} = observed number of reports, and expected \eqn{\hat{E}}
 is (for RRR, and using the entire database as \emph{background}) estimated as
 
 \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
-
-where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of reports with the drug,
+µ
+where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of repµorts with the drug,
 the event, and in the whole database respectively.
 
 From a bayesian perspective, the credibility interval of the IC is constructed
 from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
 observed and expected equal to 0.5. The point of \eqn{log_{2}} is to provide
 a log-scale for convenient plotting of multiple IC values side-by-side.
+
+Note: the function is vectorized, i.e. obs and exp can be vectors, see the examples.
 }
 \examples{
 pvutils::ic(obs = 20, exp = 10)

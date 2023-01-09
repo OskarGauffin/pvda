@@ -20,8 +20,8 @@ observed count).}
 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{
-A tibble with three columns (point estimate and confidence bounds)
-with each row for each observed-to-expected pair provided.
+A tibble with three columns (point estimate and credibility bounds).
+Number of rows equals length of inputs a, b, c, d.
 }
 \description{
 Calculates the Reporting Odds Ratio ("ROR") and confidence interval
@@ -30,7 +30,8 @@ interval, used in disproportionality analysis.
 \details{
 The ROR is an odds ratio calculated from reporting counts. The
 R for Reporting in ROR is meant to emphasize an interpretation of reporting,
-as the ROR is calculated from a reporting database.
+as the ROR is calculated from a reporting database. Note: the function is
+vectorized, i.e. a, b, c and d can be vectors, see the examples.
 }
 \examples{
 
