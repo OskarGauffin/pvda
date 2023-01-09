@@ -1,3 +1,16 @@
+ci_for_ror <- function(a, b, c, d, sign_lvl_quantile) {
+
+  exp(log(a * d/(b * c)) + qnorm(sign_lvl_quantile) *
+        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+}
+
+ci_for_ic <- function(obs, exp, sign_lvl_quantile, shrinkage) {
+  output <- log2(stats::qgamma(p = sign_lvl_quantile,
+                               shape = obs + shrinkage,
+                               rate = exp + shrinkage))
+  return(output)
+}
+
 #' @title Reporting Odds Ratio
 #'
 #' @description Calculates the Reporting Odds Ratio ("ROR") and confidence interval
@@ -37,22 +50,14 @@ ror <- function(a, b, c, d, sign_lvl = 0.95){
   lower_quantile <- (1 - sign_lvl) / 2
   upper_quantile <- 1 - lower_quantile
 
-  # Define a function for the bounds
-  ci_for_ror <- function(a, b, c, d, sign_lvl_quantile) {
-
-        exp(log(a * d/(b * c)) + qnorm(sign_lvl_quantile) *
-              sqrt(1 / a + 1 / b + 1 / c + 1 / d))
-  }
 
   output <- tibble::tibble(
-                "lower bound" = ci_for_ror(a, b, c, d, lower_quantile),
+                "ror_lower" = ci_for_ror(a, b, c, d, lower_quantile),
                 "ror" = a * d / (b * c),
-                "upper bound" = ci_for_ror(a, b, c, d, upper_quantile))
+                "ror_upper" = ci_for_ror(a, b, c, d, upper_quantile))
 
     return(output)
 }
-
-
 
 #' @title Information component
 #'
@@ -104,20 +109,14 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 
   ic <- tibble::tibble("ic" = log2((obs + shrinkage) / (exp + shrinkage)))
 
-  # Note, stats::qgamma allows vectorized inputs for shape and rate
-  get_quantiles <- function(quantile) {
-    output <- log2(stats::qgamma(p = quantile,
-                                 shape = obs + shrinkage,
-                                 rate = exp + shrinkage))
-    return(output)
-  }
-
   # Therefore we produce quantiles for each bound (lower and upper)
-  quantiles <- c((1 - sign_lvl) / 2, (1 + sign_lvl) / 2)
-  names(quantiles) <- c("lower bound", "upper bound")
-  credibility_intervals <- purrr::map_dfc(quantiles, get_quantiles)
+  lower_quantile <- (1 - sign_lvl) / 2
+  upper_quantile <- 1 - lower_quantile
 
-  credibility_intervals |>
-    dplyr::bind_cols(ic) |>
-    dplyr::select("lower bound", ic, "upper bound")
-}
+  output <- tibble::tibble(
+    "ic_lower" = ci_for_ic(obs, exp, lower_quantile, shrinkage),
+    "ic" = log2((obs + shrinkage)/(exp + shrinkage)),
+    "ic_upper" = ci_for_ic(obs, exp, upper_quantile, shrinkage))
+
+  return(output)
+  }
