@@ -52,6 +52,6 @@ Note: the function is vectorized, i.e. obs and exp can be vectors, see the examp
 pvutils::ic(obs = 20, exp = 10)
 
 # Note that obs and exp can be vectors (of equal length, no recycling)
-pvutils::ic(obs=c(20,30), exp=c(10, 10))
+pvutils::ic(obs = c(20, 30), exp = c(10, 10))
 
 }

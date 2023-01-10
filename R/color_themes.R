@@ -9,8 +9,9 @@
 #' @examples
 #' par(lwd = 5)
 #' hist(runif(30),
-#'      col = pvutils:::custom_colours("blue"),
-#'      border = pvutils:::custom_colours("green"))
+#'   col = pvutils:::custom_colours("blue"),
+#'   border = pvutils:::custom_colours("green")
+#' )
 #'
 custom_colours <- function(colour = c("blue", "green")) {
   checkmate::assert_string(colour)
@@ -39,16 +40,17 @@ custom_ggtheme <- function() {
   ggplot2::theme(
     panel.background = ggplot2::element_rect(
       fill = pvutils:::custom_colours("blue"),
-      color = pvutils:::custom_colours("green")),
-
+      color = pvutils:::custom_colours("green")
+    ),
     panel.grid.major = ggplot2::element_line(
       color = pvutils:::custom_colours("green"),
       size = 0.1,
-      linetype = "dotted"),
-
+      linetype = "dotted"
+    ),
     panel.grid.minor = ggplot2::element_line(
       color = pvutils:::custom_colours("green"),
-      size = 0.1)
+      size = 0.1
+    )
   )
 }
 

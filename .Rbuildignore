@@ -9,3 +9,4 @@
 ^pvutils.*\.tar\.gz$
 ^pvutils.*\.tgz$
 ^LICENSE\.md$
+^data-raw$

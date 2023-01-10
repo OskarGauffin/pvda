@@ -10,9 +10,8 @@
 #' @inheritParams ror
 #' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
-
-  exp(log((a * d)/(b * c)) + qnorm(sign_lvl_probs) *
-        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+  exp(log((a * d) / (b * c)) + qnorm(sign_lvl_probs) *
+    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
 #' @title Confidence intervals for Information Component (IC)
@@ -27,9 +26,11 @@ ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
 #' @inheritParams ic
 #' @export
 ci_for_ic <- function(obs, exp, sign_lvl_probs, shrinkage) {
-  output <- log2(stats::qgamma(p = sign_lvl_probs,
-                               shape = obs + shrinkage,
-                               rate = exp + shrinkage))
+  output <- log2(stats::qgamma(
+    p = sign_lvl_probs,
+    shape = obs + shrinkage,
+    rate = exp + shrinkage
+  ))
   return(output)
 }
 
@@ -58,30 +59,29 @@ ci_for_ic <- function(obs, exp, sign_lvl_probs, shrinkage) {
 #' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
 #'
 #' # Note that a, b, c and d can be vectors (of equal length, no recycling)
-#' pvutils::ror(a = c(5, 10), b = c(10, 20), c = (15, 30), d = (10000, 10000))
+#' pvutils::ror(a = c(5, 10), b = c(10, 20), c = c(15, 30), d = c(10000, 10000))
 #' @export
 #'
-ror <- function(a, b, c, d, sign_lvl = 0.95){
-
+ror <- function(a, b, c, d, sign_lvl = 0.95) {
   checkmate::qassert(c(a, b, c, d), "N+[0,)")
   checkmate::qassert(sign_lvl, "N1[0,1]")
 
   # Check that all vectors have the same length, seemed
   # hard to do in checkmate.
-  if(!all(purrr::map(list(b,c,d), \(x){length(x)}) == length(a))){
+  if (!all( purrr::map(list(b, c, d), \(x){length(x)}) == length(a))) {
     stop("Vectors a, b, c and d are not of equal length.")
   }
 
-  lower_quantile <- (1 - sign_lvl) / 2
-  upper_quantile <- 1 - lower_quantile
-
+  lower_prob <- (1 - sign_lvl) / 2
+  upper_prob <- 1 - lower_prob
 
   output <- tibble::tibble(
-                "ror_lower" = ci_for_ror(a, b, c, d, lower_quantile),
-                "ror" = a * d / (b * c),
-                "ror_upper" = ci_for_ror(a, b, c, d, upper_quantile))
+    "ror_lower" = ci_for_ror(a, b, c, d, lower_prob),
+    "ror" = a * d / (b * c),
+    "ror_upper" = ci_for_ror(a, b, c, d, upper_prob)
+  )
 
-    return(output)
+  return(output)
 }
 
 #' @title Information component
@@ -99,7 +99,7 @@ ror <- function(a, b, c, d, sign_lvl = 0.95){
 #' is (for RRR, and using the entire database as \emph{background}) estimated as
 #'
 #' \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
-#'µ
+#' µ
 #' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of repµorts with the drug,
 #' the event, and in the whole database respectively.
 #'
@@ -125,31 +125,33 @@ ror <- function(a, b, c, d, sign_lvl = 0.95){
 #' pvutils::ic(obs = 20, exp = 10)
 #'
 #' # Note that obs and exp can be vectors (of equal length, no recycling)
-#' pvutils::ic(obs=c(20,30), exp=c(10, 10))
+#' pvutils::ic(obs = c(20, 30), exp = c(10, 10))
 #'
 #' @export
 
 ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
-
   # Run input checks
   checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
   checkmate::qassert(sign_lvl, "N1[0,1]")
 
-  if(! length(obs == length(exp))){
+  if (!length(obs == length(exp))) {
     stop("Vectors 'obs' and 'exp' are not of equal length.")
   }
 
-  ic <- tibble::tibble("ic" = log2((obs + shrinkage) / (exp + shrinkage)))
-
-  # Therefore we produce quantiles for each bound (lower and upper)
-  lower_quantile <- (1 - sign_lvl) / 2
-  upper_quantile <- 1 - lower_quantile
+  lower_prob <- (1 - sign_lvl) / 2
+  upper_prob <- 1 - lower_prob
 
   output <- tibble::tibble(
-    "ic_lower" = ci_for_ic(obs, exp, lower_quantile, shrinkage),
-    "ic" = log2((obs + shrinkage)/(exp + shrinkage)),
-    "ic_upper" = ci_for_ic(obs, exp, upper_quantile, shrinkage))
+    "ic_lower" = ci_for_ic(obs, exp, lower_prob, shrinkage),
+    "ic" = log2((obs + shrinkage) / (exp + shrinkage)),
+    "ic_upper" = ci_for_ic(obs, exp, upper_prob, shrinkage)
+  )
 
   return(output)
-  }
+}
+
+calc_expected <- function(dt, type=c("rrr", "prr")){
+  if(!typeof(dt) == "data.table"){
+    dt <- as.data.table(df)}
+}

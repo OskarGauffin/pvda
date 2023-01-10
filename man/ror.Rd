@@ -38,5 +38,5 @@ vectorized, i.e. a, b, c and d can be vectors, see the examples.
 pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
 
 # Note that a, b, c and d can be vectors (of equal length, no recycling)
-pvutils::ror(a = c(5, 10), b = c(10, 20), c = (15, 30), d = (10000, 10000))
+pvutils::ror(a = c(5, 10), b = c(10, 20), c = c(15, 30), d = c(10000, 10000))
 }
