@@ -6,3 +6,4 @@ pvutils.Rcheck/
 pvutils*.tar.gz
 pvutils*.tgz
 inst/doc
+docs
