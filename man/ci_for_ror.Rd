@@ -27,5 +27,5 @@ normality based) confidence bounds for the ROR, for a passed probability.
 Called twice in \code{ror} to create a confidence interval.
 }
 \seealso{
-\code{\link{ror}}, \code{\link{base::qnorm}}
+\code{\link{ror}}
 }

@@ -27,5 +27,5 @@ posterior gamma distribution. Called twice in \code{ic} to create a
 credibility interval.
 }
 \seealso{
-\code{\link{ic}}, \code{\link{base::qgamma}}
+\code{\link{ic}}
 }

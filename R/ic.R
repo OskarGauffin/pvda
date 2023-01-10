@@ -6,11 +6,11 @@
 #' a passed significance level (\code{sign_lvl}) in \code{\link{ror}}. If
 #' \code{sgn_lvl = .95} in \code{ror}, quantiles of the normal distribution will
 #' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
-#' @seealso \code{\link{ror}}, \code{\link{base::qnorm}}
+#' @seealso \code{\link{ror}}
 #' @inheritParams ror
 #' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
-  exp(log((a * d) / (b * c)) + qnorm(sign_lvl_probs) *
+  exp(log((a * d) / (b * c)) + stats::qnorm(sign_lvl_probs) *
     sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
@@ -22,7 +22,7 @@ ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
 #' a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For
 #' instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
 #' extracted at \code{sgn_lvl_probs} 0.025 and 0.975.
-#' @seealso \code{\link{ic}}, \code{\link{base::qgamma}}
+#' @seealso \code{\link{ic}}
 #' @inheritParams ic
 #' @export
 ci_for_ic <- function(obs, exp, sign_lvl_probs, shrinkage) {
@@ -151,7 +151,7 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   return(output)
 }
 
-calc_expected <- function(dt, type=c("rrr", "prr")){
-  if(!typeof(dt) == "data.table"){
-    dt <- as.data.table(df)}
-}
+# calc_expected <- function(dt, type=c("rrr", "prr")){
+#   if(!typeof(dt) == "data.table"){
+#     dt <- as.data.table(df)}
+# }
