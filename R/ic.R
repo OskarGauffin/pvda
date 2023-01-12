@@ -151,7 +151,34 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   return(output)
 }
 
-# calc_expected <- function(dt, type=c("rrr", "prr")){
-#   if(!typeof(dt) == "data.table"){
-#     dt <- as.data.table(df)}
-# }
+add_ic
+
+
+calc_expected <- function(dt){
+
+  if(!typeof(dt) == "data.table"){
+    dt <- data.table::as.data.table(dt)
+    }
+
+    lazy_dt(dt) |>
+    distinct() |>
+    mutate(n_tot = n_distinct(report_id)) |>
+    group_by(drug) |>
+    mutate(n_drug = n_distinct(report_id)) |>
+    ungroup() |>
+    group_by(event) |>
+    mutate(n_event = n_distinct(report_id)) |>
+    ungroup() |>
+    count(drug, event, n_tot, n_drug, n_event) |>
+    rename(obs = n) |>
+    mutate(n_tot_prr = n_tot - n_drug,
+           n_event_prr = n_event - obs) |>
+    mutate(exp_rrr = n_drug * n_event/n_tot,
+           exp_prr = n_drug * n_event_prr/ n_tot_prr) |>
+    select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr, n_drug, n_event_prr, n_tot_prr, exp_prr) |>
+    arrange(desc(obs)) |>
+    tibble::as_tibble()
+
+}
+
+calc_expected(drug_event_df) |> add_ic(obs=obs, exp=exp_prr)
