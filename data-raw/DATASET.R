@@ -21,6 +21,6 @@ simulate_dataset <- function(N = 1000){
 }
 
 # Run function and save using usethis
-drug_event_df <- simulate_dataset(N=10^5)
+drug_event_df <- simulate_dataset(N=10^3)
 
 usethis::use_data(drug_event_df, overwrite = TRUE)

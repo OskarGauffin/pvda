@@ -11,7 +11,7 @@
 #' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(sign_lvl_probs) *
-    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
 #' @title Confidence intervals for Information Component (IC)
@@ -151,16 +151,24 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   return(output)
 }
 
-add_ic
+# Add documentation later.
+add_ic <- function(df){
 
+}
 
-calc_expected <- function(dt){
+#' @title Calculate expected counts
+#' @description Produces various counts needed to do disproportionality analysis.
+# Add documentation later.
+
+count_expected <- function(dt,
+                           da_estimators = c("rrr", "prr", "ror")){
 
   if(!typeof(dt) == "data.table"){
     dt <- data.table::as.data.table(dt)
-    }
+  }
 
-    lazy_dt(dt) |>
+  # The RRR counts are required for the PRR and ROR
+  count_df <- dtplyr::lazy_dt(dt, immutable = FALSE) |>
     distinct() |>
     mutate(n_tot = n_distinct(report_id)) |>
     group_by(drug) |>
@@ -171,14 +179,36 @@ calc_expected <- function(dt){
     ungroup() |>
     count(drug, event, n_tot, n_drug, n_event) |>
     rename(obs = n) |>
-    mutate(n_tot_prr = n_tot - n_drug,
-           n_event_prr = n_event - obs) |>
-    mutate(exp_rrr = n_drug * n_event/n_tot,
-           exp_prr = n_drug * n_event_prr/ n_tot_prr) |>
-    select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr, n_drug, n_event_prr, n_tot_prr, exp_prr) |>
+    mutate(exp_rrr = n_drug * n_event/n_tot)
+  select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
+
+  # Calc PRR counts
+  if(any( c("ror","prr") %in% da_estimators)){
+    count_df <- count_df |>
+      mutate(n_tot_prr = n_tot - n_drug,
+             n_event_prr = n_event - obs) |>
+      mutate(exp_prr = n_drug * n_event_prr/ n_tot_prr) |>
+      select(everything(), n_event_prr, n_tot_prr, exp_prr)
+  }
+
+  # Calc ROR counts. Count a already present in obs.
+  if("ror" %in% da_estimators){
+  count_df <- count_df |>
+    mutate(b = n_drug - obs,
+           c = n_event_prr,
+           d = n_tot_prr - n_event) |>
+    mutate(exp_ror = d/b*c) |>
+    select(everything(), b, c, d, exp_ror)
+  }
+
+  if(! "rrr" %in% da_estimators){
+    count_df <- count_df |> select(-ends_with("rrr"))
+  }
+
+  count_df |>
     arrange(desc(obs)) |>
     tibble::as_tibble()
 
+  return(count_df)
 }
 
-calc_expected(drug_event_df) |> add_ic(obs=obs, exp=exp_prr)
