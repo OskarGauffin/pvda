@@ -12,7 +12,7 @@ i.e. the same report_id can have several drugs and events.
 Number of drugs per report_id is sampled as 1 + Pois(3), with increasing
 probability as the drug letter closes in on Z. Every drug is assigned
 an event, with decreasing probability as the event index number increases
-towards 1000. See the DATASET.R file in the Data/Data-raw folder for details.
+towards 1000. See the DATASET.R file in the data-raw folder for details.
 
 \describe{
   \item{report_id}{A patient or report identifier}

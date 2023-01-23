@@ -156,19 +156,41 @@ add_ic <- function(df){
 
 }
 
-#' @title Calculate expected counts
-#' @description Produces various counts needed to do disproportionality analysis.
-# Add documentation later.
+#' @title Calculate counts required for expected counts, and expected counts
+#' @description Produces various counts used in disproportionality analysis.
+#' @param dt A data table, or an object possible to convert to a data table, e.g.
+#' a tibble or data.frame. For column specifications, see details.
+#'
+#' @details
+#' The passed data table should contain three columns: "report_id", "drug_name"
+#' and "event_name". It should have one row per reported drug-event-combination,
+#' i.e. receiving an additional report for drug A and event 1 would add one row
+#' to the table. The same report_id can occur on several rows, if the same
+#' report contains several drugs and/or events. Column report_id must be of type
+#' numeric or character. Columns drug_name and event_name must be
+#' characters.
+#' @param da_estimators A character vector containing the desired expected counts.
+#' Defaults to all possible options, i.e. c("rrr", "prr", "ror").
+#' @return A tibble with counts.
+#' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
+#' rename select ungroup
+#' @export
 
 count_expected <- function(dt,
                            da_estimators = c("rrr", "prr", "ror")){
+
+  # library(pvutils)
+  # dt <- drug_event_df
+  # library(dplyr)
+  # da_estimators = c("rrr", "prr", "ror")
 
   if(!typeof(dt) == "data.table"){
     dt <- data.table::as.data.table(dt)
   }
 
-  # The RRR counts are required for the PRR and ROR
-  count_df <- dtplyr::lazy_dt(dt, immutable = FALSE) |>
+  #  Begin with the RRR counts, as they're the computationally most feasible,
+  #  and useful for calculating PRR and ROR.
+  count_dt <- dtplyr::lazy_dt(dt, immutable = FALSE) |>
     distinct() |>
     mutate(n_tot = n_distinct(report_id)) |>
     group_by(drug) |>
@@ -179,36 +201,41 @@ count_expected <- function(dt,
     ungroup() |>
     count(drug, event, n_tot, n_drug, n_event) |>
     rename(obs = n) |>
-    mutate(exp_rrr = n_drug * n_event/n_tot)
+    mutate(exp_rrr = n_drug * n_event/n_tot) |>
   select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
 
-  # Calc PRR counts
+  # Calc PRR counts if requested
   if(any( c("ror","prr") %in% da_estimators)){
-    count_df <- count_df |>
-      mutate(n_tot_prr = n_tot - n_drug,
-             n_event_prr = n_event - obs) |>
+    count_dt <- count_dt |>
+      mutate(n_event_prr = n_event - obs,
+             n_tot_prr = n_tot - n_drug) |>
       mutate(exp_prr = n_drug * n_event_prr/ n_tot_prr) |>
       select(everything(), n_event_prr, n_tot_prr, exp_prr)
   }
 
-  # Calc ROR counts. Count a already present in obs.
+  # Calc ROR counts if requested. Count "a" equal obs.
   if("ror" %in% da_estimators){
-  count_df <- count_df |>
+  count_dt <- count_dt |>
     mutate(b = n_drug - obs,
            c = n_event_prr,
-           d = n_tot_prr - n_event) |>
-    mutate(exp_ror = d/b*c) |>
+           d = n_tot_prr - n_event + obs) |>
+    mutate(exp_ror = b*c/d) |>
     select(everything(), b, c, d, exp_ror)
   }
 
   if(! "rrr" %in% da_estimators){
-    count_df <- count_df |> select(-ends_with("rrr"))
+    count_dt <- count_dt |> select(-ends_with("rrr"))
   }
 
-  count_df |>
+  count_df <- count_dt |>
     arrange(desc(obs)) |>
     tibble::as_tibble()
 
   return(count_df)
 }
+
+# 21, 338    359
+# 153, 467
+#
+# N_tot = 979
 
