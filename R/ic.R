@@ -174,7 +174,6 @@ add_ic <- function(df){
 #' @return A tibble with counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
 #' rename select ungroup
-#' @import data.table
 #' @export
 
 count_expected <- function(dt,
