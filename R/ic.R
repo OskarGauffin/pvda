@@ -130,6 +130,7 @@ ror <- function(a, b, c, d, sign_lvl = 0.95) {
 #' @export
 
 ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
+
   # Run input checks
   checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
@@ -151,8 +152,11 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   return(output)
 }
 
-# Add documentation later.
-add_ic <- function(df){
+#' @title Wrapper for implemented disproportionality estimators
+#' @inheritParams count_expected
+add_disprop_est <- function(df, da_estimators){
+
+
 
 }
 
@@ -160,6 +164,8 @@ add_ic <- function(df){
 #' @description Produces various counts used in disproportionality analysis.
 #' @param dt A data table, or an object possible to convert to a data table, e.g.
 #' a tibble or data.frame. For column specifications, see details.
+#' @param da_estimators A character vector containing the desired expected counts.
+#' Defaults to all possible options, i.e. c("rrr", "prr", "ror").
 #'
 #' @details
 #' The passed data table should contain three columns: "report_id", "drug_name"
@@ -169,8 +175,6 @@ add_ic <- function(df){
 #' report contains several drugs and/or events. Column report_id must be of type
 #' numeric or character. Columns drug_name and event_name must be
 #' characters.
-#' @param da_estimators A character vector containing the desired expected counts.
-#' Defaults to all possible options, i.e. c("rrr", "prr", "ror").
 #' @return A tibble with counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
 #' rename select ungroup
@@ -179,7 +183,24 @@ add_ic <- function(df){
 count_expected <- function(dt,
                            da_estimators = c("rrr", "prr", "ror")){
 
-  # dt = drug_event_df
+  # Run input checks
+  checkmate::qassert(dt[[1]], c("S+","N+"))
+  checkmate::qassertr(dt[2:3], "S+")
+
+  if(!any(hasName(dt, c("report_id", "drug", "event")))){
+    stop("At least one of column names 'report_id', 'drug' and 'event' is not found. Please check the passed object.")
+  }
+  if( ! colnames(dt) == c("report_id", "drug", "event")){
+    stop("Column names of input argument ('dt') are not 'report_id', 'drug' and 'event'. Please check the passed object.")
+  }
+
+  checkmate::qassert(da_estimators, "S+")
+  if( any(! da_estimators %in% c("rrr", "prr", "ror"))){
+    stop("Only 'rrr', 'prr' and 'ror' are allowed in parameter 'da_estimators'")
+  }
+
+
+
   if(!typeof(dt) == "data.table"){
     dt <- data.table::as.data.table(dt)
   }
