@@ -26,3 +26,25 @@ test_that("Function ror works", {
   expect_equal(test_df[, 2], expected_output[, 2])
   # expect_equal(test_df[, 3], expected_output[, 3])
 })
+
+
+test_that("Function count_expected works", {
+
+  produced_output <- count_expected(drug_event_df,
+                                    da_estimators = c("rrr", "prr", "ror"))
+
+  # Should return as many rows
+  expect_equal(nrow(produced_output),
+               nrow(dplyr::distinct(drug_event_df[,c("drug", "event")], )))
+
+  first_row <- produced_output[1,]
+
+  # Some internal checks that the counts agree for at least one line
+  expect_equal(sum(first_row[,c("obs", "b", "c", "d")]), first_row$n_tot)
+  expect_equal(sum(first_row[,c("obs", "b")]), first_row$n_drug)
+  expect_equal(sum(first_row[,c("obs", "c")]), first_row$n_event)
+  expect_equal(first_row$n_event_prr, first_row$c)
+  expect_equal(first_row$n_tot_prr, diff(as.numeric(first_row[, c("n_drug", "n_tot")])))
+})
+
+

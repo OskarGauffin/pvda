@@ -17,6 +17,8 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 Imports: 
+    dplyr (>= 1.0.10),
+    dtplyr (>=  1.2.2),
     checkmate (>= 2.1.0),
     data.table (>= 1.14.6),
     ggplot2 (>= 3.4.0),

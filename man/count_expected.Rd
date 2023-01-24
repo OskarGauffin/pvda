@@ -7,10 +7,11 @@
 count_expected(dt, da_estimators = c("rrr", "prr", "ror"))
 }
 \arguments{
-\item{dt}{A data table, or an object possible to convert to a data table. See details.}
+\item{dt}{A data table, or an object possible to convert to a data table, e.g.
+a tibble or data.frame. For column specifications, see details.}
 
-\item{da_estimators}{A character vector contaning the desired expected counts.
-Defaults to c("rrr", "prr", "ror").}
+\item{da_estimators}{A character vector containing the desired expected counts.
+Defaults to all possible options, i.e. c("rrr", "prr", "ror").}
 }
 \value{
 A tibble with counts.
@@ -19,8 +20,11 @@ A tibble with counts.
 Produces various counts used in disproportionality analysis.
 }
 \details{
-Three columns are expected: "report_id", "drug_name" and "event_name".
-Column report_id should be a numeric or characters. The same report_id can
-occur on several rows, if the same report contains several drugs and/or
-events. Columns drug_name and event_name must be of type character.
+The passed data table should contain three columns: "report_id", "drug_name"
+and "event_name". It should have one row per reported drug-event-combination,
+i.e. receiving an additional report for drug A and event 1 would add one row
+to the table. The same report_id can occur on several rows, if the same
+report contains several drugs and/or events. Column report_id must be of type
+numeric or character. Columns drug_name and event_name must be
+characters.
 }

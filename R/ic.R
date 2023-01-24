@@ -174,16 +174,13 @@ add_ic <- function(df){
 #' @return A tibble with counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
 #' rename select ungroup
+#' @import data.table
 #' @export
 
 count_expected <- function(dt,
                            da_estimators = c("rrr", "prr", "ror")){
 
-  # library(pvutils)
-  # dt <- drug_event_df
-  # library(dplyr)
-  # da_estimators = c("rrr", "prr", "ror")
-
+  # dt = drug_event_df
   if(!typeof(dt) == "data.table"){
     dt <- data.table::as.data.table(dt)
   }
@@ -233,9 +230,4 @@ count_expected <- function(dt,
 
   return(count_df)
 }
-
-# 21, 338    359
-# 153, 467
-#
-# N_tot = 979
 
