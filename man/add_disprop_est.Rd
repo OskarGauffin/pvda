@@ -2,14 +2,19 @@
 % Please edit documentation in R/ic.R
 \name{add_disprop_est}
 \alias{add_disprop_est}
-\title{Wrapper for implemented disproportionality estimators}
+\title{Wrapper for adding disproportionality estimates to data.frame with expected counts}
 \usage{
-add_disprop_est(df, da_estimators)
+add_disprop_est(df, da_estimators = c("prr", "ic", "ror"), ...)
 }
 \arguments{
+\item{df}{A data table, or an object possible to convert to a data table, e.g.
+a tibble or data.frame. For column specifications, see details.}
+
 \item{da_estimators}{A character vector containing the desired expected counts.
 Defaults to all possible options, i.e. c("rrr", "prr", "ror").}
+
+\item{...}{For passing additional arguments, e.g. significance level.}
 }
 \description{
-Wrapper for implemented disproportionality estimators
+Wrapper for adding disproportionality estimates to data.frame with expected counts
 }

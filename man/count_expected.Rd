@@ -4,10 +4,10 @@
 \alias{count_expected}
 \title{Calculate counts required for expected counts, and expected counts}
 \usage{
-count_expected(dt, da_estimators = c("rrr", "prr", "ror"))
+count_expected(df, da_estimators = c("rrr", "prr", "ror"))
 }
 \arguments{
-\item{dt}{A data table, or an object possible to convert to a data table, e.g.
+\item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
 
 \item{da_estimators}{A character vector containing the desired expected counts.
