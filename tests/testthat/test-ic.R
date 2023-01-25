@@ -30,12 +30,12 @@ test_that("Function ror works", {
 
 test_that("Function count_expected works", {
 
-  produced_output <- count_expected(drug_event_df,
+  produced_output <- pvutils::count_expected(drug_event_df,
                                     da_estimators = c("rrr", "prr", "ror"))
 
   # Should return as many rows
   expect_equal(nrow(produced_output),
-               nrow(dplyr::distinct(drug_event_df[,c("drug", "event")], )))
+               nrow(dplyr::distinct(drug_event_df[, c("drug", "event")], )))
 
   first_row <- produced_output[1,]
 

@@ -178,27 +178,23 @@ add_disprop_est <- function(df, da_estimators){
 #' @return A tibble with counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
 #' rename select ungroup
+#' @import data.table
 #' @export
 
 count_expected <- function(dt,
                            da_estimators = c("rrr", "prr", "ror")){
 
-  # Run input checks
   checkmate::qassert(dt[[1]], c("S+","N+"))
   checkmate::qassertr(dt[2:3], "S+")
 
-  if(!any(hasName(dt, c("report_id", "drug", "event")))){
+  if(!any(utils::hasName(dt, c("report_id", "drug", "event")))){
     stop("At least one of column names 'report_id', 'drug' and 'event' is not found. Please check the passed object.")
-  }
-  if( ! colnames(dt) == c("report_id", "drug", "event")){
-    stop("Column names of input argument ('dt') are not 'report_id', 'drug' and 'event'. Please check the passed object.")
   }
 
   checkmate::qassert(da_estimators, "S+")
   if( any(! da_estimators %in% c("rrr", "prr", "ror"))){
     stop("Only 'rrr', 'prr' and 'ror' are allowed in parameter 'da_estimators'")
   }
-
 
 
   if(!typeof(dt) == "data.table"){
