@@ -47,4 +47,12 @@ test_that("Function add_expected_count works", {
   expect_equal(first_row$n_tot_prr, diff(as.numeric(first_row[, c("n_drug", "n_tot")])))
 })
 
+test_that("The whole disproportionality function chain runs without NA output except in ROR", {
 
+  output <- drug_event_df |>
+    add_expected_counts() |>
+    add_disprop_est() |>
+    dplyr::select(-dplyr::starts_with("ror"))
+
+  expect_equal(FALSE, any(is.na(output)))
+})
