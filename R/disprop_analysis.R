@@ -248,6 +248,7 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 #' @title Wrapper for adding disproportionality estimates to data frame
 #' containing expected counts
 #' @inheritParams add_expected_counts
+#' @param da_estimators Defaults to c("ic", "prr", "ror"). 
 #' @param ... For passing additional arguments, e.g. significance level.
 #' @return The passed data frame with additional columns as specified by
 #' parameters.
