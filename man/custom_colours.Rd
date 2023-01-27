@@ -19,8 +19,8 @@ So far, this function provides hex codes for blue and green in
 \examples{
 par(lwd = 5)
 hist(runif(30),
-  col = pvutils:::custom_colours("blue"),
-  border = pvutils:::custom_colours("green")
+  col = pvutils::custom_colours("blue"),
+  border = pvutils::custom_colours("green")
 )
 
 }

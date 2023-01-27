@@ -17,6 +17,5 @@ and green in "Uppsala Monitoring Centre - style"
 library("ggplot2")
 ggplot(mtcars, aes(mpg, disp)) +
   geom_point() +
-  pvutils:::custom_ggtheme()
-
+  pvutils::custom_ggtheme()
 }

@@ -28,18 +28,18 @@ test_that("Function ror works", {
 })
 
 
-test_that("Function count_expected works", {
+test_that("Function add_expected_count works", {
 
-  produced_output <- pvutils::count_expected(drug_event_df,
+  produced_output <- pvutils::add_expected_counts(drug_event_df,
                                     da_estimators = c("rrr", "prr", "ror"))
 
-  # Should return as many rows
+  # Should return as many rows as there are unique report_ids in drug_event_df
+  # (N=1000)
   expect_equal(nrow(produced_output),
                nrow(dplyr::distinct(drug_event_df[, c("drug", "event")], )))
 
-  first_row <- produced_output[1,]
-
   # Some internal checks that the counts agree for at least one line
+  first_row <- produced_output[1,]
   expect_equal(sum(first_row[,c("obs", "b", "c", "d")]), first_row$n_tot)
   expect_equal(sum(first_row[,c("obs", "b")]), first_row$n_drug)
   expect_equal(sum(first_row[,c("obs", "c")]), first_row$n_event)
