@@ -5,7 +5,7 @@
 \title{Wrapper for adding disproportionality estimates to data frame
 containing expected counts}
 \usage{
-add_disprop_est(df, da_estimators = c("prr", "ic", "ror"), ...)
+add_disprop_est(df, da_estimators = c("ic", "prr", "ror"), ...)
 }
 \arguments{
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
