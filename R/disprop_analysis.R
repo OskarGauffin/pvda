@@ -20,28 +20,27 @@
 #' @export
 
 add_expected_counts <- function(df,
-                                da_estimators = c("rrr", "prr", "ror")){
-
+                                da_estimators = c("rrr", "prr", "ror")) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_ror -> d -> b -> exp_prr -> n_tot_prr ->
-    n_event_prr -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
-    event -> drug -> report_id
+  n_event_prr -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
+  event -> drug -> report_id
 
   checkmate::qassert(df[[1]], c("S+", "N+"))
   checkmate::qassertr(df[2:3], "S+")
 
-  if(!any(utils::hasName(df, c("report_id", "drug", "event")))){
+  if (!any(utils::hasName(df, c("report_id", "drug", "event")))) {
     stop("At least one of column names 'report_id', 'drug' and 'event' is not
          found. Please check the passed object.")
   }
 
   checkmate::qassert(da_estimators, "S+")
-  if( any(! da_estimators %in% c("rrr", "prr", "ror"))){
+  if (any(!da_estimators %in% c("rrr", "prr", "ror"))) {
     stop("Only 'rrr', 'prr' and 'ror' are allowed in parameter 'da_estimators'")
   }
 
 
-  if(!typeof(df) == "data.table"){
+  if (!typeof(df) == "data.table") {
     df <- data.table::as.data.table(df)
   }
 
@@ -58,29 +57,33 @@ add_expected_counts <- function(df,
     ungroup() |>
     count(drug, event, n_tot, n_drug, n_event) |>
     rename(obs = n) |>
-    mutate(exp_rrr = n_drug * n_event/n_tot) |>
+    mutate(exp_rrr = n_drug * n_event / n_tot) |>
     select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
 
   # Calc PRR counts if requested
-  if(any( c("ror","prr") %in% da_estimators)){
+  if (any(c("ror", "prr") %in% da_estimators)) {
     count_dt <- count_dt |>
-      mutate(n_event_prr = n_event - obs,
-             n_tot_prr = n_tot - n_drug) |>
-      mutate(exp_prr = n_drug * n_event_prr/ n_tot_prr) |>
+      mutate(
+        n_event_prr = n_event - obs,
+        n_tot_prr = n_tot - n_drug
+      ) |>
+      mutate(exp_prr = n_drug * n_event_prr / n_tot_prr) |>
       select(everything(), n_event_prr, n_tot_prr, exp_prr)
   }
 
   # Calc ROR counts if requested. Count "a" equal obs.
-  if("ror" %in% da_estimators){
+  if ("ror" %in% da_estimators) {
     count_dt <- count_dt |>
-      mutate(b = n_drug - obs,
-             c = n_event_prr,
-             d = n_tot_prr - n_event + obs) |>
-      mutate(exp_ror = b*c/d) |>
+      mutate(
+        b = n_drug - obs,
+        c = n_event_prr,
+        d = n_tot_prr - n_event + obs
+      ) |>
+      mutate(exp_ror = b * c / d) |>
       select(everything(), b, c, d, exp_ror)
   }
 
-  if(! "rrr" %in% da_estimators){
+  if (!"rrr" %in% da_estimators) {
     count_dt <- count_dt |> select(-ends_with("rrr"))
   }
 
@@ -104,7 +107,7 @@ add_expected_counts <- function(df,
 #' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(sign_lvl_probs) *
-        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
 #' @title Confidence intervals for Information Component (IC)
@@ -161,7 +164,9 @@ ror <- function(a, b, c, d, sign_lvl = 0.95) {
 
   # Check that all vectors have the same length, seemed
   # hard to do in checkmate.
-  if (!all( purrr::map(list(b, c, d), \(x){length(x)}) == length(a))) {
+  if (!all(purrr::map(list(b, c, d), \(x){
+    length(x)
+  }) == length(a))) {
     stop("Vectors a, b, c and d are not of equal length.")
   }
 
@@ -223,7 +228,6 @@ ror <- function(a, b, c, d, sign_lvl = 0.95) {
 #' @export
 
 ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
-
   # Run input checks
   checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
@@ -257,10 +261,8 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 #' @inheritParams prr
 #' @export
 ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
-
-  s_hat = sqrt(1/obs + 1/n_drug + 1/n_event_prr + 1/n_tot_prr)
-  (obs)/(n_drug * n_event_prr/n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
-
+  s_hat <- sqrt(1 / obs + 1 / n_drug + 1 / n_event_prr + 1 / n_tot_prr)
+  (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
 }
 
 #' @title Proportional Reporting Rate
@@ -290,10 +292,12 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
 #' pvutils::prr(obs = 5, n_drug = 10, n_event_prr = 20, n_tot_prr = 10000)
 #'
 #' # Note that input parameters can be vectors (of equal length, no recycling)
-#' pvutils::prr(obs = c(5, 10),
-#'             n_drug = c(10, 20),
-#'             n_event_prr = c(15, 30),
-#'             n_tot_prr = c(10000, 10000))
+#' pvutils::prr(
+#'   obs = c(5, 10),
+#'   n_drug = c(10, 20),
+#'   n_event_prr = c(15, 30),
+#'   n_tot_prr = c(10000, 10000)
+#' )
 #' @export
 #'
 prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
@@ -302,8 +306,12 @@ prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
 
   # Check that all vectors have the same length, seemed
   # hard to do in checkmate.
-  if (!all( purrr::map(list(n_drug, n_event_prr, n_tot_prr),
-                       \(x){length(x)}) == length(obs))) {
+  if (!all(purrr::map(
+    list(n_drug, n_event_prr, n_tot_prr),
+    \(x){
+      length(x)
+    }
+  ) == length(obs))) {
     stop("Vectors obs, n_drug, n_event_prr and n_tot_prr are not of equal length.")
   }
 
@@ -325,29 +333,32 @@ prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
 #' @return The passed data frame with additional columns as specified by
 #' parameters.
 #' @export
-add_disprop_est <- function(df, da_estimators = c("ic", "prr", "ror"), ...){
-
+add_disprop_est <- function(df, da_estimators = c("ic", "prr", "ror"), ...) {
   da_df <- df
 
-  if("ic" %in% da_estimators){
+  if ("ic" %in% da_estimators) {
     ic_df <- ic(da_df$obs, da_df$exp_rrr)
     da_df <- da_df |> dplyr::bind_cols(ic_df)
   }
 
-  if("prr" %in% da_estimators){
-    prr_df <- prr(obs = da_df$obs,
-                  n_drug = da_df$n_drug,
-                  n_event_prr = da_df$n_event_prr,
-                  n_tot_prr = da_df$n_tot_prr)
+  if ("prr" %in% da_estimators) {
+    prr_df <- prr(
+      obs = da_df$obs,
+      n_drug = da_df$n_drug,
+      n_event_prr = da_df$n_event_prr,
+      n_tot_prr = da_df$n_tot_prr
+    )
 
     da_df <- da_df |> dplyr::bind_cols(prr_df)
   }
 
-  if("ror" %in% da_estimators){
-    ror_df <- ror(a = da_df$obs,
-                  b = da_df$b,
-                  c = da_df$c,
-                  d = da_df$d)
+  if ("ror" %in% da_estimators) {
+    ror_df <- ror(
+      a = da_df$obs,
+      b = da_df$b,
+      c = da_df$c,
+      d = da_df$d
+    )
 
     da_df <- da_df |> dplyr::bind_cols(ror_df)
   }
