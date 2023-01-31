@@ -94,7 +94,7 @@ add_expected_counts <- function(df,
 #' @title Confidence intervals for Reporting Odds Ratio
 #' @description Mainly for use in \code{\link{ror}}. Produces (symmetric,
 #' normality based) confidence bounds for the ROR, for a passed probability.
-#' Called twice in \code{ror} to create a confidence interval.
+#' Called twice in \code{ror} to create confidence intervals.
 #' @param sign_lvl_probs The probabilities of the normal distribution, based on
 #' a passed significance level (\code{sign_lvl}) in \code{\link{ror}}. If
 #' \code{sgn_lvl = .95} in \code{ror}, quantiles of the normal distribution will
@@ -129,8 +129,8 @@ ci_for_ic <- function(obs, exp, sign_lvl_probs, shrinkage) {
 
 #' @title Reporting Odds Ratio
 #'
-#' @description Calculates the Reporting Odds Ratio ("ROR") and confidence interval
-#' interval, used in disproportionality analysis.
+#' @description Calculates Reporting Odds Ratio ("ROR") and confidence
+#' intervals, used in disproportionality analysis.
 #'
 #' @details The ROR is an odds ratio calculated from reporting counts. The
 #' R for Reporting in ROR is meant to emphasize an interpretation of reporting,
@@ -245,10 +245,82 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   return(output)
 }
 
+#' @title Confidence intervals for Proportional Reporting Rate
+#' @description Mainly for use in \code{\link{prr}}. Produces (symmetric,
+#' normality based) confidence bounds for the PRR, for a passed probability.
+#' Called twice in \code{prr} to create confidence intervals.
+#' @param sign_lvl_probs The probabilities of the normal distribution, based on
+#' a passed significance level (\code{sign_lvl}) in \code{\link{prr}}. If
+#' \code{sgn_lvl = .95} in \code{prr}, quantiles of the normal distribution will
+#' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
+#' @seealso \code{\link{prr}}
+#' @inheritParams prr
+#' @export
+ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
+
+  s_hat = sqrt(1/obs + 1/n_drug + 1/n_event_prr + 1/n_tot_prr)
+  (obs)/(n_drug * n_event_prr/n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
+
+}
+
+#' @title Proportional Reporting Rate
+#'
+#' @description Calculates Proportional Reporting Rate ("PRR") with
+#' confidence intervals, used in disproportionality analysis.
+#'
+#' @details The PRR is the proportion of reports with an event in set of exposed
+#' cases, divided with the proportion of reports with the event in a background
+#' or comparator, which does not include the exposed.
+#' The \emph{Reporting} highlights the correct interpretation, of examining
+#' reporting as the PRR is calculated from a reporting database.
+#' Note: the function is vectorized, see the examples.
+#'
+#' @param obs Number of reports for the specific drug and event (i.e. the
+#' observed count).
+#' @param n_drug Number of reports with the drug, without the event
+#' @param n_event_prr Number of reports with the event in the background.
+#' @param n_tot_prr Number of reports in the background.
+#' @param sign_lvl Significance level of confidence interval. Default is
+#' 0.95 (i.e. 95 \% confidence interval)
+#' @return A tibble with three columns (point estimate and credibility bounds).
+#' Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.
+#'
+#' @examples
+#'
+#' pvutils::prr(obs = 5, n_drug = 10, n_event_prr = 20, n_tot_prr = 10000)
+#'
+#' # Note that input parameters can be vectors (of equal length, no recycling)
+#' pvutils::prr(obs = c(5, 10),
+#'             n_drug = c(10, 20),
+#'             n_event_prr = c(15, 30),
+#'             n_tot_prr = c(10000, 10000))
+#' @export
+#'
+prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
+  checkmate::qassert(c(obs, n_drug, n_event_prr, n_tot_prr), "N+[0,)")
+  checkmate::qassert(sign_lvl, "N1[0,1]")
+
+  # Check that all vectors have the same length, seemed
+  # hard to do in checkmate.
+  if (!all( purrr::map(list(n_drug, n_event_prr, n_tot_prr),
+                       \(x){length(x)}) == length(obs))) {
+    stop("Vectors obs, n_drug, n_event_prr and n_tot_prr are not of equal length.")
+  }
+
+  lower_prob <- (1 - sign_lvl) / 2
+  upper_prob <- 1 - lower_prob
+
+  output <- tibble::tibble(
+    "prr_lower" = ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, lower_prob),
+    "prr" = obs / n_drug * (n_event_prr / n_tot_prr),
+    "prr_upper" = ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, upper_prob)
+  )
+}
+
 #' @title Wrapper for adding disproportionality estimates to data frame
 #' containing expected counts
 #' @inheritParams add_expected_counts
-#' @param da_estimators Defaults to c("ic", "prr", "ror"). 
+#' @param da_estimators Defaults to c("ic", "prr", "ror").
 #' @param ... For passing additional arguments, e.g. significance level.
 #' @return The passed data frame with additional columns as specified by
 #' parameters.
@@ -260,6 +332,15 @@ add_disprop_est <- function(df, da_estimators = c("ic", "prr", "ror"), ...){
   if("ic" %in% da_estimators){
     ic_df <- ic(da_df$obs, da_df$exp_rrr)
     da_df <- da_df |> dplyr::bind_cols(ic_df)
+  }
+
+  if("prr" %in% da_estimators){
+    prr_df <- prr(obs = da_df$obs,
+                  n_drug = da_df$n_drug,
+                  n_event_prr = da_df$n_event_prr,
+                  n_tot_prr = da_df$n_tot_prr)
+
+    da_df <- da_df |> dplyr::bind_cols(prr_df)
   }
 
   if("ror" %in% da_estimators){

@@ -24,7 +24,7 @@ be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.}
 \description{
 Mainly for use in \code{\link{ror}}. Produces (symmetric,
 normality based) confidence bounds for the ROR, for a passed probability.
-Called twice in \code{ror} to create a confidence interval.
+Called twice in \code{ror} to create confidence intervals.
 }
 \seealso{
 \code{\link{ror}}

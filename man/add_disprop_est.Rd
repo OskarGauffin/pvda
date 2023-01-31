@@ -11,8 +11,7 @@ add_disprop_est(df, da_estimators = c("ic", "prr", "ror"), ...)
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
 
-\item{da_estimators}{A character vector containing the desired expected counts.
-Defaults to all possible options, i.e. c("rrr", "prr", "ror").}
+\item{da_estimators}{Defaults to c("ic", "prr", "ror").}
 
 \item{...}{For passing additional arguments, e.g. significance level.}
 }

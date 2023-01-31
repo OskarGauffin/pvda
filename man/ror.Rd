@@ -24,8 +24,8 @@ A tibble with three columns (point estimate and credibility bounds).
 Number of rows equals length of inputs a, b, c, d.
 }
 \description{
-Calculates the Reporting Odds Ratio ("ROR") and confidence interval
-interval, used in disproportionality analysis.
+Calculates Reporting Odds Ratio ("ROR") and confidence
+intervals, used in disproportionality analysis.
 }
 \details{
 The ROR is an odds ratio calculated from reporting counts. The
