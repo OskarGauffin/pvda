@@ -32,7 +32,6 @@ Set to NULL if you don't want to apply any such rule.}
 \value{
 The passed data frame with additional columns as specified by
 parameters.
-#' @importFrom dplyr starts_with, across
 }
 \description{
 Wrapper for adding disproportionality estimates to data frame

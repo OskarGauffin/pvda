@@ -339,15 +339,18 @@ prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
 #' @param ... For passing additional arguments, e.g. significance level.
 #' @return The passed data frame with additional columns as specified by
 #' parameters.
-#' #' @importFrom dplyr starts_with, across
 #' @export
 add_disprop_est <- function(df,
                             da_estimators = c("ic", "prr", "ror"),
                             rule_of_N = 3,
                             number_of_digits = 2,
                             ...) {
+
   checkmate::qassert(rule_of_N, c("N1[0,]", "0"))
-  checkmate::qassert(number_of_digits, c("I1[0,]", "0"))
+  # Function round actually rounds decimals in digits, so we can pass this on
+  # without further concerns
+  checkmate::qassert(number_of_digits, c("N1[0,]", "0"))
+
 
   da_df <- df
 
@@ -383,10 +386,13 @@ add_disprop_est <- function(df,
     # Apply rule of N to these colnames
     da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
 
-    da_df %>%
-      mutate(across(
-        starts_with(da_estimators_not_ic),
-        ~ ifelse(da_df[["obs"]] <= rule_of_N, NA, cur_column())
+    # Only need to do this check once
+    replace_these_rows <- da_df[["obs"]] <= rule_of_N
+
+    da_df |>
+      dplyr::mutate(dplyr::across(
+        dplyr::starts_with(da_estimators_not_ic),
+        ~ ifelse(replace_these_rows, NA, dplyr::cur_column())
       ))
   }
 
@@ -394,8 +400,8 @@ add_disprop_est <- function(df,
   if (!is.null(number_of_digits)) {
 
     # Only apply to non-report-count columns, i.e. expected or da_estimates
-    da_df |> mutate(across(
-      starts_with(c("exp", da_estimators)),
+    da_df |> dplyr::mutate(dplyr::across(
+      dplyr::starts_with(c("exp", da_estimators)),
       ~ round(.x, digits = number_of_digits)
     ))
   }
