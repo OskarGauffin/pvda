@@ -28,7 +28,7 @@ credibility interval."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality_analysis using pvutils</a>
+    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality_analysis</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -61,12 +61,14 @@ credibility interval.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>obs</dt>
 <dd><p>A numeric vector with observed counts, i.e. number of reports
-for the selected drug-event-combination.</p></dd>
+for the selected drug-event-combination. Note that shrinkage (e.g. +0.5) is added
+inside the function and should not be included here.</p></dd>
 
 
 <dt>exp</dt>
 <dd><p>A numeric vector with expected counts, i.e. number of reports
-to be expected given a comparator or <em>background</em>.</p></dd>
+to be expected given a comparator or <em>background</em>. Note that shrinkage
+(e.g. +0.5) is added inside the function and should not be included here.</p></dd>
 
 
 <dt>sign_lvl_probs</dt>
