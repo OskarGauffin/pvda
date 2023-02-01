@@ -209,9 +209,11 @@ ror <- function(a, b, c, d, sign_lvl = 0.95) {
 #' Note: the function is vectorized, i.e. obs and exp can be vectors, see the examples.
 #'
 #' @param obs A numeric vector with observed counts, i.e. number of reports
-#' for the selected drug-event-combination.
+#' for the selected drug-event-combination. Note that shrinkage (e.g. +0.5) is added
+#' inside the function and should not be included here.
 #' @param exp A numeric vector with expected counts, i.e. number of reports
-#' to be expected given a comparator or \emph{background}.
+#' to be expected given a comparator or \emph{background}. Note that shrinkage
+#' (e.g. +0.5) is added inside the function and should not be included here.
 #' @param shrinkage A non-negative numeric of length 1, to be added to
 #' observed and expected count. Default is 0.5.
 #' @param sign_lvl Significance level of credibility interval. Default is
@@ -340,7 +342,7 @@ prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
 #' @return The passed data frame with additional columns as specified by
 #' parameters.
 #' @export
-add_disprop_est <- function(df,
+add_disproportionality <- function(df,
                             da_estimators = c("ic", "prr", "ror"),
                             rule_of_N = 3,
                             number_of_digits = 2,

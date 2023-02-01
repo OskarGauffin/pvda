@@ -8,10 +8,12 @@ ic(obs, exp, shrinkage = 0.5, sign_lvl = 0.95)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports
-for the selected drug-event-combination.}
+for the selected drug-event-combination. Note that shrinkage (e.g. +0.5) is added
+inside the function and should not be included here.}
 
 \item{exp}{A numeric vector with expected counts, i.e. number of reports
-to be expected given a comparator or \emph{background}.}
+to be expected given a comparator or \emph{background}. Note that shrinkage
+(e.g. +0.5) is added inside the function and should not be included here.}
 
 \item{shrinkage}{A non-negative numeric of length 1, to be added to
 observed and expected count. Default is 0.5.}

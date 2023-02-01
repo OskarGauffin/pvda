@@ -52,7 +52,7 @@ test_that("Function add_expected_count works", {
 test_that("The whole disproportionality function chain runs without NA output except in PRR and ROR", {
   output <- drug_event_df |>
     add_expected_counts() |>
-    add_disprop_est() |>
+    add_disproportionality() |>
     dplyr::select(-dplyr::starts_with("ror")) |>
     dplyr::select(-dplyr::starts_with("prr"))
 

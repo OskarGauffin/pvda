@@ -8,10 +8,12 @@ ci_for_ic(obs, exp, sign_lvl_probs, shrinkage)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports
-for the selected drug-event-combination.}
+for the selected drug-event-combination. Note that shrinkage (e.g. +0.5) is added
+inside the function and should not be included here.}
 
 \item{exp}{A numeric vector with expected counts, i.e. number of reports
-to be expected given a comparator or \emph{background}.}
+to be expected given a comparator or \emph{background}. Note that shrinkage
+(e.g. +0.5) is added inside the function and should not be included here.}
 
 \item{sign_lvl_probs}{The probabilities of the posterior, based on
 a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For

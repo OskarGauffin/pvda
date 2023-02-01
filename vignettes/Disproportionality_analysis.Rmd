@@ -1,5 +1,5 @@
 ---
-title: "Disproportionality_analysis using pvutils"
+title: "Disproportionality_analysis"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Disproportionality_analysis}
@@ -8,74 +8,107 @@ vignette: >
 ---
 
 During the life cycle of a medicinal product, knowledge of the safety profile 
-continues to accumulate post market introduction. One way to collect such information
+continues to accumulate after post-marketing. One way to collect such information
 of suspected adverse events is to fill in a spontaneous report and send it to a 
 national regulatory authority, such as the FDA, MHRA, PMDA, MPA, etc.      
 
 Given a large set of reports covering a multitude of drugs and adverse events, 
-disproportionality analysis is a data driven tool to identify 
+disproportionality analysis is a data driven framework to identify 
 drug-event-combinations of potential interest for further qualitative 
-manual case-by-case assessment. 
-
-The pvutils package provides three different disproportionality estimators,
+manual case-by-case assessment. The pvutils package provides three estimators, 
 the proportional reporting rate (PRR), the reporting odds ratio (ROR) and the 
 information component (IC). 
 
+## Disproportionality analysis for a specific drug-event combination
 A first use-case for these functions is to provide a way to calculate 
-confidence or credibility intervals for different point estimates. 
-For instance, incorrectly calculated IC-values has sometimes been published 
-in scientific publications. 
+confidence or credibility intervals for a specific drug-event-combination, where
+you already know the number of observed reports, and other required counts such as
+the database total count, number of reports with the exposure and number of
+reports with the event.
+
+For instance, you may have extracted counts to an excel sheet from 
+some tool where these estimators are not implemented, and want to check 
+if the results are consistent across a few different estimators.
 
 ```{r}
 library(pvutils)
+prr(obs = 10, n_drug = 1000, n_event_prr = 200, n_tot_prr = 10000)
+ror(a = 10, b = 20, c= 200, d = 10000)
 ic(obs = 10, exp = 5)
 ```
-The next question is how to calculate the exp-parameter, passed in the ic-function as 5 above. This is the second
-use-case, to calculate disproportionality from raw data. 
+For further details on the specific input parameters, consult the documentation 
+of each function. 
 
-# Disproportionality from raw data
+## Disproportionality analysis from report-level data
+If you don't have the counts mentioned above, but do have report-level data 
+that you want to perform disproportionality analysis on, this is straightforward.
 
-A simulated data set 'drug_event_df' is included in the package. To avoid any 
-proprietary issues, drugs are named as Drug_A - Drug_Z, and events are named 
-Event_1 - Event_1000. The package passes this data to a 
-"add_expected_counts"-function, which provides the required expected counts. 
-These are then passed to "add_disprop_est" which adds point and interval 
-estimates to the resulting data frame. 
+Here, we'll demonstrate using a simulated data set 'drug_event_df' included in 
+the package. To avoid any proprietary issues, drugs are named 
+Drug_A - Drug_Z, and events are named Event_1 - Event_1000. 
 
 ```{r}
 drug_event_df |>
   add_expected_counts() |>
-  add_disprop_est()
+  add_disproportionality()
 ```
 
-We will now step through each of these three steps in further detail. It is 
-important that the structure of the raw data is compliant with what pvutils 
-expects. Every line in the passed data corresponds to a reported 
-drug-event-combination. The same report may contain several such, as rows with 
-repeated report_ids indicate. 
+We will now step through each of these three steps in further detail. 
 
-To be explicit, the first three rows of drug_event_df are from the same report,
-with report_id = 1. The first row reports a Drug_D and an adverse event 
-named Event_5.The next five rows are from another report, where for instance 
+### Correctly structured input data
+It is important that the report-level data is structured in alignment with 
+what the package expects. Every line in the passed data corresponds to a reported 
+drug-event pair. 
+
+In the drug_event_df-example data, the first three rows of drug_event_df are from the same report, with report_id = 1. The first row reports a Drug_D and an adverse event 
+named Event_5.The next three rows are from another report, where for instance 
 drug B has been reported for two different events, event 15 and event 33. 
 
 ```{r}
-drug_event_df[1:5, ]
+drug_event_df[1:6, ]
+```
+
+For completeness, note that if the same drug-event pair occurs several times in one report, this contributes once. That is, an observed count of five means that there were five different reports containing the drug-event-pair, not that a single report contained the same drug-event pair multiple times (which is not impossible, in case of rechallenge, data entry errors etc.) 
+
+### Counting the expected
+Disproportionality analysis is based on an observed-to-expected ratio. 
+The observed count is compared to an expected count, based on the comparator or 
+background. The technical details of PRR, RRR and IC are documented within 
+each function, but overall one can note that all expected counts are derived 
+from the same contingency table (including marginal sums) of those who did and 
+did not have the drug, and the adverse event respectively.
+
+The add_expected_counts-function has a single parameter, that can be used
+to select if you want to omit expected counts for one of the available 
+disproportionality estimators. Note that IC by default uses expected counts 
+used in the Relative Reporting Rate (RRR).
+
+```{r}
+drug_event_df |> add_expected_counts(da_estimators = c("prr", "ror", "rrr")) |> head(1)
 ```
 
 
-For timely execution, pvutils uses the data.table-package (through the dtplyr-wrapper). 
+### Adding the disproportionality estimators
+The add_disproportionality()-function has two parameters. One is the rule_of_N,
+by default set to 3, which is sometimes referred to as "rule of three". 
+This sets ROR and PRR-values to NA if the observed count is less than the 
+passed value. For completeness, note that the default shrinkage in the IC acts as a 
+built in 'rule of 3', i.e. the shrinkage of +0.5 prevents the lower bound to 
+exceed 0 at the default significance level of 95\%.
 
+The second parameter controls the rounding of non-count values in the output, 
+including all expected counts, uncertainty bounds and point estimates. By default
+2 digits are kept. 
 
-
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r}
+#| echo=FALSE 
+  
+drug_event_df |> 
+  add_expected_counts() |> 
+  add_disproportionality(rule_of_N = 3, 
+                         number_of_digits = 2)
 ```
+In short, the add_disproportionality is a wrapper around ror, prr and ic. For further details around these parameters, see the documentation of these functions. 
 
-```{r setup}
-library(pvutils)
-```
+# Technical notes
+For timely execution, pvutils uses the data.table-package to do the counting. 
