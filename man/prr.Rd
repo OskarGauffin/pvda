@@ -40,8 +40,10 @@ Note: the function is vectorized, see the examples.
 pvutils::prr(obs = 5, n_drug = 10, n_event_prr = 20, n_tot_prr = 10000)
 
 # Note that input parameters can be vectors (of equal length, no recycling)
-pvutils::prr(obs = c(5, 10),
-            n_drug = c(10, 20),
-            n_event_prr = c(15, 30),
-            n_tot_prr = c(10000, 10000))
+pvutils::prr(
+  obs = c(5, 10),
+  n_drug = c(10, 20),
+  n_event_prr = c(15, 30),
+  n_tot_prr = c(10000, 10000)
+)
 }

@@ -5,19 +5,34 @@
 \title{Wrapper for adding disproportionality estimates to data frame
 containing expected counts}
 \usage{
-add_disprop_est(df, da_estimators = c("ic", "prr", "ror"), ...)
+add_disprop_est(
+  df,
+  da_estimators = c("ic", "prr", "ror"),
+  rule_of_N = 3,
+  number_of_digits = 2,
+  ...
+)
 }
 \arguments{
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
 
-\item{da_estimators}{Defaults to c("ic", "prr", "ror").}
+\item{da_estimators}{Character vector, defaults to c("ic", "prr", "ror").}
+
+\item{rule_of_N}{Numeric. To protect against spurious
+associations due to small observed counts, prr and ror point and
+interval estimates are set to NA when the observed is less or equal to
+the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
+Set to NULL if you don't want to apply any such rule.}
+
+\item{number_of_digits}{Integer. Defaults to 2. Set to NULL to avoid rounding.}
 
 \item{...}{For passing additional arguments, e.g. significance level.}
 }
 \value{
 The passed data frame with additional columns as specified by
 parameters.
+#' @importFrom dplyr starts_with, across
 }
 \description{
 Wrapper for adding disproportionality estimates to data frame

@@ -1,11 +1,73 @@
 ---
-title: "Disproportionality_analysis"
+title: "Disproportionality_analysis using pvutils"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Disproportionality_analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+During the life cycle of a medicinal product, knowledge of the safety profile 
+continues to accumulate post market introduction. One way to collect such information
+of suspected adverse events is to fill in a spontaneous report and send it to a 
+national regulatory authority, such as the FDA, MHRA, PMDA, MPA, etc.      
+
+Given a large set of reports covering a multitude of drugs and adverse events, 
+disproportionality analysis is a data driven tool to identify 
+drug-event-combinations of potential interest for further qualitative 
+manual case-by-case assessment. 
+
+The pvutils package provides three different disproportionality estimators,
+the proportional reporting rate (PRR), the reporting odds ratio (ROR) and the 
+information component (IC). 
+
+A first use-case for these functions is to provide a way to calculate 
+confidence or credibility intervals for different point estimates. 
+For instance, incorrectly calculated IC-values has sometimes been published 
+in scientific publications. 
+
+```{r}
+library(pvutils)
+ic(obs = 10, exp = 5)
+```
+The next question is how to calculate the exp-parameter, passed in the ic-function as 5 above. This is the second
+use-case, to calculate disproportionality from raw data. 
+
+# Disproportionality from raw data
+
+A simulated data set 'drug_event_df' is included in the package. To avoid any 
+proprietary issues, drugs are named as Drug_A - Drug_Z, and events are named 
+Event_1 - Event_1000. The package passes this data to a 
+"add_expected_counts"-function, which provides the required expected counts. 
+These are then passed to "add_disprop_est" which adds point and interval 
+estimates to the resulting data frame. 
+
+```{r}
+drug_event_df |>
+  add_expected_counts() |>
+  add_disprop_est()
+```
+
+We will now step through each of these three steps in further detail. It is 
+important that the structure of the raw data is compliant with what pvutils 
+expects. Every line in the passed data corresponds to a reported 
+drug-event-combination. The same report may contain several such, as rows with 
+repeated report_ids indicate. 
+
+To be explicit, the first three rows of drug_event_df are from the same report,
+with report_id = 1. The first row reports a Drug_D and an adverse event 
+named Event_5.The next five rows are from another report, where for instance 
+drug B has been reported for two different events, event 15 and event 33. 
+
+```{r}
+drug_event_df[1:5, ]
+```
+
+
+For timely execution, pvutils uses the data.table-package (through the dtplyr-wrapper). 
+
+
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
