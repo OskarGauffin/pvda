@@ -40,12 +40,14 @@ For further details on the specific input parameters, consult the documentation
 of each function. 
 
 ## Disproportionality analysis from report-level data
-If you don't have the counts mentioned above, but do have report-level data 
+If you do not have the counts mentioned above, but do have report-level data 
 that you want to perform disproportionality analysis on, this is straightforward.
 
-Here, we'll demonstrate using a simulated data set 'drug_event_df' included in 
-the package. To avoid any proprietary issues, drugs are named 
-Drug_A - Drug_Z, and events are named Event_1 - Event_1000. 
+Here, we'll demonstrate the use with simulated data set 'drug_event_df' included 
+in the package. For simplicity, drugs are named Drug_A - Drug_Z, and events are 
+named Event_1 - Event_1000. We pass the data to a function that calculates
+expected counts, and then to a function which adds columns contaning 
+disproportionality.
 
 ```{r}
 drug_event_df |>
@@ -53,12 +55,12 @@ drug_event_df |>
   add_disproportionality()
 ```
 
-We will now step through each of these three steps in further detail. 
+We will now step through these steps in detail. 
 
-### Correctly structured input data
-It is important that the report-level data is structured in alignment with 
-what the package expects. Every line in the passed data corresponds to a reported 
-drug-event pair. 
+### Passing a correctly structured input data
+It is important that the report-level data is structured correctly. 
+Every line in the passed data frame corresponds to a drug-event pair
+from a report.
 
 In the drug_event_df-example data, the first three rows of drug_event_df are from the same report, with report_id = 1. The first row reports a Drug_D and an adverse event 
 named Event_5.The next three rows are from another report, where for instance 
@@ -68,12 +70,31 @@ drug B has been reported for two different events, event 15 and event 33.
 drug_event_df[1:6, ]
 ```
 
-For completeness, note that if the same drug-event pair occurs several times in one report, this contributes once. That is, an observed count of five means that there were five different reports containing the drug-event-pair, not that a single report contained the same drug-event pair multiple times (which is not impossible, in case of rechallenge, data entry errors etc.) 
+For completeness, note that if the same drug-event pair occurs several times in 
+one report, these drug-event pair contributes to counts only once. That is, 
+an observed count of five means that there were five different reports 
+containing the drug-event-pair, not e.g. that a single report contained the same 
+drug-event pair five times.
 
 ### Counting the expected
-Disproportionality analysis is based on an observed-to-expected ratio. 
-The observed count is compared to an expected count, based on the comparator or 
-background. The technical details of PRR, RRR and IC are documented within 
+Disproportionality analysis is in essence a comparison of two percentages. 
+The proportion with an event among reports with an exposure is compared  
+to the proportion of the same event in a comparator set of reports, 
+often the whole adverse event reports-database.
+
+Inference and output are performed using counts rather than percentages,
+in an "observed-to-expected" ratio.  The observed count is compared to an 
+expected count, where the latter attempts to provide a baseline reporting 
+rate of the event, to highlight drug-event-pairs worthy of further evaluation.
+
+For specific drug-event combinations, there is often potential to construct
+more relevant comparators, but disproportionality analysis tries to provide a 
+comparator for a wide range of drug-event-pairs, where construction of specific 
+comparators would not be feasible. Multiple testing is not an issue, as the
+claim is not statistical significance as much as a sorting of potentially 
+interesting drug-event pairs. 
+
+The technical details of PRR, RRR and IC are documented within 
 each function, but overall one can note that all expected counts are derived 
 from the same contingency table (including marginal sums) of those who did and 
 did not have the drug, and the adverse event respectively.
@@ -110,5 +131,79 @@ drug_event_df |>
 ```
 In short, the add_disproportionality is a wrapper around ror, prr and ic. For further details around these parameters, see the documentation of these functions. 
 
+# Subgroup analysis
+As the disproportionality builds the comparator from the passed data, 
+any subgroup analysis of e.g. specific age groups is achieved by filtering out
+the group of interest, and then passing it to add_expected_counts.  
+
 # Technical notes
-For timely execution, pvutils uses the data.table-package to do the counting. 
+The package  uses the data.table-package for fast counting, through the dtplyr
+wrapper. 
+
+```{r, include=FALSE}
+
+# plot_udfs_as_graph <- function(package_name = "pvutils"){
+
+  library(pvutils)
+  package_name = "pvutils"
+  ns_names <- getNamespaceExports(package_name)
+  ns_names_w_id <- dplyr::bind_cols("id" = seq_along(ns_names), "name"=ns_names)
+  edge_output <- list()
+
+  for(i in seq_along(ns_names)){
+  # i = 11
+
+  ns_name_i <- ns_names[i]
+  code_function_i <- body(get(ns_name_i)) |> paste0((as.character()), collapse="")
+
+  # Find first occurrence of prefix calls in code_function_i
+  ns_calls <- stringr::str_c(" ", ns_names, "(")
+  # ns_calls_with_comma <- stringr::str_c("", ns_names, "(")
+
+
+  first_call_pos <- pmin(stringr::str_locate(stringr::fixed(code_function_i),
+                                  stringr::fixed(c(ns_calls)))[,1])
+
+  calls <- na.omit(dplyr::bind_rows("function_id" = ns_names_w_id$id,
+                                    "function_name" = ns_names_w_id$name,
+                                    "pos" = first_call_pos)) |>
+    dplyr::arrange(pos) |> dplyr::select(-pos)
+
+  edges <- dplyr::bind_cols(i, calls |> dplyr::select(-function_name))
+  colnames(edges) = c("from", "to")
+  edge_output[[i]] <- edges
+  }
+
+  edges <- do.call(rbind.data.frame, edge_output)
+  edge_df <- DiagrammeR::create_edge_df(edges$from, edges$to)
+
+  nodes_with_edges <- c(unique(edges$from), unique(edges$to))
+
+  nodes <- dplyr::bind_cols("id" = 1:length(ns_names),
+                            "label"=ns_names)[1:length(ns_names) %in% nodes_with_edges,]
+
+  node_df <- DiagrammeR::create_node_df(length(nodes$id),
+                            label = nodes$label,
+                            fontsize = 7,
+                            shape = "rectangle",
+                            fixedsize=FALSE)
+
+  node_df$id <- nodes$id
+
+
+  graph <- DiagrammeR::create_graph(nodes_df = node_df,
+                                     edges_df = edge_df)
+```
+
+
+```{r, echo=FALSE, fig.height = 8, fig.width = 8}
+
+suppressWarnings(DiagrammeR::render_graph(graph, layout = "tree", title="Overview of package functions"))
+
+# }
+# 
+# 
+# plot_udfs_as_graph()
+
+```
+

@@ -40,16 +40,16 @@ custom_colours <- function(colour = c("blue", "green")) {
 custom_ggtheme <- function() {
   ggplot2::theme(
     panel.background = ggplot2::element_rect(
-      fill = pvutils::custom_colours("blue"),
-      color = pvutils::custom_colours("green")
+      fill = custom_colours("blue"),
+      color = custom_colours("green")
     ),
     panel.grid.major = ggplot2::element_line(
-      color = pvutils::custom_colours("green"),
+      color = custom_colours("green"),
       size = 0.1,
       linetype = "dotted"
     ),
     panel.grid.minor = ggplot2::element_line(
-      color = pvutils::custom_colours("green"),
+      color = custom_colours("green"),
       size = 0.1
     )
   )
