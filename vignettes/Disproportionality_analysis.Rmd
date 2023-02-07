@@ -3,8 +3,10 @@ title: "Disproportionality_analysis"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Disproportionality_analysis}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 During the life cycle of a medicinal product, knowledge of the safety profile 
@@ -157,20 +159,23 @@ wrapper.
   code_function_i <- body(get(ns_name_i)) |> paste0((as.character()), collapse="")
 
   # Find first occurrence of prefix calls in code_function_i
-  ns_calls <- stringr::str_c(" ", ns_names, "(")
+  ns_calls <- stringr::str_c(ns_names, "(")
   # ns_calls_with_comma <- stringr::str_c("", ns_names, "(")
 
 
-  first_call_pos <- pmin(stringr::str_locate(stringr::fixed(code_function_i),
-                                  stringr::fixed(c(ns_calls)))[,1])
+  first_call_pos <- stringr::str_locate(stringr::fixed(code_function_i),
+                                  stringr::fixed(c(ns_calls)))[,1]
 
   calls <- na.omit(dplyr::bind_rows("function_id" = ns_names_w_id$id,
                                     "function_name" = ns_names_w_id$name,
                                     "pos" = first_call_pos)) |>
-    dplyr::arrange(pos) |> dplyr::select(-pos)
+    dplyr::arrange(pos) |> dplyr::select(-pos) |> 
+    dplyr::filter(! function_name %in% c("custom_colours", "custom_ggtheme"))
 
-  edges <- dplyr::bind_cols(i, calls |> dplyr::select(-function_name))
+  edges <- dplyr::bind_cols(i, calls) |> 
+    dplyr::select(-function_name)  
   colnames(edges) = c("from", "to")
+  edges <- edges |> dplyr::filter(from != to)
   edge_output[[i]] <- edges
   }
 
@@ -181,10 +186,9 @@ wrapper.
 
   nodes <- dplyr::bind_cols("id" = 1:length(ns_names),
                             "label"=ns_names)[1:length(ns_names) %in% nodes_with_edges,]
-
   node_df <- DiagrammeR::create_node_df(length(nodes$id),
                             label = nodes$label,
-                            fontsize = 7,
+                            fontsize = 6,
                             shape = "rectangle",
                             fixedsize=FALSE)
 
@@ -198,12 +202,9 @@ wrapper.
 
 ```{r, echo=FALSE, fig.height = 8, fig.width = 8}
 
-suppressWarnings(DiagrammeR::render_graph(graph, layout = "tree", title="Overview of package functions"))
-
-# }
-# 
-# 
-# plot_udfs_as_graph()
+suppressWarnings(DiagrammeR::render_graph(graph, 
+                                          layout = "tree", 
+                                          title="Overview of package functions"))
 
 ```
 

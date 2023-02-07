@@ -47,48 +47,48 @@ add_expected_counts <- function(df,
   #  Begin with the RRR counts, as they're the computationally most feasible,
   #  and useful for calculating PRR and ROR.
   count_dt <- dtplyr::lazy_dt(df, immutable = FALSE) |>
-    distinct() |>
-    mutate(n_tot = n_distinct(report_id)) |>
-    group_by(drug) |>
-    mutate(n_drug = n_distinct(report_id)) |>
-    ungroup() |>
-    group_by(event) |>
-    mutate(n_event = n_distinct(report_id)) |>
-    ungroup() |>
-    count(drug, event, n_tot, n_drug, n_event) |>
-    rename(obs = n) |>
-    mutate(exp_rrr = n_drug * n_event / n_tot) |>
-    select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
+    dplyr::distinct() |>
+    dplyr::mutate(n_tot = dplyr::n_distinct(report_id)) |>
+    dplyr::group_by(drug) |>
+    dplyr::mutate(n_drug = dplyr::n_distinct(report_id)) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(event) |>
+    dplyr::mutate(n_event = dplyr::n_distinct(report_id)) |>
+    dplyr::ungroup() |>
+    dplyr::count(drug, event, n_tot, n_drug, n_event) |>
+    dplyr::rename(obs = n) |>
+    dplyr::mutate(exp_rrr = n_drug * n_event / n_tot) |>
+    dplyr::select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
 
   # Calc PRR counts if requested
   if (any(c("ror", "prr") %in% da_estimators)) {
     count_dt <- count_dt |>
-      mutate(
+      dplyr::mutate(
         n_event_prr = n_event - obs,
         n_tot_prr = n_tot - n_drug
       ) |>
-      mutate(exp_prr = n_drug * n_event_prr / n_tot_prr) |>
-      select(everything(), n_event_prr, n_tot_prr, exp_prr)
+      dplyr::mutate(exp_prr = n_drug * n_event_prr / n_tot_prr) |>
+      dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
   }
 
   # Calc ROR counts if requested. Count "a" equal obs.
   if ("ror" %in% da_estimators) {
     count_dt <- count_dt |>
-      mutate(
+      dplyr::mutate(
         b = n_drug - obs,
         c = n_event_prr,
         d = n_tot_prr - n_event + obs
       ) |>
-      mutate(exp_ror = b * c / d) |>
-      select(everything(), b, c, d, exp_ror)
+      dplyr::mutate(exp_ror = b * c / d) |>
+      dplyr::select(tidyselect::everything(), b, c, d, exp_ror)
   }
 
   if (!"rrr" %in% da_estimators) {
-    count_dt <- count_dt |> select(-ends_with("rrr"))
+    count_dt <- count_dt |> dplyr::select(-tidyselect::ends_with("rrr"))
   }
 
   count_df <- count_dt |>
-    arrange(desc(obs)) |>
+    dplyr::arrange(dplyr::desc(obs)) |>
     tibble::as_tibble()
 
   return(count_df)
@@ -123,12 +123,12 @@ add_disproportionality <- function(df,
   da_df <- df
 
   if ("ic" %in% da_estimators) {
-    ic_df <- ic(da_df$obs, da_df$exp_rrr)
+    ic_df <- pvutils::ic(da_df$obs, da_df$exp_rrr)
     da_df <- da_df |> dplyr::bind_cols(ic_df)
   }
 
   if ("prr" %in% da_estimators) {
-    prr_df <- prr(
+    prr_df <- pvutils::prr(
       obs = da_df$obs,
       n_drug = da_df$n_drug,
       n_event_prr = da_df$n_event_prr,
@@ -139,7 +139,7 @@ add_disproportionality <- function(df,
   }
 
   if ("ror" %in% da_estimators) {
-    ror_df <- ror(
+    ror_df <- pvutils::ror(
       a = da_df$obs,
       b = da_df$b,
       c = da_df$c,
@@ -175,6 +175,22 @@ add_disproportionality <- function(df,
   }
 
   return(da_df)
+}
+
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param df PARAM_DESCRIPTION
+#' @param ... PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' da_1 <- da(drug_event_df)
+#' @export
+
+da <- function(df, ...){
+
+  df |> add_expected_counts() |> add_disproportionality()
+
 }
 
 
