@@ -77,6 +77,12 @@ ror <- function(a, b, c, d, sign_lvl = 0.95) {
   lower_prob <- (1 - sign_lvl) / 2
   upper_prob <- 1 - lower_prob
 
+  # Integer overflow on vaers-sized data sets if these are not converted to double
+  a = as.numeric(a)
+  b = as.numeric(b)
+  c = as.numeric(c)
+  d = as.numeric(d)
+
   output <- tibble::tibble(
     "ror_lower" = ci_for_ror(a, b, c, d, lower_prob),
     "ror" = a * d / (b * c),
@@ -220,6 +226,12 @@ prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95) {
   ) == length(obs))) {
     stop("Vectors obs, n_drug, n_event_prr and n_tot_prr are not of equal length.")
   }
+
+ # Integer overflow on vaers-sized data sets if these are not converted to double
+ obs = as.numeric(obs)
+ n_drug = as.numeric(n_drug)
+ n_event_prr = as.numeric(n_event_prr)
+ n_tot_prr = as.numeric(n_tot_prr)
 
   lower_prob <- (1 - sign_lvl) / 2
   upper_prob <- 1 - lower_prob

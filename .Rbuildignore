@@ -15,3 +15,4 @@
 ^pkgdown$
 ^backlog$
 ^udf_network_graph$
+^debug_scripts$

@@ -27,7 +27,8 @@ add_expected_counts <- function(df,
     event -> drug -> report_id
 
   checkmate::qassert(df[[1]], c("S+", "N+"))
-  checkmate::qassertr(df[2:3], "S+")
+  checkmate::qassert(df[[2]], "S+")
+  checkmate::qassert(df[[3]], "S+")
 
   if (!any(utils::hasName(df, c("report_id", "drug", "event")))) {
     stop("At least one of column names 'report_id', 'drug' and 'event' is not
@@ -57,7 +58,10 @@ add_expected_counts <- function(df,
     dplyr::ungroup() |>
     dplyr::count(drug, event, n_tot, n_drug, n_event) |>
     dplyr::rename(obs = n) |>
-    dplyr::mutate(exp_rrr = n_drug * n_event / n_tot) |>
+    # Note that the as.numeric must be called in the same mutate as we do
+    # the multiplication
+    dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
+                    as.numeric(n_tot)) |>
     dplyr::select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
 
   # Calc PRR counts if requested
@@ -67,7 +71,8 @@ add_expected_counts <- function(df,
         n_event_prr = n_event - obs,
         n_tot_prr = n_tot - n_drug
       ) |>
-      dplyr::mutate(exp_prr = n_drug * n_event_prr / n_tot_prr) |>
+      dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
+                      as.numeric(n_tot_prr)) |>
       dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
   }
 
@@ -79,7 +84,7 @@ add_expected_counts <- function(df,
         c = n_event_prr,
         d = n_tot_prr - n_event + obs
       ) |>
-      dplyr::mutate(exp_ror = b * c / d) |>
+      dplyr::mutate(exp_ror = as.numeric(b) * as.numeric(c) / as.numeric(d)) |>
       dplyr::select(tidyselect::everything(), b, c, d, exp_ror)
   }
 
