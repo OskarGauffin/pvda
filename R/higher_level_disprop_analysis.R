@@ -1,3 +1,28 @@
+# ---------------------------------------------------------------------------- #
+# Functions are organized as headers in foldable code sections,
+# structured according to their position in the code.
+# Collapse All with "Alt+O"
+# And expand All with "Shift+Alt+O"
+# ---------------------------------------------------------------------------- #
+
+# 1.1 da ----
+#' @title Disproportionality analysis
+#' @description Execute a disproportionality analysis.
+#' @inheritParams add_expected_counts
+#' @inheritDotParams
+#' @return A tibble with various counts, point and interval estimates for
+#' the ic, prr and ror disproportionality estimators
+#' @details ADD HERE
+#' @examples
+#' da_1 <- da(drug_event_df)
+#' @export
+da <- function(df, ...) {
+  df |>
+    add_expected_counts() |>
+    add_disproportionality()
+}
+
+# 2.1 add_expected_counts ----
 #' @title Calculate counts required for expected counts, and expected counts
 #' @description Produces various counts used in disproportionality analysis.
 #' @param df A data table, or an object possible to convert to a data table, e.g.
@@ -99,6 +124,7 @@ add_expected_counts <- function(df,
   return(count_df)
 }
 
+# 2.2 add_disproportionality ----
 #' @title Wrapper for adding disproportionality estimates to data frame
 #' containing expected counts
 #' @inheritParams add_expected_counts
@@ -178,20 +204,4 @@ add_disproportionality <- function(df,
   }
 
   return(da_df)
-}
-
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param df PARAM_DESCRIPTION
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' da_1 <- da(drug_event_df)
-#' @export
-
-da <- function(df, ...) {
-  df |>
-    add_expected_counts() |>
-    add_disproportionality()
 }

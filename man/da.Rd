@@ -2,23 +2,23 @@
 % Please edit documentation in R/higher_level_disprop_analysis.R
 \name{da}
 \alias{da}
-\title{FUNCTION_TITLE}
+\title{Disproportionality analysis}
 \usage{
 da(df, ...)
 }
 \arguments{
-\item{df}{PARAM_DESCRIPTION}
-
-\item{...}{PARAM_DESCRIPTION}
+\item{df}{A data table, or an object possible to convert to a data table, e.g.
+a tibble or data.frame. For column specifications, see details.}
 }
 \value{
-OUTPUT_DESCRIPTION
+A tibble with various counts, point and interval estimates for
+the ic, prr and ror disproportionality estimators
 }
 \description{
-FUNCTION_DESCRIPTION
+Execute a disproportionality analysis.
 }
 \details{
-DETAILS
+ADD HERE
 }
 \examples{
 da_1 <- da(drug_event_df)
