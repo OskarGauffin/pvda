@@ -4,11 +4,11 @@
 \alias{sign_lvl_to_quantile_prob}
 \title{Quantile probabilities from significance level}
 \usage{
-sign_lvl_to_quantile_prob(sign_lvl)
+sign_lvl_to_quantile_prob(sign_lvl = 0.95)
 }
 \arguments{
-\item{sign_lvl}{Significance level of credibility interval. Default is
-0.95 (i.e. 95 \% credibility interval)}
+\item{sign_lvl}{Significance level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{
 A list with two numerical vectors, "lower" and "upper".

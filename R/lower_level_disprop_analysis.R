@@ -1,12 +1,13 @@
 #' @title Quantile probabilities from significance level
 #' @description Calculates equi-tailed quantile probabilities from a
 #' significance level
-#' @inheritParams ic
+#' @param sign_lvl Significance level of confidence or credibility intervals.
+#' Default is 0.95 (i.e. 95 \% confidence interval)
 #' @return A list with two numerical vectors, "lower" and "upper".
 #' @examples
 #' sign_lvl_to_quantile_prob(0.95)
 #' @export
-sign_lvl_to_quantile_prob <- function(sign_lvl){
+sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95){
   checkmate::qassert(sign_lvl, "N1[0,1]")
 
   lower_prob <- (1 - sign_lvl) / 2
@@ -70,8 +71,7 @@ ci_for_ic <- function(obs,
 #' @param b Number of reports with the drug, without the event
 #' @param c Number of reports without the drug, with the event
 #' @param d Number of reports without the drug, without the event
-#' @param sign_lvl Significance level of confidence interval. Default is
-#' 0.95 (i.e. 95 \% confidence interval)
+#' @inheritParams sign_lvl_to_quantile_prob
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #' Number of rows equals length of inputs a, b, c, d.
 #'
@@ -145,8 +145,7 @@ ror <- function(a, b, c, d, sign_lvl = 0.95) {
 #' (e.g. +0.5) is added inside the function and should not be included here.
 #' @param shrinkage A non-negative numeric of length 1, to be added to
 #' observed and expected count. Default is 0.5.
-#' @param sign_lvl Significance level of credibility interval. Default is
-#' 0.95 (i.e. 95 \% credibility interval)
+#' @inheritParams sign_lvl_to_quantile_prob
 #'
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #'
@@ -211,8 +210,7 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
 #' @param n_drug Number of reports with the drug, without the event
 #' @param n_event_prr Number of reports with the event in the background.
 #' @param n_tot_prr Number of reports in the background.
-#' @param sign_lvl Significance level of confidence interval. Default is
-#' 0.95 (i.e. 95 \% confidence interval)
+#' @inheritParams sign_lvl_to_quantile_prob
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #' Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.
 #'
