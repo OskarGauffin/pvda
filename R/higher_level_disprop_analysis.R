@@ -9,7 +9,7 @@
 #' @title Disproportionality analysis
 #' @description Execute a disproportionality analysis.
 #' @inheritParams add_expected_counts
-#' @inheritDotParams
+#' @param ... Used to pass additional parameters to lower level functions.
 #' @return A tibble with various counts, point and interval estimates for
 #' the ic, prr and ror disproportionality estimators
 #' @details ADD HERE
