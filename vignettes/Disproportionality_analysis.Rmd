@@ -35,7 +35,7 @@ if the results are consistent across a few different estimators.
 ```{r}
 library(pvutils)
 prr(obs = 10, n_drug = 1000, n_event_prr = 200, n_tot_prr = 10000)
-ror(a = 10, b = 20, c= 200, d = 10000)
+ror(a = 10, b = 20, c = 200, d = 10000)
 ic(obs = 10, exp = 5)
 ```
 For further details on the specific input parameters, consult the documentation 
@@ -107,7 +107,9 @@ disproportionality estimators. Note that IC by default uses expected counts
 used in the Relative Reporting Rate (RRR).
 
 ```{r}
-drug_event_df |> add_expected_counts(da_estimators = c("prr", "ror", "rrr")) |> head(1)
+drug_event_df |>
+  add_expected_counts(da_estimators = c("prr", "ror", "rrr")) |>
+  head(1)
 ```
 
 
@@ -124,12 +126,14 @@ including all expected counts, uncertainty bounds and point estimates. By defaul
 2 digits are kept. 
 
 ```{r}
-#| echo=FALSE 
-  
-drug_event_df |> 
-  add_expected_counts() |> 
-  add_disproportionality(rule_of_N = 3, 
-                         number_of_digits = 2)
+#| echo=FALSE
+
+drug_event_df |>
+  add_expected_counts() |>
+  add_disproportionality(
+    rule_of_N = 3,
+    number_of_digits = 2
+  )
 ```
 In short, the add_disproportionality is a wrapper around ror, prr and ic. For further details around these parameters, see the documentation of these functions. 
 
@@ -152,17 +156,17 @@ computer.
 
 # plot_udfs_as_graph <- function(package_name = "pvutils"){
 
-  library(pvutils)
-  package_name = "pvutils"
-  ns_names <- getNamespaceExports(package_name)
-  ns_names_w_id <- dplyr::bind_cols("id" = seq_along(ns_names), "name"=ns_names)
-  edge_output <- list()
+library(pvutils)
+package_name <- "pvutils"
+ns_names <- getNamespaceExports(package_name)
+ns_names_w_id <- dplyr::bind_cols("id" = seq_along(ns_names), "name" = ns_names)
+edge_output <- list()
 
-  for(i in seq_along(ns_names)){
+for (i in seq_along(ns_names)) {
   # i = 9
 
   ns_name_i <- ns_names[i]
-  code_function_i <- body(get(ns_name_i)) |> paste0((as.character()), collapse="")
+  code_function_i <- body(get(ns_name_i)) |> paste0((as.character()), collapse = "")
 
   # Find first occurrence of prefix calls in code_function_i
   ns_calls <- stringr::str_c(ns_names, "(")
@@ -170,56 +174,66 @@ computer.
 
 
   # Avoid "is.numeric" being counted as ic
-  code_function_i<- gsub(x=code_function_i, pattern="as.numeric", replacement="", fixed=T)
-  # str_replace didn't manage this. 
-  
-  first_call_pos <- stringr::str_locate(stringr::fixed(code_function_i),
-                                  stringr::fixed(c(ns_calls)))[,1]
+  code_function_i <- gsub(x = code_function_i, pattern = "as.numeric", replacement = "", fixed = T)
+  # str_replace didn't manage this.
 
-  calls <- na.omit(dplyr::bind_rows("function_id" = ns_names_w_id$id,
-                                    "function_name" = ns_names_w_id$name,
-                                    "pos" = first_call_pos)) |>
-    dplyr::arrange(pos) |> dplyr::select(-pos) |> 
-    dplyr::filter(! function_name %in% c("custom_colours", "custom_ggtheme"))
+  first_call_pos <- stringr::str_locate(
+    stringr::fixed(code_function_i),
+    stringr::fixed(c(ns_calls))
+  )[, 1]
 
-  edges <- dplyr::bind_cols(i, calls) |> 
-    dplyr::select(-function_name)  
-  colnames(edges) = c("from", "to")
+  calls <- na.omit(dplyr::bind_rows(
+    "function_id" = ns_names_w_id$id,
+    "function_name" = ns_names_w_id$name,
+    "pos" = first_call_pos
+  )) |>
+    dplyr::arrange(pos) |>
+    dplyr::select(-pos) |>
+    dplyr::filter(!function_name %in% c("custom_colours", "custom_ggtheme"))
+
+  edges <- dplyr::bind_cols(i, calls) |>
+    dplyr::select(-function_name)
+  colnames(edges) <- c("from", "to")
   edges <- edges |> dplyr::filter(from != to)
   edge_output[[i]] <- edges
-  }
+}
 
-  edges <- do.call(rbind.data.frame, edge_output)
-  edge_df <- DiagrammeR::create_edge_df(edges$from, edges$to)
+edges <- do.call(rbind.data.frame, edge_output)
+edge_df <- DiagrammeR::create_edge_df(edges$from, edges$to)
 
-  nodes_with_edges <- c(unique(edges$from), unique(edges$to))
+nodes_with_edges <- c(unique(edges$from), unique(edges$to))
 
-  nodes <- dplyr::bind_cols("id" = 1:length(ns_names),
-                            "label"=ns_names)[1:length(ns_names) %in% nodes_with_edges,]
-  node_df <- DiagrammeR::create_node_df(length(nodes$id),
-                            label = nodes$label,
-                            fontsize = 6,
-                            shape = "rectangle",
-                            fixedsize=FALSE)
+nodes <- dplyr::bind_cols(
+  "id" = 1:length(ns_names),
+  "label" = ns_names
+)[1:length(ns_names) %in% nodes_with_edges, ]
+node_df <- DiagrammeR::create_node_df(length(nodes$id),
+  label = nodes$label,
+  fontsize = 6,
+  shape = "rectangle",
+  fixedsize = FALSE
+)
 
-  node_df$id <- nodes$id
+node_df$id <- nodes$id
 
 
-  graph <- DiagrammeR::create_graph(nodes_df = node_df,
-                                     edges_df = edge_df)
-  
-  suppressWarnings(DiagrammeR::render_graph(graph, 
-                                          layout = "tree", 
-                                          title="Overview of package functions"))
+graph <- DiagrammeR::create_graph(
+  nodes_df = node_df,
+  edges_df = edge_df
+)
 
+suppressWarnings(DiagrammeR::render_graph(graph,
+  layout = "tree",
+  title = "Overview of package functions"
+))
 ```
 
 
 ```{r, echo=FALSE, fig.height = 8, fig.width = 8}
 
-suppressWarnings(DiagrammeR::render_graph(graph, 
-                                          layout = "tree", 
-                                          title="Overview of package functions"))
-
+suppressWarnings(DiagrammeR::render_graph(graph,
+  layout = "tree",
+  title = "Overview of package functions"
+))
 ```
 

@@ -1,3 +1,5 @@
+
+# FUNCTIONS LISTED IN ASCENDING CALL ORDER, I.E. HIGHER LEVEL FURTHER DOWN
 #' @title Quantile probabilities from significance level
 #' @description Calculates equi-tailed quantile probabilities from a
 #' significance level
@@ -7,7 +9,7 @@
 #' @examples
 #' sign_lvl_to_quantile_prob(0.95)
 #' @export
-sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95){
+sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95) {
   checkmate::qassert(sign_lvl, "N1[0,1]")
 
   lower_prob <- (1 - sign_lvl) / 2
@@ -17,6 +19,7 @@ sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95){
   return(output)
 }
 
+# CI_FOR_ROR
 #' @title Confidence intervals for Reporting Odds Ratio
 #' @description Mainly for use in \code{\link{ror}}. Produces (symmetric,
 #' normality based) confidence bounds for the ROR, for a passed probability.
@@ -30,9 +33,10 @@ sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95){
 #' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(sign_lvl_probs) *
-        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
+# CI_FOR_IC
 #' @title Confidence intervals for Information Component (IC)
 #' @description Mainly used in \code{link{ic}}. Produces quantiles of the
 #' posterior gamma distribution. Called twice in \code{ic} to create a
@@ -56,61 +60,24 @@ ci_for_ic <- function(obs,
   return(output)
 }
 
-#' @title Reporting Odds Ratio
-#'
-#' @description Calculates Reporting Odds Ratio ("ROR") and confidence
-#' intervals, used in disproportionality analysis.
-#'
-#' @details The ROR is an odds ratio calculated from reporting counts. The
-#' R for Reporting in ROR is meant to emphasize an interpretation of reporting,
-#' as the ROR is calculated from a reporting database. Note: the function is
-#' vectorized, i.e. a, b, c and d can be vectors, see the examples.
-#'
-#' @param a Number of reports for the specific drug and event (i.e. the
-#' observed count).
-#' @param b Number of reports with the drug, without the event
-#' @param c Number of reports without the drug, with the event
-#' @param d Number of reports without the drug, without the event
-#' @inheritParams sign_lvl_to_quantile_prob
-#' @return A tibble with three columns (point estimate and credibility bounds).
-#' Number of rows equals length of inputs a, b, c, d.
-#'
-#' @examples
-#'
-#' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
-#'
-#' # Note that a, b, c and d can be vectors (of equal length, no recycling)
-#' pvutils::ror(a = c(5, 10), b = c(10, 20), c = c(15, 30), d = c(10000, 10000))
+# CI_FOR_PRR
+#' @title Confidence intervals for Proportional Reporting Rate
+#' @description Mainly for use in \code{\link{prr}}. Produces (symmetric,
+#' normality based) confidence bounds for the PRR, for a passed probability.
+#' Called twice in \code{prr} to create confidence intervals.
+#' @param sign_lvl_probs The probabilities of the normal distribution, based on
+#' a passed significance level (\code{sign_lvl}) in \code{\link{prr}}. If
+#' \code{sgn_lvl = .95} in \code{prr}, quantiles of the normal distribution will
+#' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
+#' @seealso \code{\link{prr}}
+#' @inheritParams prr
 #' @export
-#'
-ror <- function(a, b, c, d, sign_lvl = 0.95) {
-  checkmate::qassert(c(a, b, c, d), "N+[0,)")
-
-  # Check that all vectors have the same length, seemed
-  # hard to do in checkmate.
-  if (!all(purrr::map(list(b, c, d), \(x){
-    length(x)
-  }) == length(a))) {
-    stop("Vectors a, b, c and d are not of equal length.")
-  }
-
-  quantile_prob <- sign_lvl_to_quantile_prob(sign_lvl)
-
-  # Integer overflow on vaers-sized data sets if these are not converted to double
-  a = as.numeric(a)
-  b = as.numeric(b)
-  c = as.numeric(c)
-  d = as.numeric(d)
-
-  output <- tibble::tibble(
-    "ror_lower" = ci_for_ror(a, b, c, d, quantile_prob$lower),
-    "ror" = a * d / (b * c),
-    "ror_upper" = ci_for_ror(a, b, c, d, quantile_prob$upper)
-  )
-
-  return(output)
+ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
+  s_hat <- sqrt(1 / obs + 1 / n_drug + 1 / n_event_prr + 1 / n_tot_prr)
+  (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
 }
 
+# IC
 #' @title Information component
 #'
 #' @description Calculates the information component ("IC") and credibility
@@ -177,20 +144,60 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
   return(output)
 }
 
-#' @title Confidence intervals for Proportional Reporting Rate
-#' @description Mainly for use in \code{\link{prr}}. Produces (symmetric,
-#' normality based) confidence bounds for the PRR, for a passed probability.
-#' Called twice in \code{prr} to create confidence intervals.
-#' @param sign_lvl_probs The probabilities of the normal distribution, based on
-#' a passed significance level (\code{sign_lvl}) in \code{\link{prr}}. If
-#' \code{sgn_lvl = .95} in \code{prr}, quantiles of the normal distribution will
-#' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
-#' @seealso \code{\link{prr}}
-#' @inheritParams prr
+# ROR
+#' @title Reporting Odds Ratio
+#'
+#' @description Calculates Reporting Odds Ratio ("ROR") and confidence
+#' intervals, used in disproportionality analysis.
+#'
+#' @details The ROR is an odds ratio calculated from reporting counts. The
+#' R for Reporting in ROR is meant to emphasize an interpretation of reporting,
+#' as the ROR is calculated from a reporting database. Note: the function is
+#' vectorized, i.e. a, b, c and d can be vectors, see the examples.
+#'
+#' @param a Number of reports for the specific drug and event (i.e. the
+#' observed count).
+#' @param b Number of reports with the drug, without the event
+#' @param c Number of reports without the drug, with the event
+#' @param d Number of reports without the drug, without the event
+#' @inheritParams sign_lvl_to_quantile_prob
+#' @return A tibble with three columns (point estimate and credibility bounds).
+#' Number of rows equals length of inputs a, b, c, d.
+#'
+#' @examples
+#'
+#' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
+#'
+#' # Note that a, b, c and d can be vectors (of equal length, no recycling)
+#' pvutils::ror(a = c(5, 10), b = c(10, 20), c = c(15, 30), d = c(10000, 10000))
 #' @export
-ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
-  s_hat <- sqrt(1 / obs + 1 / n_drug + 1 / n_event_prr + 1 / n_tot_prr)
-  (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
+#'
+ror <- function(a, b, c, d, sign_lvl = 0.95) {
+  checkmate::qassert(c(a, b, c, d), "N+[0,)")
+
+  # Check that all vectors have the same length, seemed
+  # hard to do in checkmate.
+  if (!all(purrr::map(list(b, c, d), \(x){
+    length(x)
+  }) == length(a))) {
+    stop("Vectors a, b, c and d are not of equal length.")
+  }
+
+  quantile_prob <- sign_lvl_to_quantile_prob(sign_lvl)
+
+  # Integer overflow on vaers-sized data sets if these are not converted to double
+  a <- as.numeric(a)
+  b <- as.numeric(b)
+  c <- as.numeric(c)
+  d <- as.numeric(d)
+
+  output <- tibble::tibble(
+    "ror_lower" = ci_for_ror(a, b, c, d, quantile_prob$lower),
+    "ror" = a * d / (b * c),
+    "ror_upper" = ci_for_ror(a, b, c, d, quantile_prob$upper)
+  )
+
+  return(output)
 }
 
 #' @title Proportional Reporting Rate
@@ -232,7 +239,6 @@ prr <- function(obs,
                 n_event_prr,
                 n_tot_prr,
                 sign_lvl = 0.95) {
-
   checkmate::qassert(c(obs, n_drug, n_event_prr, n_tot_prr), "N+[0,)")
 
   # Check that all vectors have the same length, seemed
@@ -247,10 +253,10 @@ prr <- function(obs,
   }
 
   # Integer overflow on vaers-sized data sets if these are not converted to double
-  obs = as.numeric(obs)
-  n_drug = as.numeric(n_drug)
-  n_event_prr = as.numeric(n_event_prr)
-  n_tot_prr = as.numeric(n_tot_prr)
+  obs <- as.numeric(obs)
+  n_drug <- as.numeric(n_drug)
+  n_event_prr <- as.numeric(n_event_prr)
+  n_tot_prr <- as.numeric(n_tot_prr)
 
   quantile_prob <- sign_lvl_to_quantile_prob(sign_lvl)
 

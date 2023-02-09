@@ -23,8 +23,8 @@ add_expected_counts <- function(df,
                                 da_estimators = c("rrr", "prr", "ror")) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_ror -> d -> b -> exp_prr -> n_tot_prr ->
-    n_event_prr -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
-    event -> drug -> report_id
+  n_event_prr -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
+  event -> drug -> report_id
 
   checkmate::qassert(df[[1]], c("S+", "N+"))
   checkmate::qassert(df[[2]], "S+")
@@ -61,7 +61,7 @@ add_expected_counts <- function(df,
     # Note that the as.numeric must be called in the same mutate as we do
     # the multiplication
     dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
-                    as.numeric(n_tot)) |>
+      as.numeric(n_tot)) |>
     dplyr::select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
 
   # Calc PRR counts if requested
@@ -72,7 +72,7 @@ add_expected_counts <- function(df,
         n_tot_prr = n_tot - n_drug
       ) |>
       dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
-                      as.numeric(n_tot_prr)) |>
+        as.numeric(n_tot_prr)) |>
       dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
   }
 
@@ -118,7 +118,6 @@ add_disproportionality <- function(df,
                                    rule_of_N = 3,
                                    number_of_digits = 2,
                                    ...) {
-
   checkmate::qassert(rule_of_N, c("N1[0,]", "0"))
   # Function round actually rounds decimals in digits, so we can pass this on
   # without further concerns
@@ -171,7 +170,6 @@ add_disproportionality <- function(df,
 
   # Rounding of output
   if (!is.null(number_of_digits)) {
-
     # Only apply to non-report-count columns, i.e. expected or da_estimates
     da_df |> dplyr::mutate(dplyr::across(
       dplyr::starts_with(c("exp", da_estimators)),
@@ -192,10 +190,8 @@ add_disproportionality <- function(df,
 #' da_1 <- da(drug_event_df)
 #' @export
 
-da <- function(df, ...){
-
-  df |> add_expected_counts() |> add_disproportionality()
-
+da <- function(df, ...) {
+  df |>
+    add_expected_counts() |>
+    add_disproportionality()
 }
-
-

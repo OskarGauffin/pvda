@@ -5,6 +5,6 @@
 #' @return Nothing.
 #' @export
 
-write_to_excel <- function(df){
+write_to_excel <- function(df) {
 
 }
