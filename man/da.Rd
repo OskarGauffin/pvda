@@ -9,6 +9,8 @@ da(df, ...)
 \arguments{
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
+
+\item{...}{Used to pass additional parameters to lower level functions.}
 }
 \value{
 A tibble with various counts, point and interval estimates for
