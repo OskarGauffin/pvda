@@ -182,34 +182,18 @@ report contained the same drug-event pair five times.</p>
 <div class="section level4">
 <h4 id="counting-the-expected">Counting the expected<a class="anchor" aria-label="anchor" href="#counting-the-expected"></a>
 </h4>
-<p>Disproportionality analysis is in essence a comparison of two
-percentages. The proportion with an event among reports with an exposure
-is compared<br>
-to the proportion of the same event in a comparator set of reports,
-often the whole adverse event reports-database.</p>
-<p>Inference and output are performed using counts rather than
-percentages, in an “observed-to-expected” ratio. The observed count is
-compared to an expected count, where the latter attempts to provide a
-baseline reporting rate of the event, to highlight drug-event-pairs
-worthy of further evaluation.</p>
-<p>For specific drug-event combinations, there is often potential to
-construct more relevant comparators, but disproportionality analysis
-tries to provide a comparator for a wide range of drug-event-pairs,
-where construction of specific comparators would not be feasible.
-Multiple testing is not an issue, as the claim is not statistical
-significance as much as a sorting of potentially interesting drug-event
-pairs.</p>
-<p>The technical details of PRR, RRR and IC are documented within each
-function, but overall one can note that all expected counts are derived
-from the same contingency table (including marginal sums) of those who
-did and did not have the drug, and the adverse event respectively.</p>
-<p>The add_expected_counts-function has a single parameter, that can be
-used to select if you want to omit expected counts for one of the
-available disproportionality estimators. Note that IC by default uses
-expected counts used in the Relative Reporting Rate (RRR).</p>
+<p>The details of PRR, RRR and IC are documented within each function,
+but overall one can note that all expected counts are derived from the
+same contingency table (including marginal sums) of those who did and
+did not have the drug, and the adverse event respectively.</p>
+<p>The <code>add_expected_counts</code>-function has a single parameter,
+<code>expected_count_estimators</code> that can be used to turn off
+calculation of expected counts for specific estimators. Note that IC by
+tradition uses expected counts referred to as the Relative Reporting
+Rate (RRR).</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/add_expected_counts.html">add_expected_counts</a></span><span class="op">(</span>da_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prr"</span>, <span class="st">"ror"</span>, <span class="st">"rrr"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/add_expected_counts.html">add_expected_counts</a></span><span class="op">(</span>expected_count_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prr"</span>, <span class="st">"ror"</span>, <span class="st">"rrr"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 14</span></span></span>
 <span><span class="co">##   drug   event    obs n_drug n_event n_tot exp_rrr n_eve…¹ n_tot…² exp_prr     b</span></span>
@@ -221,16 +205,21 @@ expected counts used in the Relative Reporting Rate (RRR).</p>
 <div class="section level4">
 <h4 id="adding-the-disproportionality-estimators">Adding the disproportionality estimators<a class="anchor" aria-label="anchor" href="#adding-the-disproportionality-estimators"></a>
 </h4>
-<p>The add_disproportionality()-function has two parameters. One is the
-rule_of_N, by default set to 3, which is sometimes referred to as “rule
-of three”. This sets ROR and PRR-values to NA if the observed count is
-less than the passed value. For completeness, note that the default
-shrinkage in the IC acts as a built in ‘rule of 3’, i.e. the shrinkage
-of +0.5 prevents the lower bound to exceed 0 at the default significance
-level of 95%.</p>
-<p>The second parameter controls the rounding of non-count values in the
-output, including all expected counts, uncertainty bounds and point
-estimates. By default 2 digits are kept.</p>
+<p>The <code>add_disproportionality</code> function has a
+<code>da_estimator</code> parameter, which by default includes IC, PRR
+and ROR. If a subset is preferred, just pass the desired estimators in
+lower case letters.</p>
+<p>The <code>add_disproportionality</code> function has two parameters.
+One is the <code>rule_of_N</code>, by default set to 3, which is
+sometimes referred to as “rule of three”. This sets ROR and PRR-values
+to NA if the observed count is less than the specified N. For
+completeness, note that the default shrinkage in the IC acts as a built
+in ‘rule of 3’, i.e. the shrinkage of +0.5 prevents the lower bound to
+exceed 0 at the default significance level of 95%.</p>
+<p>The second parameter <code>number_of_digits</code> controls the
+rounding of non-count values in the output, including all expected
+counts, uncertainty bounds and point estimates. By default 2 digits are
+kept.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,279 × 23</span></span></span>
 <span><span class="co">##    drug   event   obs n_drug n_event n_tot exp_rrr n_eve…¹ n_tot…² exp_prr     b</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -249,8 +238,8 @@ estimates. By default 2 digits are kept.</p>
 <span><span class="co">## <span style="color: #949494;">#   prr_upper &lt;dbl&gt;, ror_lower &lt;dbl&gt;, ror &lt;dbl&gt;, ror_upper &lt;dbl&gt;, and</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​n_event_prr, ²​n_tot_prr</span></span></span></code></pre>
 <p>In short, the add_disproportionality is a wrapper around ror, prr and
-ic. For further details around these parameters, see the documentation
-of these functions.</p>
+ic. For further details around those estimators, see the documentation
+of corresponding function.</p>
 </div>
 </div>
 <div class="section level2">
@@ -259,20 +248,20 @@ of these functions.</p>
 <p>As the disproportionality builds the comparator from the passed data,
 any subgroup analysis of e.g. specific age groups is achieved by
 filtering out the group of interest, and then passing it to
-add_expected_counts.</p>
+<code>da</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="technical-notes">Technical notes<a class="anchor" aria-label="anchor" href="#technical-notes"></a>
+<h2 id="execution-speed">Execution speed<a class="anchor" aria-label="anchor" href="#execution-speed"></a>
 </h2>
-<p>The package uses the data.table-package for fast counting, through
-the dtplyr wrapper.</p>
-<p>The VAERS-database is publicly available online. The
-<code>vaers</code> R package, available on <a href="https://gitlab.com/iembry/vaers.git" class="external-link">gitlab</a>, contains data
-from VAERS from years 1990 - 2018, resulting in 4 146 778 rows to be
-processed. Execution on these takes less than 7 seconds on an ordinary
-computer.</p>
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-30e945a560304c155c46" style="width:768px;height:768px;"></div>
-<script type="application/json" data-for="htmlwidget-30e945a560304c155c46">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       label = \"Overview of package functions\",\n       labelloc = \"t\",\n       labeljust = \"c\",\n       fontname = \"Helvetica\",\n       fontcolor = \"gray30\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"sign_lvl_to_quantile_prob\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"-1,1!\"] \n  \"3\" [label = \"ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"-1.5,2!\"] \n  \"4\" [label = \"ci_for_prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,1!\"] \n  \"5\" [label = \"ci_for_ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,1!\"] \n  \"6\" [label = \"ci_for_ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"-2,1!\"] \n  \"7\" [label = \"ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"8\" [label = \"prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,2!\"] \n  \"9\" [label = \"da\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"-1,4!\"] \n  \"10\" [label = \"add_expected_counts\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"-1.5,3!\"] \n  \"12\" [label = \"add_disproportionality\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"-0.5,3!\"] \n  \"3\"->\"1\" \n  \"3\"->\"6\" \n  \"7\"->\"1\" \n  \"7\"->\"5\" \n  \"8\"->\"1\" \n  \"8\"->\"4\" \n  \"9\"->\"12\" \n  \"9\"->\"10\" \n  \"12\"->\"3\" \n  \"12\"->\"8\" \n  \"12\"->\"7\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>The data.table-package (through dtplyr) is used for fast execution. A
+test of the execution speed was made using the <code>vaers</code> R
+package, available on <a href="https://gitlab.com/iembry/vaers.git" class="external-link">gitlab</a>. The
+<code>vaers</code> package contains data from VAERS from years 1990 -
+2018, resulting in 4 146 778 rows to be processed by <code>da</code> in
+<code>pvutils</code>. Execution on a regular laptop took less than 7
+seconds.</p>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-323908d9cd316b10e2b7" style="width:768px;height:768px;"></div>
+<script type="application/json" data-for="htmlwidget-323908d9cd316b10e2b7">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       label = \"Overview of package functions\",\n       labelloc = \"t\",\n       labeljust = \"c\",\n       fontname = \"Helvetica\",\n       fontcolor = \"gray30\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"2\" [label = \"count_expected_rrr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"4\" [label = \"ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"4,2!\"] \n  \"5\" [label = \"ci_for_prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,1!\"] \n  \"6\" [label = \"ci_for_ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,1!\"] \n  \"7\" [label = \"count_expected_ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,2!\"] \n  \"8\" [label = \"ci_for_ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"4,1!\"] \n  \"9\" [label = \"ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,2!\"] \n  \"10\" [label = \"prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,2!\"] \n  \"11\" [label = \"da\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2.5,4!\"] \n  \"12\" [label = \"add_expected_counts\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,3!\"] \n  \"14\" [label = \"count_expected_prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"5,2!\"] \n  \"15\" [label = \"add_disproportionality\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,3!\"] \n  \"4\"->\"8\" \n  \"9\"->\"6\" \n  \"10\"->\"5\" \n  \"11\"->\"15\" \n  \"11\"->\"12\" \n  \"12\"->\"2\" \n  \"12\"->\"14\" \n  \"12\"->\"10\" \n  \"12\"->\"7\" \n  \"12\"->\"9\" \n  \"15\"->\"4\" \n  \"15\"->\"10\" \n  \"15\"->\"9\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
