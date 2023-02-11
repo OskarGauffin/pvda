@@ -30,7 +30,7 @@ test_that("Function ror works", {
 
 test_that("Function add_expected_count works", {
   produced_output <- pvutils::add_expected_counts(drug_event_df,
-    da_estimators = c("rrr", "prr", "ror")
+  expected_count_estimators = c("rrr", "prr", "ror")
   )
 
   # Should return as many rows as there are unique report_ids in drug_event_df
@@ -50,9 +50,9 @@ test_that("Function add_expected_count works", {
 })
 
 test_that("The whole disproportionality function chain runs without NA output except in PRR and ROR", {
-  output <- drug_event_df |>
-    add_expected_counts() |>
-    add_disproportionality() |>
+  output <- pvutils::drug_event_df |>
+    pvutils::add_expected_counts() |>
+    pvutils::add_disproportionality() |>
     dplyr::select(-dplyr::starts_with("ror")) |>
     dplyr::select(-dplyr::starts_with("prr"))
 

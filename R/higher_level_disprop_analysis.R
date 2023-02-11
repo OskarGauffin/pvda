@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------------- #
-# Functions are organized as headers in foldable code sections,
+# Function names are organized by headers in foldable code sections,
 # structured according to their position in the code.
 # Collapse All with "Alt+O"
 # And expand All with "Shift+Alt+O"
 # ---------------------------------------------------------------------------- #
 
-# 1.1 da ----
+# 0.1 da ----
 #' @title Disproportionality analysis
 #' @description Execute a disproportionality analysis.
 #' @inheritParams add_expected_counts
@@ -22,13 +22,14 @@ da <- function(df, ...) {
     add_disproportionality()
 }
 
-# 2.1 add_expected_counts ----
+# 1.1 add_expected_counts ----
 #' @title Calculate counts required for expected counts, and expected counts
 #' @description Produces various counts used in disproportionality analysis.
 #' @param df A data table, or an object possible to convert to a data table, e.g.
 #' a tibble or data.frame. For column specifications, see details.
-#' @param da_estimators A character vector containing the desired expected counts.
-#' Defaults to all possible options, i.e. c("rrr", "prr", "ror").
+#' @param expected_count_estimators A character vector containing the desired
+#' expected count estimators. Defaults to all possible options, i.e.
+#' c("rrr", "prr", "ror").
 #'
 #' @details
 #' The passed data table should contain three columns: "report_id", "drug_name"
@@ -45,11 +46,10 @@ da <- function(df, ...) {
 #' @export
 
 add_expected_counts <- function(df,
-                                da_estimators = c("rrr", "prr", "ror")) {
-  # data.table complains if you haven't defined these variables as NULLs
-  NULL -> desc -> ends_with -> exp_ror -> d -> b -> exp_prr -> n_tot_prr ->
-  n_event_prr -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
-  event -> drug -> report_id
+                                expected_count_estimators = c("rrr", "prr", "ror")) {
+  # data.table complains if we don't put obs to NULL. Similar requirements
+  # in lower level functions called in this function
+  obs <- NULL
 
   checkmate::qassert(df[[1]], c("S+", "N+"))
   checkmate::qassert(df[[2]], "S+")
@@ -60,11 +60,11 @@ add_expected_counts <- function(df,
          found. Please check the passed object.")
   }
 
-  checkmate::qassert(da_estimators, "S+")
-  if (any(!da_estimators %in% c("rrr", "prr", "ror"))) {
-    stop("Only 'rrr', 'prr' and 'ror' are allowed in parameter 'da_estimators'")
+  checkmate::qassert(expected_count_estimators, "S+")
+  if (any(!expected_count_estimators %in% c("rrr", "prr", "ror"))) {
+    stop("Only 'rrr', 'prr' and 'ror' are allowed in parameter
+         'expected_count_estimators'")
   }
-
 
   if (!typeof(df) == "data.table") {
     df <- data.table::as.data.table(df)
@@ -72,48 +72,19 @@ add_expected_counts <- function(df,
 
   #  Begin with the RRR counts, as they're the computationally most feasible,
   #  and useful for calculating PRR and ROR.
-  count_dt <- dtplyr::lazy_dt(df, immutable = FALSE) |>
-    dplyr::distinct() |>
-    dplyr::mutate(n_tot = dplyr::n_distinct(report_id)) |>
-    dplyr::group_by(drug) |>
-    dplyr::mutate(n_drug = dplyr::n_distinct(report_id)) |>
-    dplyr::ungroup() |>
-    dplyr::group_by(event) |>
-    dplyr::mutate(n_event = dplyr::n_distinct(report_id)) |>
-    dplyr::ungroup() |>
-    dplyr::count(drug, event, n_tot, n_drug, n_event) |>
-    dplyr::rename(obs = n) |>
-    # Note that the as.numeric must be called in the same mutate as we do
-    # the multiplication
-    dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
-      as.numeric(n_tot)) |>
-    dplyr::select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
+  count_dt <- count_expected_rrr(df)
 
   # Calc PRR counts if requested
-  if (any(c("ror", "prr") %in% da_estimators)) {
-    count_dt <- count_dt |>
-      dplyr::mutate(
-        n_event_prr = n_event - obs,
-        n_tot_prr = n_tot - n_drug
-      ) |>
-      dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
-        as.numeric(n_tot_prr)) |>
-      dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
+  if (any(c("ror", "prr") %in% expected_count_estimators)) {
+    count_dt <- count_expected_prr(count_dt)
   }
 
   # Calc ROR counts if requested. Count "a" equal obs.
-  if ("ror" %in% da_estimators) {
-    count_dt <- count_dt |>
-      dplyr::mutate(
-        b = n_drug - obs,
-        c = n_event_prr,
-        d = n_tot_prr - n_event + obs
-      ) |>
-      dplyr::mutate(exp_ror = as.numeric(b) * as.numeric(c) / as.numeric(d)) |>
-      dplyr::select(tidyselect::everything(), b, c, d, exp_ror)
+  if ("ror" %in% expected_count_estimators) {
+    count_dt <- count_expected_ror(count_dt)
   }
 
-  if (!"rrr" %in% da_estimators) {
+  if (!"rrr" %in% expected_count_estimators) {
     count_dt <- count_dt |> dplyr::select(-tidyselect::ends_with("rrr"))
   }
 
@@ -124,7 +95,7 @@ add_expected_counts <- function(df,
   return(count_df)
 }
 
-# 2.2 add_disproportionality ----
+# 1.2 add_disproportionality ----
 #' @title Wrapper for adding disproportionality estimates to data frame
 #' containing expected counts
 #' @inheritParams add_expected_counts
@@ -205,3 +176,6 @@ add_disproportionality <- function(df,
 
   return(da_df)
 }
+
+
+# See lower_level_disprop_analysis.R for further details

@@ -1,10 +1,111 @@
 # ---------------------------------------------------------------------------- #
-# Functions are organized as headers in foldable code sections,
+# Functions are organized by headers in foldable code sections,
 # structured according to their position in the code.
 # Collapse All with "Alt+O"
 # And expand All with "Shift+Alt+O"
 # ---------------------------------------------------------------------------- #
 
+### Called from add_expected_counts
+#  1.1 count_expected_rrr ----
+#' @title Count Expected for Relative Reporting Rate
+#' @description Internal function to provide expected counts related to the RRR
+#' @param df See documentation for add_expected_counts
+#' @return A data frame with columns for obs, n_drug,
+#' n_event, n_tot and (RRR) expected
+#' @seealso
+#'  \code{\link[dtplyr]{lazy_dt}}
+#'  \code{\link[dplyr]{distinct}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{n_distinct}}, \code{\link[dplyr]{group_by}}, \code{\link[dplyr]{count}}, \code{\link[dplyr]{rename}}, \code{\link[dplyr]{select}}
+#' @importFrom dtplyr lazy_dt
+#' @importFrom dplyr distinct mutate n_distinct group_by ungroup count rename select
+count_expected_rrr <- function(df) {
+  NULL -> desc -> ends_with -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
+  event -> drug -> report_id
+
+  #  Note that although dplyr from v 1.1.0 supports .by-grouping
+  #  this does not seem to be the case for dtplyr (which is used here)
+  count_dt <- dtplyr::lazy_dt(df, immutable = FALSE) |>
+    dplyr::distinct() |>
+    dplyr::mutate(n_tot = dplyr::n_distinct(report_id)) |>
+    dplyr::group_by(drug) |>
+    dplyr::mutate(n_drug = dplyr::n_distinct(report_id)) |>
+    dplyr::group_by(drug) |>
+    dplyr::group_by(event) |>
+    dplyr::mutate(n_event = dplyr::n_distinct(report_id)) |>
+    dplyr::ungroup() |>
+    dplyr::count(drug, event, n_tot, n_drug, n_event) |>
+    dplyr::rename(obs = n) |>
+    # Note that the as.numeric must be called in the same mutate as we do
+    # the multiplication
+    dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
+      as.numeric(n_tot)) |>
+    dplyr::select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
+
+  return(count_dt)
+}
+
+#  1.2 count_expected_prr ----
+#' @title Count expected for Proportional Reporting Rate
+#' @description Internal function to provide expected counts related to the PRR
+#' @param count_dt A data table, output from count_expected_rrr
+#' @return A data table with added columns for n_event_prr
+#' n_tot_prr and expected_prr
+#' @seealso
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#'  \code{\link[tidyselect]{everything}}
+#'  @export
+#' @importFrom dplyr mutate select
+#' @importFrom tidyselect everything
+count_expected_prr <- function(count_dt) {
+  # data.table complains if you haven't defined these variables as NULLs
+  NULL -> desc -> ends_with -> exp_prr -> n_tot_prr ->
+  n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot ->
+  event -> drug -> report_id
+
+
+  count_dt <- count_dt |>
+    dplyr::mutate(
+      n_event_prr = n_event - obs,
+      n_tot_prr = n_tot - n_drug
+    ) |>
+    dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
+      as.numeric(n_tot_prr)) |>
+    dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
+
+  return(count_dt)
+}
+
+#  1.1 count_expected_ror ----
+#' @title Count expected for Reporting Odds Ratio
+#' @description Internal function to provide expected counts related to the ROR
+#' @param count_dt A data table, output from count_expected_rrr
+#' @return A data table with added columns for n_event_prr,
+#' n_tot_prr and expected_prr
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @seealso
+#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
+#'  \code{\link[tidyselect]{everything}}
+#' @rdname count_expected_ror
+#' @importFrom dplyr mutate select
+#' @importFrom tidyselect everything
+count_expected_ror <- function(count_dt) {
+  # data.table complains if you haven't defined these variables as NULLs
+  NULL -> desc -> ends_with -> exp_ror -> d -> b -> n -> n_event -> n_drug ->
+  n_tot -> event -> drug -> report_id -> obs -> n_event_prr -> n_tot_prr
+
+  count_dt <- count_dt |>
+    dplyr::mutate(
+      b = n_drug - obs,
+      c = n_event_prr,
+      d = n_tot_prr - n_event + obs
+    ) |>
+    dplyr::mutate(exp_ror = as.numeric(b) * as.numeric(c) / as.numeric(d)) |>
+    dplyr::select(tidyselect::everything(), b, c, d, exp_ror)
+  return(count_dt)
+}
+
+#-----------------------------------
+### Called from add_disproportionality ----
 # 1.1 ic ----
 #' @title Information component
 #'
@@ -273,5 +374,7 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
 #' @export
 ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(sign_lvl_probs) *
-        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
+
+#-----------------------------------

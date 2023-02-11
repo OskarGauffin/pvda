@@ -4,14 +4,15 @@
 \alias{add_expected_counts}
 \title{Calculate counts required for expected counts, and expected counts}
 \usage{
-add_expected_counts(df, da_estimators = c("rrr", "prr", "ror"))
+add_expected_counts(df, expected_count_estimators = c("rrr", "prr", "ror"))
 }
 \arguments{
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
 
-\item{da_estimators}{A character vector containing the desired expected counts.
-Defaults to all possible options, i.e. c("rrr", "prr", "ror").}
+\item{expected_count_estimators}{A character vector containing the desired
+expected count estimators. Defaults to all possible options, i.e.
+c("rrr", "prr", "ror").}
 }
 \value{
 A tibble with counts.

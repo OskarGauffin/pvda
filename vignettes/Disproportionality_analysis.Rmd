@@ -79,49 +79,35 @@ containing the drug-event-pair, not e.g. that a single report contained the same
 drug-event pair five times.
 
 ### Counting the expected
-Disproportionality analysis is in essence a comparison of two percentages. 
-The proportion with an event among reports with an exposure is compared  
-to the proportion of the same event in a comparator set of reports, 
-often the whole adverse event reports-database.
-
-Inference and output are performed using counts rather than percentages,
-in an "observed-to-expected" ratio.  The observed count is compared to an 
-expected count, where the latter attempts to provide a baseline reporting 
-rate of the event, to highlight drug-event-pairs worthy of further evaluation.
-
-For specific drug-event combinations, there is often potential to construct
-more relevant comparators, but disproportionality analysis tries to provide a 
-comparator for a wide range of drug-event-pairs, where construction of specific 
-comparators would not be feasible. Multiple testing is not an issue, as the
-claim is not statistical significance as much as a sorting of potentially 
-interesting drug-event pairs. 
-
-The technical details of PRR, RRR and IC are documented within 
-each function, but overall one can note that all expected counts are derived 
+The details of PRR, RRR and IC are documented within each function, but overall one can note that all expected counts are derived 
 from the same contingency table (including marginal sums) of those who did and 
 did not have the drug, and the adverse event respectively.
 
-The add_expected_counts-function has a single parameter, that can be used
-to select if you want to omit expected counts for one of the available 
-disproportionality estimators. Note that IC by default uses expected counts 
-used in the Relative Reporting Rate (RRR).
+The `add_expected_counts`-function has a single parameter, 
+`expected_count_estimators` that can be used to turn off calculation of 
+expected counts for specific estimators. Note that IC by tradition uses 
+expected counts referred to as the Relative Reporting Rate (RRR).
 
 ```{r}
 drug_event_df |>
-  add_expected_counts(da_estimators = c("prr", "ror", "rrr")) |>
+  add_expected_counts(expected_count_estimators = c("prr", "ror", "rrr")) |>
   head(1)
 ```
 
 
 ### Adding the disproportionality estimators
-The add_disproportionality()-function has two parameters. One is the rule_of_N,
-by default set to 3, which is sometimes referred to as "rule of three". 
-This sets ROR and PRR-values to NA if the observed count is less than the 
-passed value. For completeness, note that the default shrinkage in the IC acts as a 
-built in 'rule of 3', i.e. the shrinkage of +0.5 prevents the lower bound to 
-exceed 0 at the default significance level of 95\%.
+The `add_disproportionality` function has a `da_estimator` parameter, which
+by default includes IC, PRR and ROR. If a subset is preferred, just pass 
+the desired estimators in lower case letters.
 
-The second parameter controls the rounding of non-count values in the output, 
+The `add_disproportionality` function has two parameters. One is the 
+`rule_of_N`, by default set to 3, which is sometimes referred to as 
+"rule of three". This sets ROR and PRR-values to NA if the observed count is 
+less than the specified N. For completeness, note that the default shrinkage 
+in the IC acts as a built in 'rule of 3', i.e. the shrinkage of +0.5 prevents 
+the lower bound to exceed 0 at the default significance level of 95\%.
+
+The second parameter `number_of_digits` controls the rounding of non-count values in the output, 
 including all expected counts, uncertainty bounds and point estimates. By default
 2 digits are kept. 
 
@@ -135,22 +121,21 @@ drug_event_df |>
     number_of_digits = 2
   )
 ```
-In short, the add_disproportionality is a wrapper around ror, prr and ic. For further details around these parameters, see the documentation of these functions. 
+In short, the add_disproportionality is a wrapper around ror, prr and ic. For 
+further details around those estimators, see the documentation of corresponding
+function. 
 
 # Subgroup analysis
 As the disproportionality builds the comparator from the passed data, 
 any subgroup analysis of e.g. specific age groups is achieved by filtering out
-the group of interest, and then passing it to add_expected_counts.  
+the group of interest, and then passing it to `da`.  
 
-# Technical notes
-The package  uses the data.table-package for fast counting, through the dtplyr
-wrapper. 
-
-The VAERS-database is publicly available online. The `vaers` R package,
-available on [gitlab](https://gitlab.com/iembry/vaers.git), 
-contains data from VAERS from years 1990 - 2018, resulting in 4 146 778 rows to
-be processed. Execution on these takes less than 7 seconds on an ordinary 
-computer. 
+# Execution speed 
+The data.table-package (through dtplyr) is used for fast execution. A test of 
+the execution speed was made using the `vaers` R package, available on [gitlab](https://gitlab.com/iembry/vaers.git). The `vaers` package contains 
+data from VAERS from years 1990 - 2018, resulting in 4 146 778 rows to
+be processed by `da` in `pvutils`. Execution on a regular laptop took less 
+than 7 seconds.
 
 ```{r, include=FALSE}
 
@@ -171,8 +156,6 @@ for (i in seq_along(ns_names)) {
   # Find first occurrence of prefix calls in code_function_i
   ns_calls <- stringr::str_c(ns_names, "(")
   # ns_calls_with_comma <- stringr::str_c("", ns_names, "(")
-
-
   # Avoid "is.numeric" being counted as ic
   code_function_i <- gsub(x = code_function_i, pattern = "as.numeric", replacement = "", fixed = T)
   # str_replace didn't manage this.
@@ -189,12 +172,13 @@ for (i in seq_along(ns_names)) {
   )) |>
     dplyr::arrange(pos) |>
     dplyr::select(-pos) |>
-    dplyr::filter(!function_name %in% c("custom_colours", "custom_ggtheme"))
+    dplyr::filter(!function_name %in% c("custom_colours", "custom_ggtheme", "sign_lvl_to_quantile_prob"))
 
   edges <- dplyr::bind_cols(i, calls) |>
     dplyr::select(-function_name)
   colnames(edges) <- c("from", "to")
-  edges <- edges |> dplyr::filter(from != to)
+  edges <- edges |> 
+    dplyr::filter(from != to)
   edge_output[[i]] <- edges
 }
 
