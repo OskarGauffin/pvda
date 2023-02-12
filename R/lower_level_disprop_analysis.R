@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------- #
-# Functions are organized by headers in foldable code sections,
+# Function names are organized by headers in foldable code sections,
 # structured according to their position in the code.
 # Collapse All with "Alt+O"
 # And expand All with "Shift+Alt+O"

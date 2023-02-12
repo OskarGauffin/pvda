@@ -2,26 +2,38 @@
 % Please edit documentation in R/higher_level_disprop_analysis.R
 \name{da}
 \alias{da}
-\title{Disproportionality analysis}
+\title{Disproportionality Analysis}
 \usage{
-da(df, ...)
+da(df, group_by = NULL, ...)
 }
 \arguments{
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
 
-\item{...}{Used to pass additional parameters to lower level functions.}
+\item{group_by}{Provide a string with the name of a grouping variable in `df`
+to perform subgroup analyses (i.e. run disproportionality analysis within each group).
+Passing NULL, the default, uses all data in df as a single group.}
+
+\item{...}{Pass additional objects, e.g. count_expected_estimators,
+da_estimators, or sign_lvl documented in lower level functions.}
 }
 \value{
-A tibble with various counts, point and interval estimates for
-the ic, prr and ror disproportionality estimators
+A dataframe containing counts and estimates related to
+supported disproportionality estimators.
 }
 \description{
-Execute a disproportionality analysis.
-}
-\details{
-ADD HERE
+Execute a disproportionality analysis
 }
 \examples{
-da_1 <- da(drug_event_df)
+da_1 <- drug_event_df |> pvutils::da()
+
+drug_event_df_with_grouping  <- drug_event_df |>
+dplyr::mutate("group" = report_id \%\% 2)
+da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")
+}
+\seealso{
+\code{\link[checkmate]{qassert}}
+ \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
+ \code{\link[dplyr]{bind_cols}}, \code{\link[dplyr]{select}}
+ \code{\link[purrr]{map}}, \code{\link[purrr]{list_c}}
 }

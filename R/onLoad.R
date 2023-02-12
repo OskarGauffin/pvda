@@ -1,3 +1,3 @@
 .onLoad <- function(libname, pkgname) {
-  base::packageStartupMessage("Report issues at https://github.com/OskarGauffin/pvutils")
+  base::packageStartupMessage("Under development. Report issues at https://github.com/OskarGauffin/pvutils")
 }

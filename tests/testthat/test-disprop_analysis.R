@@ -58,3 +58,15 @@ test_that("The whole disproportionality function chain runs without NA output ex
 
   expect_equal(FALSE, any(is.na(output)))
 })
+
+test_that("The grouping functionality runs", {
+
+  drug_event_df_with_grouping  <- pvutils::drug_event_df |>
+    dplyr::mutate("group" = report_id %% 2)
+  da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")
+
+  first_row_ic_group_0 <- as.numeric(da_1[1,]$ic)
+  manual_calc_ic_first_row_group_0 <- as.numeric(log2((14 + 0.5)/(da_1[1,8] + 0.5)))
+
+  expect_equal(manual_calc_ic_first_row_group_0, first_row_ic_group_0)
+})

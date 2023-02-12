@@ -10,9 +10,9 @@ editor_options:
 ---
 
 During the life cycle of a medicinal product, knowledge of the safety profile 
-continues to accumulate after post-marketing. One way to collect such information
-of suspected adverse events is to fill in a spontaneous report and send it to a 
-national regulatory authority, such as the FDA, MHRA, PMDA, MPA, etc.      
+continues to accumulate beyond market introduction. Spontaneous reporting of
+adverse events through means of individual case safety reports remains an 
+important part of this safety monitoring.
 
 Given a large set of reports covering a multitude of drugs and adverse events, 
 disproportionality analysis is a data driven framework to identify 
@@ -28,27 +28,25 @@ you already know the number of observed reports, and other required counts such 
 the database total count, number of reports with the exposure and number of
 reports with the event.
 
-For instance, you may have extracted counts to an excel sheet from 
-some tool where these estimators are not implemented, and want to check 
-if the results are consistent across a few different estimators.
-
 ```{r}
 library(pvutils)
 prr(obs = 10, n_drug = 1000, n_event_prr = 200, n_tot_prr = 10000)
 ror(a = 10, b = 20, c = 200, d = 10000)
 ic(obs = 10, exp = 5)
 ```
+
 For further details on the specific input parameters, consult the documentation 
 of each function. 
 
 ## Disproportionality analysis from report-level data
-If you do not have the counts mentioned above, but do have report-level data 
-that you want to perform disproportionality analysis on, this is straightforward.
+If the aim is to screen a wide range of drug-event pairs from report-level data 
+using disproportionality analysis, this is handled through the function `da`.
 
-Here, we'll demonstrate the use with simulated data set 'drug_event_df' included 
-in the package. For simplicity, drugs are named Drug_A - Drug_Z, and events are 
-named Event_1 - Event_1000. We pass the data to a function that calculates
-expected counts, and then to a function which adds columns contaning 
+The `pvutils` package contains a simulated data set 'drug_event_df'. For 
+simplicity, drugs are named Drug_A - Drug_Z, and events are 
+named Event_1 - Event_1000. Further details on the proportions of each drug and
+event are described in the data object (execute `?df_drug_event`). We pass the 
+data to a function that calculates expected counts, and then to a function which adds columns contaning 
 disproportionality.
 
 ```{r}
