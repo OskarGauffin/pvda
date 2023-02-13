@@ -13,7 +13,8 @@ Suggests:
     DiagrammeR,
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    writexl (>= 1.4.2)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
@@ -28,8 +29,7 @@ Imports:
     stringr (>= 1.5.0),
     tibble (>= 3.1.8),
     tidyselect (>= 1.2.0),
-    utils (>= 4.1.3),
-    writexl (>= 1.4.2)
+    utils (>= 4.1.3)
 Depends: 
     R (>= 2.10)
 URL: https://oskargauffin.github.io/pvutils/

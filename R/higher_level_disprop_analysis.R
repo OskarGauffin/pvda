@@ -12,8 +12,11 @@
 #' @param group_by Provide a string with the name of a grouping variable in `df`
 #'  to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 #'  Passing NULL, the default, uses all data in df as a single group.
-#'  @param write_path Provide a path if you want the produced output to be written
-#'  to your working directory. To write to your current working directory, pass `getwd()`.
+#' @param write_path If you don't want to write the output to an excel file,
+#'  pass the default value, NULL. To write to excel, provide a path to a folder
+#'  e.g. to write to your current working directory, pass `getwd()`.
+#'  The excel file will by default be named `da.xlsx`. To change the excel file name,
+#'  pass a path ending with the specific filename suffixed with `.xlsx`.
 #' @param ... Pass additional objects, e.g. count_expected_estimators,
 #' da_estimators, or sign_lvl documented in lower level functions.
 #' @return A dataframe containing counts and estimates related to
@@ -74,7 +77,7 @@ da <- function(df, group_by = NULL, write_path = NULL, ...) {
 
   write_to_excel(output, write_path)
 
-  return(output)
+  return(invisible(output))
 }
 
 # da <- pvutils::drug_event_df |> pvutils::da(write_path = getwd())
