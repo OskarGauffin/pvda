@@ -12,7 +12,9 @@ a tibble or data.frame. For column specifications, see details.}
 
 \item{group_by}{Provide a string with the name of a grouping variable in `df`
 to perform subgroup analyses (i.e. run disproportionality analysis within each group).
-Passing NULL, the default, uses all data in df as a single group.}
+Passing NULL, the default, uses all data in df as a single group.
+@param write_path Provide a path if you want the produced output to be written
+to your working directory. To write to your current working directory, pass `getwd()`.}
 
 \item{...}{Pass additional objects, e.g. count_expected_estimators,
 da_estimators, or sign_lvl documented in lower level functions.}
@@ -27,6 +29,7 @@ Execute a disproportionality analysis
 \examples{
 da_1 <- drug_event_df |> pvutils::da()
 
+# Split df into two groups (even/uneven report_ids)
 drug_event_df_with_grouping  <- drug_event_df |>
 dplyr::mutate("group" = report_id \%\% 2)
 da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")

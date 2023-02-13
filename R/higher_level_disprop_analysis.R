@@ -12,6 +12,8 @@
 #' @param group_by Provide a string with the name of a grouping variable in `df`
 #'  to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 #'  Passing NULL, the default, uses all data in df as a single group.
+#'  @param write_path Provide a path if you want the produced output to be written
+#'  to your working directory. To write to your current working directory, pass `getwd()`.
 #' @param ... Pass additional objects, e.g. count_expected_estimators,
 #' da_estimators, or sign_lvl documented in lower level functions.
 #' @return A dataframe containing counts and estimates related to
@@ -33,7 +35,7 @@
 #' @importFrom checkmate qassert
 #' @importFrom dplyr bind_cols select pull slice
 #' @importFrom purrr map list_rbind
-da <- function(df, group_by = NULL, ...) {
+da <- function(df, group_by = NULL, write_path = NULL, ...) {
 
     checkmate::qassert(group_by, c("S1", "0"))
 
@@ -70,8 +72,12 @@ da <- function(df, group_by = NULL, ...) {
     purrr::list_rbind()
     }
 
+  write_to_excel(output, write_path)
+
   return(output)
 }
+
+# da <- pvutils::drug_event_df |> pvutils::da(write_path = getwd())
 
 # 1.1 add_expected_counts ----
 #' @title Calculate counts required for expected counts, and expected counts

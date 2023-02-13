@@ -2,19 +2,18 @@
 % Please edit documentation in R/write_to_excel.R
 \name{write_to_excel}
 \alias{write_to_excel}
-\title{Calculate counts required for expected counts, and expected counts}
+\title{Write to excel}
 \usage{
-write_to_excel(df)
+write_to_excel(df, write_path = NULL)
 }
 \arguments{
-\item{df}{A data table, or an object possible to convert to a data table, e.g.}
+\item{df}{The data frame to export. See `?da` for details.}
+
+\item{write_path}{A string giving the file path}
 }
 \value{
 Nothing.
 }
 \description{
-Produces various counts used in disproportionality analysis.
-}
-\details{
-Placeholder
+Writes output from a disproportionality analysis to an excel file
 }
