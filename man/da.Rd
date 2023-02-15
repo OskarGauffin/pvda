@@ -4,11 +4,19 @@
 \alias{da}
 \title{Disproportionality Analysis}
 \usage{
-da(df, group_by = NULL, write_path = NULL, ...)
+da(
+  df,
+  da_estimators = c("ic", "prr", "ror"),
+  group_by = NULL,
+  write_path = NULL,
+  ...
+)
 }
 \arguments{
 \item{df}{A data table, or an object possible to convert to a data table, e.g.
 a tibble or data.frame. For column specifications, see details.}
+
+\item{da_estimators}{Character vector, defaults to c("ic", "prr", "ror").}
 
 \item{group_by}{Provide a string with the name of a grouping variable in `df`
 to perform subgroup analyses (i.e. run disproportionality analysis within each group).

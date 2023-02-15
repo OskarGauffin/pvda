@@ -9,6 +9,7 @@
 #' @title Disproportionality Analysis
 #' @description Execute a disproportionality analysis
 #' @inheritParams add_expected_counts
+#' @inheritParams add_disproportionality
 #' @param group_by Provide a string with the name of a grouping variable in `df`
 #'  to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 #'  Passing NULL, the default, uses all data in df as a single group.
@@ -38,22 +39,29 @@
 #' @importFrom checkmate qassert
 #' @importFrom dplyr bind_cols select pull slice
 #' @importFrom purrr map list_rbind
-da <- function(df, group_by = NULL, write_path = NULL, ...) {
+da <- function(df, da_estimators = c("ic", "prr", "ror"), group_by = NULL, write_path = NULL, ...) {
 
     checkmate::qassert(group_by, c("S1", "0"))
+
+    # Put a dot on the actual parameters, to not confuse param names and parameters
+    .da_estimators <- da_estimators
+    .expected_count_estimators = gsub("ic", "rrr", da_estimators)
 
     if(is.null(group_by)){
       # No subgrouping provided:
       output <- df |>
-        pvutils::add_expected_counts() |>
-        pvutils::add_disproportionality()
+        pvutils::add_expected_counts(expected_count_estimators = .expected_count_estimators) |>
+        pvutils::add_disproportionality(da_estimators = .da_estimators)
     } else {
       if(! group_by %in% colnames(df)){
         stop("Passed grouping column name '", group_by, "' not found in passed df.")
       }
       # When subgroups are provided:
 
-    grouped_da <- function(df, .group_by){
+    grouped_da <- function(df,
+                           .group_by,
+                           .expected_count_estimators = c("prr", "ror", "rrr"),
+                           .da_estimators = c("ic", "prr", "ror")){
 
       NULL -> drug -> event -> group
 
@@ -62,8 +70,8 @@ da <- function(df, group_by = NULL, write_path = NULL, ...) {
         dplyr::pull(!!group_by)
 
       df |>
-      pvutils::add_expected_counts() |>
-      pvutils::add_disproportionality() |>
+      pvutils::add_expected_counts(expected_count_estimators = .expected_count_estimators) |>
+      pvutils::add_disproportionality(da_estimators = .da_estimators) |>
       # Ideally, group-variable should be preserved throughout the toolchain
       dplyr::bind_cols("group" = current_group) |>
       dplyr::select(drug, event, group, everything())
