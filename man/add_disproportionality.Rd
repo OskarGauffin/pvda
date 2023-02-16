@@ -10,7 +10,7 @@ add_disproportionality(
   da_estimators = c("ic", "prr", "ror"),
   rule_of_N = 3,
   number_of_digits = 2,
-  ...
+  sign_lvl = 0.95
 )
 }
 \arguments{
@@ -25,9 +25,11 @@ interval estimates are set to NA when the observed is less or equal to
 the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
 Set to NULL if you don't want to apply any such rule.}
 
-\item{number_of_digits}{Integer. Defaults to 2. Set to NULL to avoid rounding.}
+\item{number_of_digits}{Set the number of digits to show in output by passing
+an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
-\item{...}{For passing additional arguments, e.g. significance level.}
+\item{sign_lvl}{Significance level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{
 The passed data frame with additional columns as specified by

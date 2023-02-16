@@ -10,6 +10,7 @@
 #' @description Execute a disproportionality analysis
 #' @inheritParams add_expected_counts
 #' @inheritParams add_disproportionality
+#' @inheritParams ror
 #' @param group_by Provide a string with the name of a grouping variable in `df`
 #'  to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 #'  Passing NULL, the default, uses all data in df as a single group.
@@ -18,9 +19,7 @@
 #'  e.g. to write to your current working directory, pass `getwd()`.
 #'  The excel file will by default be named `da.xlsx`. To change the excel file name,
 #'  pass a path ending with the specific filename suffixed with `.xlsx`.
-#' @param ... Pass additional objects, e.g. count_expected_estimators,
-#' da_estimators, or sign_lvl documented in lower level functions.
-#' @return A dataframe containing counts and estimates related to
+#' @return Returns a data frame invisibly containing counts and estimates related to
 #' supported disproportionality estimators.
 #' @examples
 #' da_1 <- drug_event_df |> pvutils::da()
@@ -30,28 +29,32 @@
 #' dplyr::mutate("group" = report_id %% 2)
 #' da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")
 #' @seealso
-#'  \code{\link[checkmate]{qassert}}
 #'  \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
-#'  \code{\link[dplyr]{bind_cols}}, \code{\link[dplyr]{select}}
-#'  \code{\link[purrr]{map}}, \code{\link[purrr]{list_c}}
-#' @rdname da
 #' @export
 #' @importFrom checkmate qassert
 #' @importFrom dplyr bind_cols select pull slice
 #' @importFrom purrr map list_rbind
-da <- function(df, da_estimators = c("ic", "prr", "ror"), group_by = NULL, write_path = NULL, ...) {
+da <- function(df, da_estimators = c("ic", "prr", "ror"),
+               group_by = NULL,
+               rule_of_N = 3,
+               sign_lvl = 0.95,
+               number_of_digits = 2,
+               write_path = NULL) {
 
     checkmate::qassert(group_by, c("S1", "0"))
+    checkmate::qassert(write_path, c("S1", "0"))
 
-    # Put a dot on the actual parameters, to not confuse param names and parameters
-    .da_estimators <- da_estimators
-    .expected_count_estimators = gsub("ic", "rrr", da_estimators)
+    # ic uses expected counts from rrr
+    expected_count_estimators = gsub("ic", "rrr", da_estimators)
 
     if(is.null(group_by)){
       # No subgrouping provided:
       output <- df |>
-        pvutils::add_expected_counts(expected_count_estimators = .expected_count_estimators) |>
-        pvutils::add_disproportionality(da_estimators = .da_estimators)
+        pvutils::add_expected_counts(expected_count_estimators = expected_count_estimators) |>
+        pvutils::add_disproportionality(da_estimators = da_estimators,
+                                        sign_lvl = sign_lvl,
+                                        rule_of_N = rule_of_N,
+                                        number_of_digits = number_of_digits)
     } else {
       if(! group_by %in% colnames(df)){
         stop("Passed grouping column name '", group_by, "' not found in passed df.")
@@ -59,9 +62,12 @@ da <- function(df, da_estimators = c("ic", "prr", "ror"), group_by = NULL, write
       # When subgroups are provided:
 
     grouped_da <- function(df,
-                           .group_by,
-                           .expected_count_estimators = c("prr", "ror", "rrr"),
-                           .da_estimators = c("ic", "prr", "ror")){
+                           group_by = NULL,
+                           expected_count_estimators = NULL,
+                           da_estimators = NULL,
+                           sign_lvl = NULL,
+                           rule_of_N = rule_of_N,
+                           number_of_digits = number_of_digits){
 
       NULL -> drug -> event -> group
 
@@ -70,8 +76,11 @@ da <- function(df, da_estimators = c("ic", "prr", "ror"), group_by = NULL, write
         dplyr::pull(!!group_by)
 
       df |>
-      pvutils::add_expected_counts(expected_count_estimators = .expected_count_estimators) |>
-      pvutils::add_disproportionality(da_estimators = .da_estimators) |>
+      pvutils::add_expected_counts(expected_count_estimators = expected_count_estimators) |>
+      pvutils::add_disproportionality(da_estimators = da_estimators,
+                                      sign_lvl = sign_lvl,
+                                      rule_of_N = rule_of_N,
+                                      number_of_digits = number_of_digits) |>
       # Ideally, group-variable should be preserved throughout the toolchain
       dplyr::bind_cols("group" = current_group) |>
       dplyr::select(drug, event, group, everything())
@@ -79,7 +88,13 @@ da <- function(df, da_estimators = c("ic", "prr", "ror"), group_by = NULL, write
 
     output <- df |>
     split(f = df[[group_by]]) |>
-    purrr::map(grouped_da, .group_by = group_by) |>
+    purrr::map(grouped_da,
+               group_by = group_by,
+               expected_count_estimators = expected_count_estimators,
+               da_estimators = da_estimators,
+               sign_lvl = sign_lvl,
+               rule_of_N = rule_of_N,
+               number_of_digits = number_of_digits) |>
     purrr::list_rbind()
     }
 
@@ -167,14 +182,15 @@ add_expected_counts <- function(df,
 #' @title Wrapper for adding disproportionality estimates to data frame
 #' containing expected counts
 #' @inheritParams add_expected_counts
+#' @inheritParams ror
 #' @param da_estimators Character vector, defaults to c("ic", "prr", "ror").
 #' @param rule_of_N Numeric. To protect against spurious
 #' associations due to small observed counts, prr and ror point and
 #' interval estimates are set to NA when the observed is less or equal to
 #' the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
 #' Set to NULL if you don't want to apply any such rule.
-#' @param number_of_digits Integer. Defaults to 2. Set to NULL to avoid rounding.
-#' @param ... For passing additional arguments, e.g. significance level.
+#' @param number_of_digits Set the number of digits to show in output by passing
+#' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
 #' @return The passed data frame with additional columns as specified by
 #' parameters.
 #' @export
@@ -182,12 +198,15 @@ add_disproportionality <- function(df,
                                    da_estimators = c("ic", "prr", "ror"),
                                    rule_of_N = 3,
                                    number_of_digits = 2,
-                                   ...) {
-  checkmate::qassert(rule_of_N, c("N1[0,]", "0"))
-  # Function round actually rounds decimals in digits, so we can pass this on
-  # without further concerns
-  checkmate::qassert(number_of_digits, c("N1[0,]", "0"))
+                                   sign_lvl = 0.95) {
 
+  if( ! all(da_estimators %in% c("ic", "prr", "ror"))){
+    stop("Passed parameter 'da_estimators' must consist of 'ic', 'prr' or 'ror'")
+  }
+  checkmate::qassert(rule_of_N, c("N1[0,]", "0"))
+  # The round, using number_of_digits below, rounds decimals in digits, so we
+  # can pass this on without further checks
+  checkmate::qassert(number_of_digits, c("N1[0,]", "0"))
 
   da_df <- df
 

@@ -8,8 +8,10 @@ da(
   df,
   da_estimators = c("ic", "prr", "ror"),
   group_by = NULL,
-  write_path = NULL,
-  ...
+  rule_of_N = 3,
+  sign_lvl = 0.95,
+  number_of_digits = 2,
+  write_path = NULL
 )
 }
 \arguments{
@@ -22,17 +24,26 @@ a tibble or data.frame. For column specifications, see details.}
 to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 Passing NULL, the default, uses all data in df as a single group.}
 
+\item{rule_of_N}{Numeric. To protect against spurious
+associations due to small observed counts, prr and ror point and
+interval estimates are set to NA when the observed is less or equal to
+the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
+Set to NULL if you don't want to apply any such rule.}
+
+\item{sign_lvl}{Significance level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval)}
+
+\item{number_of_digits}{Set the number of digits to show in output by passing
+an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
+
 \item{write_path}{If you don't want to write the output to an excel file,
 pass the default value, NULL. To write to excel, provide a path to a folder
 e.g. to write to your current working directory, pass `getwd()`.
 The excel file will by default be named `da.xlsx`. To change the excel file name,
 pass a path ending with the specific filename suffixed with `.xlsx`.}
-
-\item{...}{Pass additional objects, e.g. count_expected_estimators,
-da_estimators, or sign_lvl documented in lower level functions.}
 }
 \value{
-A dataframe containing counts and estimates related to
+Returns a data frame invisibly containing counts and estimates related to
 supported disproportionality estimators.
 }
 \description{
@@ -47,8 +58,5 @@ dplyr::mutate("group" = report_id \%\% 2)
 da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")
 }
 \seealso{
-\code{\link[checkmate]{qassert}}
- \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
- \code{\link[dplyr]{bind_cols}}, \code{\link[dplyr]{select}}
- \code{\link[purrr]{map}}, \code{\link[purrr]{list_c}}
+\code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
 }
