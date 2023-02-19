@@ -54,8 +54,9 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>A data table, or an object possible to convert to a data table, e.g.
-a tibble or data.frame. For column specifications, see details.</p></dd>
+<dd><p>An object possible to convert to a data table, e.g.
+a tibble or data.frame, containing patient level reported drug-event-pairs.
+See details for further information.</p></dd>
 
 
 <dt>expected_count_estimators</dt>
@@ -72,13 +73,13 @@ c("rrr", "prr", "ror").</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The passed data table should contain three columns: "report_id", "drug_name"
-and "event_name". It should have one row per reported drug-event-combination,
-i.e. receiving an additional report for drug A and event 1 would add one row
-to the table. The same report_id can occur on several rows, if the same
-report contains several drugs and/or events. Column report_id must be of type
-numeric or character. Columns drug_name and event_name must be
-characters.</p>
+    <p>@details The passed <code>df</code> should be convertible to a data table and
+ contain three columns: "report_id", "drug_name" and "event_name". The object
+ should have one row per reported drug-event-combination, i.e. receiving
+ an additional report for drug X and event Y would add one row to the table.
+ The same report_id can occur on several rows, if the same report contains
+ several distinct drugs and event-pairs. Column <code>report_id</code> must be of type
+ numeric or character. Columns <code>drug</code> and <code>event</code> must be characters.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
