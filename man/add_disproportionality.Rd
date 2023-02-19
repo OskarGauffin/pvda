@@ -2,8 +2,8 @@
 % Please edit documentation in R/higher_level_disprop_analysis.R
 \name{add_disproportionality}
 \alias{add_disproportionality}
-\title{Wrapper for adding disproportionality estimates to data frame
-containing expected counts}
+\title{Add disproportionality estimates to data frame
+with expected counts}
 \usage{
 add_disproportionality(
   df,
@@ -14,10 +14,12 @@ add_disproportionality(
 )
 }
 \arguments{
-\item{df}{A data table, or an object possible to convert to a data table, e.g.
-a tibble or data.frame. For column specifications, see details.}
+\item{df}{An object possible to convert to a data table, e.g.
+a tibble or data.frame, containing patient level reported drug-event-pairs.
+See details for further information.}
 
-\item{da_estimators}{Character vector, defaults to c("ic", "prr", "ror").}
+\item{da_estimators}{Character vector. Defaults to c("ic", "prr", "ror"),
+and must contain}
 
 \item{rule_of_N}{Numeric. To protect against spurious
 associations due to small observed counts, prr and ror point and
@@ -36,6 +38,6 @@ The passed data frame with additional columns as specified by
 parameters.
 }
 \description{
-Wrapper for adding disproportionality estimates to data frame
-containing expected counts
+Add disproportionality estimates to data frame
+with expected counts
 }

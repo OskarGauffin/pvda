@@ -7,8 +7,9 @@
 add_expected_counts(df, expected_count_estimators = c("rrr", "prr", "ror"))
 }
 \arguments{
-\item{df}{A data table, or an object possible to convert to a data table, e.g.
-a tibble or data.frame. For column specifications, see details.}
+\item{df}{An object possible to convert to a data table, e.g.
+a tibble or data.frame, containing patient level reported drug-event-pairs.
+See details for further information.}
 
 \item{expected_count_estimators}{A character vector containing the desired
 expected count estimators. Defaults to all possible options, i.e.
@@ -21,11 +22,11 @@ A tibble with counts.
 Produces various counts used in disproportionality analysis.
 }
 \details{
-The passed data table should contain three columns: "report_id", "drug_name"
-and "event_name". It should have one row per reported drug-event-combination,
-i.e. receiving an additional report for drug A and event 1 would add one row
-to the table. The same report_id can occur on several rows, if the same
-report contains several drugs and/or events. Column report_id must be of type
-numeric or character. Columns drug_name and event_name must be
-characters.
+@details The passed \code{df} should be convertible to a data table and
+ contain three columns: "report_id", "drug_name" and "event_name". The object
+ should have one row per reported drug-event-combination, i.e. receiving
+ an additional report for drug X and event Y would add one row to the table.
+ The same report_id can occur on several rows, if the same report contains
+ several distinct drugs and event-pairs. Column \code{report_id} must be of type
+ numeric or character. Columns \code{drug} and \code{event} must be characters.
 }

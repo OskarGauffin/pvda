@@ -1,45 +1,67 @@
 # ---------------------------------------------------------------------------- #
-# Function names are organized by headers in foldable code sections,
-# structured according to their position in the code.
+# Headers below are function names, in foldable code sections,
+# indexed according to their calling hierarchy.
 # Collapse All with "Alt+O"
 # And expand All with "Shift+Alt+O"
 # ---------------------------------------------------------------------------- #
 
 # 0.1 da ----
 #' @title Disproportionality Analysis
-#' @description Execute a disproportionality analysis
+#' @description \code{da} is used to execute a disproportionality analysis,
+#' potentially across subgroups (see parameter \code{group_by}), using the
+#' Information Component (IC), Proportional Reporting Rate (PRR) and/or the
+#' Peporting Odds Ratio (ROR).
 #' @inheritParams add_expected_counts
 #' @inheritParams add_disproportionality
 #' @inheritParams ror
 #' @param group_by Provide a string with the name of a grouping variable in `df`
 #'  to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 #'  Passing NULL, the default, uses all data in df as a single group.
-#' @param write_path If you don't want to write the output to an excel file,
+#' @param excel_path If you don't want to write the output to an excel file,
 #'  pass the default value, NULL. To write to excel, provide a path to a folder
 #'  e.g. to write to your current working directory, pass `getwd()`.
 #'  The excel file will by default be named `da.xlsx`. To change the excel file name,
 #'  pass a path ending with the specific filename suffixed with `.xlsx`.
-#' @return Returns a data frame invisibly containing counts and estimates related to
-#' supported disproportionality estimators.
-#' @examples
-#' da_1 <- drug_event_df |> pvutils::da()
 #'
-#' # Split df into two groups (even/uneven report_ids)
-#' drug_event_df_with_grouping  <- drug_event_df |>
+#' @details The passed \code{df} should be convertible to a data table and
+#'  contain three columns: "report_id", "drug_name" and "event_name". The object
+#'  should have one row per reported drug-event-combination, i.e. receiving
+#'  an additional report for drug X and event Y would add one row to the table.
+#'  The same report_id can occur on several rows, if the same report contains
+#'  several distinct drugs and event-pairs. Column \code{report_id} must be of type
+#'  numeric or character. Columns \code{drug} and \code{event} must be characters.
+#'
+#' @return \code{da} returns an object of class data frame (invisibly) containing
+#' counts and estimates related to supported disproportionality estimators.
+#' Each row corresponds to a drug-event pair.
+#' @examples
+#' da_1 <-
+#' drug_event_df |>
+#' pvutils::da()
+#'
+#' ### Run a disproportionality across two subgroups
+#' # Create two groups (even/uneven report_ids) in drug_event_df
+#' drug_event_df_with_grouping  <-
+#' drug_event_df |>
 #' dplyr::mutate("group" = report_id %% 2)
-#' da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")
+#'
+#' # Execute da across the subgroups
+#' da_2 <-
+#' drug_event_df_with_grouping |>
+#' pvutils::da(group_by = "group")
 #' @seealso
 #'  \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
 #' @export
 #' @importFrom checkmate qassert
 #' @importFrom dplyr bind_cols select pull slice
 #' @importFrom purrr map list_rbind
-da <- function(df, da_estimators = c("ic", "prr", "ror"),
+da <- function(df = NULL,
+               da_estimators = c("ic", "prr", "ror"),
                group_by = NULL,
                rule_of_N = 3,
                sign_lvl = 0.95,
                number_of_digits = 2,
-               write_path = NULL) {
+               excel_path = NULL) {
 
     checkmate::qassert(group_by, c("S1", "0"))
     checkmate::qassert(write_path, c("S1", "0"))
@@ -98,7 +120,7 @@ da <- function(df, da_estimators = c("ic", "prr", "ror"),
     purrr::list_rbind()
     }
 
-  write_to_excel(output, write_path)
+  write_to_excel(output, excel_path)
 
   return(invisible(output))
 }
@@ -108,20 +130,21 @@ da <- function(df, da_estimators = c("ic", "prr", "ror"),
 # 1.1 add_expected_counts ----
 #' @title Calculate counts required for expected counts, and expected counts
 #' @description Produces various counts used in disproportionality analysis.
-#' @param df A data table, or an object possible to convert to a data table, e.g.
-#' a tibble or data.frame. For column specifications, see details.
+#' @param df An object possible to convert to a data table, e.g.
+#' a tibble or data.frame, containing patient level reported drug-event-pairs.
+#' See details for further information.
 #' @param expected_count_estimators A character vector containing the desired
 #' expected count estimators. Defaults to all possible options, i.e.
 #' c("rrr", "prr", "ror").
 #'
 #' @details
-#' The passed data table should contain three columns: "report_id", "drug_name"
-#' and "event_name". It should have one row per reported drug-event-combination,
-#' i.e. receiving an additional report for drug A and event 1 would add one row
-#' to the table. The same report_id can occur on several rows, if the same
-#' report contains several drugs and/or events. Column report_id must be of type
-#' numeric or character. Columns drug_name and event_name must be
-#' characters.
+#'  @details The passed \code{df} should be convertible to a data table and
+#'  contain three columns: "report_id", "drug_name" and "event_name". The object
+#'  should have one row per reported drug-event-combination, i.e. receiving
+#'  an additional report for drug X and event Y would add one row to the table.
+#'  The same report_id can occur on several rows, if the same report contains
+#'  several distinct drugs and event-pairs. Column \code{report_id} must be of type
+#'  numeric or character. Columns \code{drug} and \code{event} must be characters.
 #' @return A tibble with counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
 #' rename select ungroup
@@ -179,11 +202,12 @@ add_expected_counts <- function(df,
 }
 
 # 1.2 add_disproportionality ----
-#' @title Wrapper for adding disproportionality estimates to data frame
-#' containing expected counts
+#' @title Add disproportionality estimates to data frame
+#' with expected counts
 #' @inheritParams add_expected_counts
 #' @inheritParams ror
-#' @param da_estimators Character vector, defaults to c("ic", "prr", "ror").
+#' @param da_estimators Character vector. Defaults to c("ic", "prr", "ror"),
+#' and must contain
 #' @param rule_of_N Numeric. To protect against spurious
 #' associations due to small observed counts, prr and ror point and
 #' interval estimates are set to NA when the observed is less or equal to
