@@ -57,12 +57,13 @@ Peporting Odds Ratio (ROR).
 }
 \details{
 The passed \code{df} should be convertible to a data table and
- contain three columns: "report_id", "drug_name" and "event_name". The object
- should have one row per reported drug-event-combination, i.e. receiving
- an additional report for drug X and event Y would add one row to the table.
- The same report_id can occur on several rows, if the same report contains
- several distinct drugs and event-pairs. Column \code{report_id} must be of type
- numeric or character. Columns \code{drug} and \code{event} must be characters.
+ contain three columns: \code{report_id}, \code{drug} and \code{event}.
+ The object should have one row per reported drug-event-combination, i.e.
+ receiving an additional report for drug X and event Y would add one row to
+ the table. The same report_id can occur on several rows, e.g. if the same
+ report contains two events for the same drug. Column \code{report_id} must
+ be of type numeric or character. Columns \code{drug} and \code{event} must
+ be of type character.
 }
 \examples{
 da_1 <-
@@ -75,6 +76,7 @@ drug_event_df_with_grouping  <-
 drug_event_df |>
 dplyr::mutate("group" = report_id \%\% 2)
 
+# Execute da across the subgroups
 da_2 <-
 drug_event_df_with_grouping |>
 pvutils::da(group_by = "group")
