@@ -124,12 +124,13 @@ Each row corresponds to a drug-event pair.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The passed <code>df</code> should be convertible to a data table and
- contain three columns: "report_id", "drug_name" and "event_name". The object
- should have one row per reported drug-event-combination, i.e. receiving
- an additional report for drug X and event Y would add one row to the table.
- The same report_id can occur on several rows, if the same report contains
- several distinct drugs and event-pairs. Column <code>report_id</code> must be of type
- numeric or character. Columns <code>drug</code> and <code>event</code> must be characters.</p>
+ contain three columns: <code>report_id</code>, <code>drug</code> and <code>event</code>.
+ The object should have one row per reported drug-event-combination, i.e.
+ receiving an additional report for drug X and event Y would add one row to
+ the table. The same report_id can occur on several rows, e.g. if the same
+ report contains two events for the same drug. Column <code>report_id</code> must
+ be of type numeric or character. Columns <code>drug</code> and <code>event</code> must
+ be of type character.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -141,7 +142,6 @@ Each row corresponds to a drug-event pair.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">da_1</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span><span class="fu">pvutils</span><span class="fu">::</span><span class="fu">da</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in checkmate::qassert(write_path, c("S1", "0")):</span> object 'write_path' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Run a disproportionality across two subgroups</span></span></span>
 <span class="r-in"><span><span class="co"># Create two groups (even/uneven report_ids) in drug_event_df</span></span></span>
@@ -149,10 +149,10 @@ Each row corresponds to a drug-event pair.</p>
 <span class="r-in"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"group"</span> <span class="op">=</span> <span class="va">report_id</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Execute da across the subgroups</span></span></span>
 <span class="r-in"><span><span class="va">da_2</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span><span class="va">drug_event_df_with_grouping</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span><span class="fu">pvutils</span><span class="fu">::</span><span class="fu">da</span><span class="op">(</span>group_by <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in checkmate::qassert(write_path, c("S1", "0")):</span> object 'write_path' not found</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
