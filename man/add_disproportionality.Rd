@@ -16,16 +16,15 @@ add_disproportionality(
 \arguments{
 \item{df}{An object possible to convert to a data table, e.g.
 a tibble or data.frame, containing patient level reported drug-event-pairs.
-See details for further information.}
+See below for further details.}
 
-\item{da_estimators}{Character vector. Defaults to c("ic", "prr", "ror"),
-and must contain}
+\item{da_estimators}{Character vector specifying which disproportionality
+estimators to use, in case you don't need all implemented options. Defaults
+to c("ic", "prr", "ror").}
 
-\item{rule_of_N}{Numeric. To protect against spurious
-associations due to small observed counts, prr and ror point and
-interval estimates are set to NA when the observed is less or equal to
-the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
-Set to NULL if you don't want to apply any such rule.}
+\item{rule_of_N}{Numeric. Sets estimates for ROR and PRR to NA when observed
+counts are less or equal to the passed value of \code{rule_of_N}. Default value
+is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.}
 
 \item{number_of_digits}{Set the number of digits to show in output by passing
 an integer. Default value is 2 digits. Set to NULL to avoid rounding.}

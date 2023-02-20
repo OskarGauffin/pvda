@@ -20,6 +20,6 @@ write_to_excel <- function(df, write_path = NULL) {
                         col_names = TRUE,
                         format_headers = TRUE)
 
-    cat(paste0("Excel file was written to '", write_path_w_file, "'"))
+    message(paste0("Excel file was written to '", write_path_w_file, "'"))
   }
 }

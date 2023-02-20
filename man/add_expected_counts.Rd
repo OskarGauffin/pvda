@@ -2,31 +2,36 @@
 % Please edit documentation in R/higher_level_disprop_analysis.R
 \name{add_expected_counts}
 \alias{add_expected_counts}
-\title{Calculate counts required for expected counts, and expected counts}
+\title{Produces expected counts}
 \usage{
-add_expected_counts(df, expected_count_estimators = c("rrr", "prr", "ror"))
+add_expected_counts(
+  df = NULL,
+  expected_count_estimators = c("rrr", "prr", "ror")
+)
 }
 \arguments{
 \item{df}{An object possible to convert to a data table, e.g.
 a tibble or data.frame, containing patient level reported drug-event-pairs.
-See details for further information.}
+See below for further details.}
 
 \item{expected_count_estimators}{A character vector containing the desired
-expected count estimators. Defaults to all possible options, i.e.
+expected count estimators. Defaults to the implemented options, i.e.
 c("rrr", "prr", "ror").}
 }
 \value{
-A tibble with counts.
+A tibble containing the various counts.
 }
 \description{
 Produces various counts used in disproportionality analysis.
 }
-\details{
-@details The passed \code{df} should be convertible to a data table and
- contain three columns: "report_id", "drug_name" and "event_name". The object
- should have one row per reported drug-event-combination, i.e. receiving
- an additional report for drug X and event Y would add one row to the table.
- The same report_id can occur on several rows, if the same report contains
- several distinct drugs and event-pairs. Column \code{report_id} must be of type
- numeric or character. Columns \code{drug} and \code{event} must be characters.
+\section{The df object}{
+
+ The passed \code{df} should be (convertible to) a data table and at least contain three
+ columns: \code{report_id}, \code{drug} and \code{event}. The data table should contain one row
+ per reported drug-event-combination, i.e. receiving a single additional report
+ for drug X and event Y would add one row to the table. If the single report
+ contained drug X for event Y and event Z, two rows would be added, with the
+ same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
+ numeric or character. Columns \code{drug} and \code{event} must be of type character.
 }
+

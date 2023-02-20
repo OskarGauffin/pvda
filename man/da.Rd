@@ -17,20 +17,19 @@ da(
 \arguments{
 \item{df}{An object possible to convert to a data table, e.g.
 a tibble or data.frame, containing patient level reported drug-event-pairs.
-See details for further information.}
+See below for further details.}
 
-\item{da_estimators}{Character vector. Defaults to c("ic", "prr", "ror"),
-and must contain}
+\item{da_estimators}{Character vector specifying which disproportionality
+estimators to use, in case you don't need all implemented options. Defaults
+to c("ic", "prr", "ror").}
 
 \item{group_by}{Provide a string with the name of a grouping variable in `df`
 to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 Passing NULL, the default, uses all data in df as a single group.}
 
-\item{rule_of_N}{Numeric. To protect against spurious
-associations due to small observed counts, prr and ror point and
-interval estimates are set to NA when the observed is less or equal to
-the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
-Set to NULL if you don't want to apply any such rule.}
+\item{rule_of_N}{Numeric. Sets estimates for ROR and PRR to NA when observed
+counts are less or equal to the passed value of \code{rule_of_N}. Default value
+is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.}
 
 \item{sign_lvl}{Significance level of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
@@ -38,37 +37,28 @@ Default is 0.95 (i.e. 95 \% confidence interval)}
 \item{number_of_digits}{Set the number of digits to show in output by passing
 an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
-\item{excel_path}{If you don't want to write the output to an excel file,
-pass the default value, NULL. To write to excel, provide a path to a folder
-e.g. to write to your current working directory, pass `getwd()`.
-The excel file will by default be named `da.xlsx`. To change the excel file name,
-pass a path ending with the specific filename suffixed with `.xlsx`.}
+\item{excel_path}{To write the output of \code{da} to an excel file, provide a path
+to a folder e.g. to write to your current working directory, pass \code{getwd()}.
+ The excel file will by default be named \code{da.xlsx}. To control the excel file name,
+ pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
+ do not want to export the output to an excel file, pass NULL (the default).}
 }
 \value{
-\code{da} returns an object of class data frame (invisibly) containing
-counts and estimates related to supported disproportionality estimators.
-Each row corresponds to a drug-event pair.
+\code{da} returns a data frame (invisibly) containing counts and
+estimates related to supported disproportionality estimators. Each row
+corresponds to a drug-event pair.
 }
 \description{
 \code{da} is used to execute a disproportionality analysis,
 potentially across subgroups (see parameter \code{group_by}), using the
 Information Component (IC), Proportional Reporting Rate (PRR) and/or the
-Peporting Odds Ratio (ROR).
-}
-\details{
-The passed \code{df} should be convertible to a data table and
- contain three columns: \code{report_id}, \code{drug} and \code{event}.
- The object should have one row per reported drug-event-combination, i.e.
- receiving an additional report for drug X and event Y would add one row to
- the table. The same report_id can occur on several rows, e.g. if the same
- report contains two events for the same drug. Column \code{report_id} must
- be of type numeric or character. Columns \code{drug} and \code{event} must
- be of type character.
+Reporting Odds Ratio (ROR).
 }
 \examples{
+### Run a disproportionality analysis
 da_1 <-
 drug_event_df |>
-pvutils::da()
+da()
 
 ### Run a disproportionality across two subgroups
 # Create two groups (even/uneven report_ids) in drug_event_df
@@ -79,7 +69,7 @@ dplyr::mutate("group" = report_id \%\% 2)
 # Execute da across the subgroups
 da_2 <-
 drug_event_df_with_grouping |>
-pvutils::da(group_by = "group")
+da(group_by = "group")
 }
 \seealso{
 \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}

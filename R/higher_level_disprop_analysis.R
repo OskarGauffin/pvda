@@ -10,35 +10,30 @@
 #' @description \code{da} is used to execute a disproportionality analysis,
 #' potentially across subgroups (see parameter \code{group_by}), using the
 #' Information Component (IC), Proportional Reporting Rate (PRR) and/or the
-#' Peporting Odds Ratio (ROR).
+#' Reporting Odds Ratio (ROR).
 #' @inheritParams add_expected_counts
 #' @inheritParams add_disproportionality
 #' @inheritParams ror
 #' @param group_by Provide a string with the name of a grouping variable in `df`
 #'  to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 #'  Passing NULL, the default, uses all data in df as a single group.
-#' @param excel_path If you don't want to write the output to an excel file,
-#'  pass the default value, NULL. To write to excel, provide a path to a folder
-#'  e.g. to write to your current working directory, pass `getwd()`.
-#'  The excel file will by default be named `da.xlsx`. To change the excel file name,
-#'  pass a path ending with the specific filename suffixed with `.xlsx`.
+
+#' @param excel_path To write the output of \code{da} to an excel file, provide a path
+#' to a folder e.g. to write to your current working directory, pass \code{getwd()}.
+#'  The excel file will by default be named \code{da.xlsx}. To control the excel file name,
+#'  pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
+#'  do not want to export the output to an excel file, pass NULL (the default).
 #'
-#' @details The passed \code{df} should be convertible to a data table and
-#'  contain three columns: \code{report_id}, \code{drug} and \code{event}.
-#'  The object should have one row per reported drug-event-combination, i.e.
-#'  receiving an additional report for drug X and event Y would add one row to
-#'  the table. The same report_id can occur on several rows, e.g. if the same
-#'  report contains two events for the same drug. Column \code{report_id} must
-#'  be of type numeric or character. Columns \code{drug} and \code{event} must
-#'  be of type character.
 #'
-#' @return \code{da} returns an object of class data frame (invisibly) containing
-#' counts and estimates related to supported disproportionality estimators.
-#' Each row corresponds to a drug-event pair.
+#' @inheritParams add_expected_counts The df object
+#' @return \code{da} returns a data frame (invisibly) containing counts and
+#' estimates related to supported disproportionality estimators. Each row
+#' corresponds to a drug-event pair.
 #' @examples
+#' ### Run a disproportionality analysis
 #' da_1 <-
 #' drug_event_df |>
-#' pvutils::da()
+#' da()
 #'
 #' ### Run a disproportionality across two subgroups
 #' # Create two groups (even/uneven report_ids) in drug_event_df
@@ -49,7 +44,7 @@
 #' # Execute da across the subgroups
 #' da_2 <-
 #' drug_event_df_with_grouping |>
-#' pvutils::da(group_by = "group")
+#' da(group_by = "group")
 #' @seealso
 #'  \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
 #' @export
@@ -129,33 +124,35 @@ da <- function(df = NULL,
 # da <- pvutils::drug_event_df |> pvutils::da(write_path = getwd())
 
 # 1.1 add_expected_counts ----
-#' @title Calculate counts required for expected counts, and expected counts
+#' @title Produces expected counts
 #' @description Produces various counts used in disproportionality analysis.
 #' @param df An object possible to convert to a data table, e.g.
 #' a tibble or data.frame, containing patient level reported drug-event-pairs.
-#' See details for further information.
+#' See below for further details.
 #' @param expected_count_estimators A character vector containing the desired
-#' expected count estimators. Defaults to all possible options, i.e.
+#' expected count estimators. Defaults to the implemented options, i.e.
 #' c("rrr", "prr", "ror").
 #'
-#' @details
-#'  @details The passed \code{df} should be convertible to a data table and
-#'  contain three columns: "report_id", "drug_name" and "event_name". The object
-#'  should have one row per reported drug-event-combination, i.e. receiving
-#'  an additional report for drug X and event Y would add one row to the table.
-#'  The same report_id can occur on several rows, if the same report contains
-#'  several distinct drugs and event-pairs. Column \code{report_id} must be of type
-#'  numeric or character. Columns \code{drug} and \code{event} must be characters.
-#' @return A tibble with counts.
+#' @section The df object:
+#'  The passed \code{df} should be (convertible to) a data table and at least contain three
+#'  columns: \code{report_id}, \code{drug} and \code{event}. The data table should contain one row
+#'  per reported drug-event-combination, i.e. receiving a single additional report
+#'  for drug X and event Y would add one row to the table. If the single report
+#'  contained drug X for event Y and event Z, two rows would be added, with the
+#'  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
+#'  numeric or character. Columns \code{drug} and \code{event} must be of type character.
+#'
+#' @return A tibble containing the various counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
 #' rename select ungroup
 #' @import data.table
 #' @export
 
-add_expected_counts <- function(df,
+add_expected_counts <- function(df = NULL,
                                 expected_count_estimators = c("rrr", "prr", "ror")) {
-  # data.table complains if we don't put obs to NULL. Similar requirements
-  # in lower level functions called in this function
+  # Something complains if we don't put obs to NULL. Similar requirements
+  # in lower level functions (count_expected_rrr, count_expected_prr,
+  # count_expected_ic) called in this function
   obs <- NULL
 
   checkmate::qassert(df[[1]], c("S+", "N+"))
@@ -164,7 +161,7 @@ add_expected_counts <- function(df,
 
   if (!any(utils::hasName(df, c("report_id", "drug", "event")))) {
     stop("At least one of column names 'report_id', 'drug' and 'event' is not
-         found. Please check the passed object.")
+         found. Please check the passed df object.")
   }
 
   checkmate::qassert(expected_count_estimators, "S+")
@@ -195,7 +192,8 @@ add_expected_counts <- function(df,
     count_dt <- count_dt |> dplyr::select(-tidyselect::ends_with("rrr"))
   }
 
-  count_df <- count_dt |>
+  count_df <-
+    count_dt |>
     dplyr::arrange(dplyr::desc(obs)) |>
     tibble::as_tibble()
 
@@ -207,13 +205,12 @@ add_expected_counts <- function(df,
 #' with expected counts
 #' @inheritParams add_expected_counts
 #' @inheritParams ror
-#' @param da_estimators Character vector. Defaults to c("ic", "prr", "ror"),
-#' and must contain
-#' @param rule_of_N Numeric. To protect against spurious
-#' associations due to small observed counts, prr and ror point and
-#' interval estimates are set to NA when the observed is less or equal to
-#' the value passed as 'rule_of_N'. Defaults to 3, but 5 is sometimes used.
-#' Set to NULL if you don't want to apply any such rule.
+#' @param da_estimators Character vector specifying which disproportionality
+#' estimators to use, in case you don't need all implemented options. Defaults
+#' to c("ic", "prr", "ror").
+#' @param rule_of_N Numeric. Sets estimates for ROR and PRR to NA when observed
+#' counts are less or equal to the passed value of \code{rule_of_N}. Default value
+#' is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.
 #' @param number_of_digits Set the number of digits to show in output by passing
 #' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
 #' @return The passed data frame with additional columns as specified by
@@ -288,6 +285,5 @@ add_disproportionality <- function(df,
 
   return(da_df)
 }
-
 
 # See lower_level_disprop_analysis.R for further details
