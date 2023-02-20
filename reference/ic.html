@@ -69,7 +69,7 @@ to be expected given a comparator or <em>background</em>. Note that shrinkage
 
 
 <dt>shrinkage</dt>
-<dd><p>A non-negative numeric of length 1, to be added to
+<dd><p>A non-negative numeric value, to be added to
 observed and expected count. Default is 0.5.</p></dd>
 
 
@@ -86,33 +86,40 @@ Default is 0.95 (i.e. 95 % confidence interval)</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The IC is based on the relative reporting rate (RRR), but modified with
-an addition of "shrinkage" (typically of 0.5) to protect against spurious
-associations.</p>
-<p>$$\hat{IC} = log_{2}(\frac{\hat{O}+0.5}{\hat{E}+0.5})$$</p>
-<p>where \(\hat{O}\) = observed number of reports, and expected \(\hat{E}\)
-is (for RRR, and using the entire database as <em>background</em>) estimated as</p>
+    <p>The IC is a log2-transformed observed-to-expected ratio, based on
+the relative reporting rate (RRR) for counts, but modified with an addition
+of "shrinkage" to protect against spurious associations.</p>
+<p>$$\hat{IC} = log_{2}(\frac{\hat{O}+k}{\hat{E}+k})$$</p>
+<p>where \(\hat{O}\) = observed number of reports, \(k\) is the shrinkage
+(typically +0.5), and expected \(\hat{E}\) is (for RRR, and using the
+entire database as comparator or <em>background</em>) estimated as</p>
 <p>$$ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}$$
 µ
-where \(N_{drug}\), \(N_{event}\) and \(N_{TOT}\) are the number of repµorts with the drug,
-the event, and in the whole database respectively.</p>
-<p>From a bayesian perspective, the credibility interval of the IC is constructed
-from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
-observed and expected equal to 0.5. The point of \(log_{2}\) is to provide
+where \(N_{drug}\), \(N_{event}\) and \(N_{TOT}\) are the number of
+reports with the drug, the event, and in the whole database respectively.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="further-details">Further details<a class="anchor" aria-label="anchor" href="#further-details"></a></h2>
+    
+
+<p>From a bayesian point-of-view, the credibility interval of the IC is constructed
+from the poisson-gamma conjugacy. The shrinkage constitutes a prior of
+observed and expected of 0.5. A shrinkage of +0.5 with a gamma-quantile based 95 %
+credibility interval cannot have lower bound above 0 unless the observed count
+exceeds 3. One benefit of \(log_{2}\) is to provide
 a log-scale for convenient plotting of multiple IC values side-by-side.</p>
-<p>Note: the function is vectorized, i.e. obs and exp can be vectors, see the examples.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">pvutils</span><span class="fu">::</span><span class="fu">ic</span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">20</span>, exp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">ic</span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">20</span>, exp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ic_lower    ic ic_upper</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>    0.264 0.965     1.53</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Note that obs and exp can be vectors (of equal length, no recycling)</span></span></span>
-<span class="r-in"><span><span class="fu">pvutils</span><span class="fu">::</span><span class="fu">ic</span><span class="op">(</span>obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>, exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Note that obs and exp can be vectors (of equal length, no recycling allowed)</span></span></span>
+<span class="r-in"><span><span class="fu">ic</span><span class="op">(</span>obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>, exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ic_lower    ic ic_upper</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
