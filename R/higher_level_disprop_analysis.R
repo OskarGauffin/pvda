@@ -1,8 +1,8 @@
 # ---------------------------------------------------------------------------- #
 # Headers below are function names, in foldable code sections,
 # indexed according to their calling hierarchy.
-# Collapse All with "Alt+O"
-# And expand All with "Shift+Alt+O"
+# Collapse All with "Alt + O"
+# And expand All with "Shift + Alt + O"
 # ---------------------------------------------------------------------------- #
 
 # 0.1 da ----
@@ -203,20 +203,20 @@ add_expected_counts <- function(df = NULL,
 # 1.2 add_disproportionality ----
 #' @title Add disproportionality estimates to data frame
 #' with expected counts
-#' @inheritParams add_expected_counts
 #' @inheritParams ror
+#' @param df Intended use is on the output tibble from \code{add_expected_counts}.
 #' @param da_estimators Character vector specifying which disproportionality
 #' estimators to use, in case you don't need all implemented options. Defaults
 #' to c("ic", "prr", "ror").
-#' @param rule_of_N Numeric. Sets estimates for ROR and PRR to NA when observed
+#' @param rule_of_N Numeric value. Sets estimates for ROR and PRR to NA when observed
 #' counts are less or equal to the passed value of \code{rule_of_N}. Default value
 #' is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.
-#' @param number_of_digits Set the number of digits to show in output by passing
+#' @param number_of_digits Numeric value. Set the number of digits to show in output by passing
 #' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
-#' @return The passed data frame with additional columns as specified by
-#' parameters.
+#' @return The passed data frame with disproportionality point and interval
+#' estimates.
 #' @export
-add_disproportionality <- function(df,
+add_disproportionality <- function(df = NULL,
                                    da_estimators = c("ic", "prr", "ror"),
                                    rule_of_N = 3,
                                    number_of_digits = 2,
@@ -286,4 +286,4 @@ add_disproportionality <- function(df,
   return(da_df)
 }
 
-# See lower_level_disprop_analysis.R for further details
+# See lower_level_disprop_analysis.R for further details ----

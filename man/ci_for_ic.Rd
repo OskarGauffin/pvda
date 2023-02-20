@@ -20,7 +20,7 @@ a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For
 instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
 extracted at \code{sgn_lvl_probs} 0.025 and 0.975.}
 
-\item{shrinkage}{A non-negative numeric of length 1, to be added to
+\item{shrinkage}{A non-negative numeric value, to be added to
 observed and expected count. Default is 0.5.}
 }
 \description{

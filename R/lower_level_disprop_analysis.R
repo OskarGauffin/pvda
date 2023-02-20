@@ -1,10 +1,9 @@
 # ---------------------------------------------------------------------------- #
-# Function names are organized by headers in foldable code sections,
-# structured according to their position in the code.
-# Collapse All with "Alt+O"
-# And expand All with "Shift+Alt+O"
+# Headers below are function names, in foldable code sections,
+# indexed according to their calling hierarchy.
+# Collapse All with "Alt + O"
+# And expand All with "Shift + Alt + O"
 # ---------------------------------------------------------------------------- #
-
 ### Called from add_expected_counts
 #  1.1 count_expected_rrr ----
 #' @title Count Expected for Relative Reporting Rate
@@ -104,34 +103,38 @@ count_expected_ror <- function(count_dt) {
   return(count_dt)
 }
 
+
+
 #-----------------------------------
-### Called from add_disproportionality ----
+### Called from add_disproportionality
 # 1.1 ic ----
 #' @title Information component
 #'
 #' @description Calculates the information component ("IC") and credibility
 #' interval, used in disproportionality analysis.
 #'
-#' @details  The IC is based on the relative reporting rate (RRR), but modified with
-#' an addition of "shrinkage" (typically of 0.5) to protect against spurious
-#' associations.
+#' @details The IC is a log2-transformed observed-to-expected ratio, based on
+#' the relative reporting rate (RRR) for counts, but modified with an addition
+#' of "shrinkage" to protect against spurious associations.
 #'
-#' \deqn{\hat{IC} = log_{2}(\frac{\hat{O}+0.5}{\hat{E}+0.5})}
+#' \deqn{\hat{IC} = log_{2}(\frac{\hat{O}+k}{\hat{E}+k})}
 #'
-#' where \eqn{\hat{O}} = observed number of reports, and expected \eqn{\hat{E}}
-#' is (for RRR, and using the entire database as \emph{background}) estimated as
+#' where \eqn{\hat{O}} = observed number of reports, \eqn{k} is the shrinkage
+#' (typically +0.5), and expected \eqn{\hat{E}} is (for RRR, and using the
+#' entire database as comparator or \emph{background}) estimated as
 #'
 #' \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
 #' µ
-#' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of repµorts with the drug,
-#' the event, and in the whole database respectively.
+#' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of
+#' reports with the drug, the event, and in the whole database respectively.
 #'
-#' From a bayesian perspective, the credibility interval of the IC is constructed
-#' from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
-#' observed and expected equal to 0.5. The point of \eqn{log_{2}} is to provide
+#' @section Further details:
+#' From a bayesian point-of-view, the credibility interval of the IC is constructed
+#' from the poisson-gamma conjugacy. The shrinkage constitutes a prior of
+#' observed and expected of 0.5. A shrinkage of +0.5 with a gamma-quantile based 95 \%
+#' credibility interval cannot have lower bound above 0 unless the observed count
+#' exceeds 3. One benefit of \eqn{log_{2}} is to provide
 #' a log-scale for convenient plotting of multiple IC values side-by-side.
-#'
-#' Note: the function is vectorized, i.e. obs and exp can be vectors, see the examples.
 #'
 #' @param obs A numeric vector with observed counts, i.e. number of reports
 #' for the selected drug-event-combination. Note that shrinkage (e.g. +0.5) is added
@@ -139,17 +142,17 @@ count_expected_ror <- function(count_dt) {
 #' @param exp A numeric vector with expected counts, i.e. number of reports
 #' to be expected given a comparator or \emph{background}. Note that shrinkage
 #' (e.g. +0.5) is added inside the function and should not be included here.
-#' @param shrinkage A non-negative numeric of length 1, to be added to
+#' @param shrinkage A non-negative numeric value, to be added to
 #' observed and expected count. Default is 0.5.
 #' @inheritParams sign_lvl_to_quantile_prob
 #'
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #'
 #' @examples
-#' pvutils::ic(obs = 20, exp = 10)
+#' ic(obs = 20, exp = 10)
 #'
-#' # Note that obs and exp can be vectors (of equal length, no recycling)
-#' pvutils::ic(obs = c(20, 30), exp = c(10, 10))
+#' # Note that obs and exp can be vectors (of equal length, no recycling allowed)
+#' ic(obs = c(20, 30), exp = c(10, 10))
 #'
 #' @export
 
@@ -261,7 +264,12 @@ prr <- function(obs,
 #' @inheritParams sign_lvl_to_quantile_prob
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #' Number of rows equals length of inputs a, b, c, d.
+#' @details A reporting odds ratio is simply an odds ratio based on adverse event
+#' reports.
+#' \deqn{\hat{ROR} = \frac{a/b}{c/d}}
 #'
+#' where \eqn{a} = observed count (i.e. number of reports with exposure and
+#' outcome), \eqn{b} = number of reports with the HERENOW
 #' @examples
 #'
 #' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
@@ -378,3 +386,4 @@ ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
 }
 
 #-----------------------------------
+

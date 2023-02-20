@@ -27,14 +27,14 @@ to c("ic", "prr", "ror").}
 to perform subgroup analyses (i.e. run disproportionality analysis within each group).
 Passing NULL, the default, uses all data in df as a single group.}
 
-\item{rule_of_N}{Numeric. Sets estimates for ROR and PRR to NA when observed
+\item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are less or equal to the passed value of \code{rule_of_N}. Default value
 is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.}
 
 \item{sign_lvl}{Significance level of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 
-\item{number_of_digits}{Set the number of digits to show in output by passing
+\item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
 an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
 \item{excel_path}{To write the output of \code{da} to an excel file, provide a path

@@ -6,7 +6,7 @@
 with expected counts}
 \usage{
 add_disproportionality(
-  df,
+  df = NULL,
   da_estimators = c("ic", "prr", "ror"),
   rule_of_N = 3,
   number_of_digits = 2,
@@ -14,27 +14,25 @@ add_disproportionality(
 )
 }
 \arguments{
-\item{df}{An object possible to convert to a data table, e.g.
-a tibble or data.frame, containing patient level reported drug-event-pairs.
-See below for further details.}
+\item{df}{Intended use is on the output tibble from \code{add_expected_counts}.}
 
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").}
 
-\item{rule_of_N}{Numeric. Sets estimates for ROR and PRR to NA when observed
+\item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are less or equal to the passed value of \code{rule_of_N}. Default value
 is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.}
 
-\item{number_of_digits}{Set the number of digits to show in output by passing
+\item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
 an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
 \item{sign_lvl}{Significance level of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{
-The passed data frame with additional columns as specified by
-parameters.
+The passed data frame with disproportionality point and interval
+estimates.
 }
 \description{
 Add disproportionality estimates to data frame

@@ -15,7 +15,7 @@ inside the function and should not be included here.}
 to be expected given a comparator or \emph{background}. Note that shrinkage
 (e.g. +0.5) is added inside the function and should not be included here.}
 
-\item{shrinkage}{A non-negative numeric of length 1, to be added to
+\item{shrinkage}{A non-negative numeric value, to be added to
 observed and expected count. Default is 0.5.}
 
 \item{sign_lvl}{Significance level of confidence or credibility intervals.
@@ -29,31 +29,35 @@ Calculates the information component ("IC") and credibility
 interval, used in disproportionality analysis.
 }
 \details{
-The IC is based on the relative reporting rate (RRR), but modified with
-an addition of "shrinkage" (typically of 0.5) to protect against spurious
-associations.
+The IC is a log2-transformed observed-to-expected ratio, based on
+the relative reporting rate (RRR) for counts, but modified with an addition
+of "shrinkage" to protect against spurious associations.
 
-\deqn{\hat{IC} = log_{2}(\frac{\hat{O}+0.5}{\hat{E}+0.5})}
+\deqn{\hat{IC} = log_{2}(\frac{\hat{O}+k}{\hat{E}+k})}
 
-where \eqn{\hat{O}} = observed number of reports, and expected \eqn{\hat{E}}
-is (for RRR, and using the entire database as \emph{background}) estimated as
+where \eqn{\hat{O}} = observed number of reports, \eqn{k} is the shrinkage
+(typically +0.5), and expected \eqn{\hat{E}} is (for RRR, and using the
+entire database as comparator or \emph{background}) estimated as
 
 \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
 µ
-where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of repµorts with the drug,
-the event, and in the whole database respectively.
-
-From a bayesian perspective, the credibility interval of the IC is constructed
-from the poisson-gamma conjugacy. The shrinkage is then a prior distribution of
-observed and expected equal to 0.5. The point of \eqn{log_{2}} is to provide
-a log-scale for convenient plotting of multiple IC values side-by-side.
-
-Note: the function is vectorized, i.e. obs and exp can be vectors, see the examples.
+where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of
+reports with the drug, the event, and in the whole database respectively.
 }
-\examples{
-pvutils::ic(obs = 20, exp = 10)
+\section{Further details}{
 
-# Note that obs and exp can be vectors (of equal length, no recycling)
-pvutils::ic(obs = c(20, 30), exp = c(10, 10))
+From a bayesian point-of-view, the credibility interval of the IC is constructed
+from the poisson-gamma conjugacy. The shrinkage constitutes a prior of
+observed and expected of 0.5. A shrinkage of +0.5 with a gamma-quantile based 95 \%
+credibility interval cannot have lower bound above 0 unless the observed count
+exceeds 3. One benefit of \eqn{log_{2}} is to provide
+a log-scale for convenient plotting of multiple IC values side-by-side.
+}
+
+\examples{
+ic(obs = 20, exp = 10)
+
+# Note that obs and exp can be vectors (of equal length, no recycling allowed)
+ic(obs = c(20, 30), exp = c(10, 10))
 
 }
