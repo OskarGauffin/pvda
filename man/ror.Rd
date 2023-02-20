@@ -32,6 +32,13 @@ The ROR is an odds ratio calculated from reporting counts. The
 R for Reporting in ROR is meant to emphasize an interpretation of reporting,
 as the ROR is calculated from a reporting database. Note: the function is
 vectorized, i.e. a, b, c and d can be vectors, see the examples.
+
+A reporting odds ratio is simply an odds ratio based on adverse event
+reports.
+\deqn{\hat{ROR} = \frac{a/b}{c/d}}
+
+where \eqn{a} = observed count (i.e. number of reports with exposure and
+outcome), \eqn{b} = number of reports with the HERENOW
 }
 \examples{
 
