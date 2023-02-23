@@ -40,7 +40,7 @@ where \eqn{\hat{O}} = observed number of reports, \eqn{k} is the shrinkage
 entire database as comparator or \emph{background}) estimated as
 
 \deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
-µ
+
 where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of
 reports with the drug, the event, and in the whole database respectively.
 }
@@ -59,5 +59,7 @@ ic(obs = 20, exp = 10)
 
 # Note that obs and exp can be vectors (of equal length, no recycling allowed)
 ic(obs = c(20, 30), exp = c(10, 10))
-
+}
+\references{
+\insertRef{Nor_n_2011}{pvutils}
 }
