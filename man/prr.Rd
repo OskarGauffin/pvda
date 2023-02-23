@@ -47,3 +47,6 @@ pvutils::prr(
   n_tot_prr = c(10000, 10000)
 )
 }
+\references{
+\insertRef{Montastruc_2011}{pvutils}
+}

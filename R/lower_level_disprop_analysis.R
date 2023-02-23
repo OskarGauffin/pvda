@@ -210,6 +210,7 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 #'   n_event_prr = c(15, 30),
 #'   n_tot_prr = c(10000, 10000)
 #' )
+#' @references \insertRef{Montastruc_2011}{pvutils}
 #' @export
 #'
 prr <- function(obs,
@@ -276,6 +277,7 @@ prr <- function(obs,
 #'
 #' # Note that a, b, c and d can be vectors (of equal length, no recycling)
 #' pvutils::ror(a = c(5, 10), b = c(10, 20), c = c(15, 30), d = c(10000, 10000))
+#' @references \insertRef{Montastruc_2011}{pvutils}
 #' @export
 #'
 ror <- function(a, b, c, d, sign_lvl = 0.95) {
