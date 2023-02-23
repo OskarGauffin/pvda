@@ -5,7 +5,7 @@ Version: 0.0.1
 Author: Oskar Gauffin
 Maintainer: Oskar Gauffin <oskar.gauffin@hotmail.com>
 Description: Provides functions useful for statistical signal detection, i.e. disproportionality analysis.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Suggests: 

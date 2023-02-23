@@ -1,10 +1,15 @@
-# todo
+# TODO
 
-# Check if the output is correct
-# Add RRR
-# Write_to_excel
+# Add on CI for IC
+# Write up ROR AND PRR formulas in documentation
+# Overall QC check on ic, prr, ror docs
 # Update vignette
-# commit to cran
+# Do QC on the ROR; PRR; IC values, in point and bounds
+# commit to CRAN
 
-# Add background object functionality
+### Long term, want to, not for now
+# Set up pkgdown site
+# Add wrappers to quantreg on median TTO with xy-bootstrap CIs
+# Temporal disproportionality for a specific set of drug-event-pairs
+# Add possibility to compare two backgrounds
 # Shiny app
