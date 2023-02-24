@@ -1,6 +1,8 @@
 # todo
 
 # Check if the output is correct
+# Sort grouped output, move da columns to left,
+# rename da bound columns to sign_lvl-names
 # Add RRR
 # Write_to_excel
 # Update vignette
