@@ -4,7 +4,7 @@
 \alias{ic}
 \title{Information component}
 \usage{
-ic(obs, exp, shrinkage = 0.5, sign_lvl = 0.95)
+ic(obs = NULL, exp = NULL, shrinkage = 0.5, sign_lvl = 0.95)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports
@@ -43,6 +43,15 @@ entire database as comparator or \emph{background}) estimated as
 
 where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of
 reports with the drug, the event, and in the whole database respectively.
+
+The credibility interval is created from the quantiles of the posterior
+gamma distribution with shape (\eqn{\hat{S}}) and rate (\eqn{\hat{R}}) parameters as
+
+\deqn{\hat{S} = \hat{O} + k}
+\deqn{\hat{R} = \hat{E} + k}
+
+using the \code{stats::qgamma} function. Parameter \eqn{k} is the shrinkage defined
+earlier.
 }
 \section{Further details}{
 

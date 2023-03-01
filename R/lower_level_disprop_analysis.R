@@ -128,6 +128,15 @@ count_expected_ror <- function(count_dt) {
 #' where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of
 #' reports with the drug, the event, and in the whole database respectively.
 #'
+#' The credibility interval is created from the quantiles of the posterior
+#' gamma distribution with shape (\eqn{\hat{S}}) and rate (\eqn{\hat{R}}) parameters as
+#'
+#' \deqn{\hat{S} = \hat{O} + k}
+#' \deqn{\hat{R} = \hat{E} + k}
+#'
+#' using the \code{stats::qgamma} function. Parameter \eqn{k} is the shrinkage defined
+#' earlier.
+#'
 #' @section Further details:
 #' From a bayesian point-of-view, the credibility interval of the IC is constructed
 #' from the poisson-gamma conjugacy. The shrinkage constitutes a prior of
@@ -157,7 +166,10 @@ count_expected_ror <- function(count_dt) {
 #' @references \insertRef{Nor_n_2011}{pvutils}
 #' @export
 
-ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
+ic <- function(obs = NULL,
+               exp = NULL,
+               shrinkage = 0.5,
+               sign_lvl = 0.95) {
   # Run input checks
   checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
@@ -186,9 +198,6 @@ ic <- function(obs, exp, shrinkage = 0.5, sign_lvl = 0.95) {
 #' @details The PRR is the proportion of reports with an event in set of exposed
 #' cases, divided with the proportion of reports with the event in a background
 #' or comparator, which does not include the exposed.
-#' The \emph{Reporting} highlights the correct interpretation, of examining
-#' reporting as the PRR is calculated from a reporting database.
-#' Note: the function is vectorized, see the examples.
 #'
 #' @param obs Number of reports for the specific drug and event (i.e. the
 #' observed count).
