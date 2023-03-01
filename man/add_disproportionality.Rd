@@ -21,8 +21,9 @@ estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").}
 
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
-counts are less or equal to the passed value of \code{rule_of_N}. Default value
-is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.}
+counts are strictly less than the passed value of \code{rule_of_N}. Default value
+is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
+don't want to apply any such rule.}
 
 \item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
 an integer. Default value is 2 digits. Set to NULL to avoid rounding.}

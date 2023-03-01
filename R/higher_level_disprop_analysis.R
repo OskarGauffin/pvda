@@ -209,8 +209,9 @@ add_expected_counts <- function(df = NULL,
 #' estimators to use, in case you don't need all implemented options. Defaults
 #' to c("ic", "prr", "ror").
 #' @param rule_of_N Numeric value. Sets estimates for ROR and PRR to NA when observed
-#' counts are less or equal to the passed value of \code{rule_of_N}. Default value
-#' is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.
+#' counts are strictly less than the passed value of \code{rule_of_N}. Default value
+#' is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
+#' don't want to apply any such rule.
 #' @param number_of_digits Numeric value. Set the number of digits to show in output by passing
 #' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
 #' @return The passed data frame with disproportionality point and interval
@@ -265,7 +266,7 @@ add_disproportionality <- function(df = NULL,
     da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
 
     # Only need to do this check once
-    replace_these_rows <- da_df[["obs"]] <= rule_of_N
+    replace_these_rows <- da_df[["obs"]] < rule_of_N
 
     da_df |>
       dplyr::mutate(dplyr::across(
