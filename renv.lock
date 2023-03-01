@@ -71,6 +71,16 @@
       "Hash": "45f0398006e83a5b10b72a90663d8d8c",
       "Requirements": []
     },
+    "Rdpack": {
+      "Package": "Rdpack",
+      "Version": "2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0ddbe51591ab1d3e7362e0da3727c837",
+      "Requirements": [
+        "rbibutils"
+      ]
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -338,15 +348,15 @@
     },
     "dtplyr": {
       "Package": "dtplyr",
-      "Version": "1.2.2",
+      "Version": "1.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c5f8828a0b459a703db190b001ad4818",
+      "Hash": "4f640f188add4172c025920054a1f8c2",
       "Requirements": [
+        "cli",
         "crayon",
         "data.table",
         "dplyr",
-        "ellipsis",
         "glue",
         "lifecycle",
         "rlang",
@@ -888,6 +898,14 @@
       "Hash": "5e3c5dc0b071b21fa128676560dbe94d",
       "Requirements": []
     },
+    "rbibutils": {
+      "Package": "rbibutils",
+      "Version": "2.2.13",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "62e3171e3c0ac826602aae0944ad0372",
+      "Requirements": []
+    },
     "readr": {
       "Package": "readr",
       "Version": "2.1.3",
@@ -1297,6 +1315,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "c0e49a9760983e81e55cdd9be92e7182",
+      "Requirements": []
+    },
+    "writexl": {
+      "Package": "writexl",
+      "Version": "1.4.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "43da939eaf6681c88eba977b9012dad9",
       "Requirements": []
     },
     "xfun": {
