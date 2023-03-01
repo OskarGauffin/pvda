@@ -270,7 +270,9 @@ prr <- function(obs,
 #' \deqn{\hat{ROR} = \frac{a/b}{c/d}}
 #'
 #' where \eqn{a} = observed count (i.e. number of reports with exposure and
-#' outcome), \eqn{b} = number of reports with the HERENOW
+#' outcome), \eqn{b} = number of reports with the drug and without the event,
+#' \eqn{c} = number of reports without the drug with the event and \eqn{d} =
+#' number of reports with neither of the drug and the event.
 #' @examples
 #'
 #' pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
