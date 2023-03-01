@@ -3,6 +3,8 @@
 # Add on CI for IC
 # Write up ROR AND PRR formulas in documentation
 # Overall QC check on ic, prr, ror docs
+# Sort grouped output, move da columns to left,
+# rename da bound columns to sign_lvl-names
 # Update vignette
 # Do QC on the ROR; PRR; IC values, in point and bounds
 # commit to CRAN
