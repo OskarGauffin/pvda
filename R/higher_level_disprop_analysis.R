@@ -192,9 +192,13 @@ add_expected_counts <- function(df = NULL,
     count_dt <- count_dt |> dplyr::select(-tidyselect::ends_with("rrr"))
   }
 
+  # Until the base pipe can handle a arrange(desc()) without a lot of
+  # ad-hoc:
+  desc_obs_order <- dplyr::desc(as.data.frame(count_dt)$obs)
+
   count_df <-
     count_dt |>
-    dplyr::arrange(dplyr::desc(obs)) |>
+    dplyr::arrange(desc_obs_order) |>
     tibble::as_tibble()
 
   return(count_df)

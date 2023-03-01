@@ -40,12 +40,12 @@ of each function.
 
 ## Disproportionality analysis from report-level data
 If the aim is to screen a wide range of drug-event pairs from report-level data 
-using disproportionality analysis, this is handled through the function `da`.
+using disproportionality analysis, this is handled through the function \code{da}.
 
-The `pvutils` package contains a simulated data set 'drug_event_df'. For 
+The \code{pvutils} package contains a simulated data set 'drug_event_df'. For 
 simplicity, drugs are named Drug_A - Drug_Z, and events are 
 named Event_1 - Event_1000. Further details on the proportions of each drug and
-event are described in the data object (execute `?df_drug_event`). We pass the 
+event are described in the data object (execute \code{?df_drug_event}). We pass the 
 data to a function that calculates expected counts, and then to a function which adds columns contaning 
 disproportionality.
 
@@ -81,8 +81,8 @@ The details of PRR, RRR and IC are documented within each function, but overall 
 from the same contingency table (including marginal sums) of those who did and 
 did not have the drug, and the adverse event respectively.
 
-The `add_expected_counts`-function has a single parameter, 
-`expected_count_estimators` that can be used to turn off calculation of 
+The \code{add_expected_counts}-function has a single parameter, 
+\code{expected_count_estimators} that can be used to turn off calculation of 
 expected counts for specific estimators. Note that IC by tradition uses 
 expected counts referred to as the Relative Reporting Rate (RRR).
 
@@ -94,18 +94,18 @@ drug_event_df |>
 
 
 ### Adding the disproportionality estimators
-The `add_disproportionality` function has a `da_estimator` parameter, which
-by default includes IC, PRR and ROR. If a subset is preferred, just pass 
-the desired estimators in lower case letters.
+The \code{add_disproportionality} function has a \code{da_estimator} parameter, which
+by default includes IC, PRR and ROR. If not all of those are wanted, just pass 
+the desired estimators instead.
 
-The `add_disproportionality` function has two parameters. One is the 
-`rule_of_N`, by default set to 3, which is sometimes referred to as 
+The \code{add_disproportionality} function has two parameters. One is the 
+\code{rule_of_N}, by default set to 3, which is sometimes referred to as 
 "rule of three". This sets ROR and PRR-values to NA if the observed count is 
 less than the specified N. For completeness, note that the default shrinkage 
 in the IC acts as a built in 'rule of 3', i.e. the shrinkage of +0.5 prevents 
 the lower bound to exceed 0 at the default significance level of 95\%.
 
-The second parameter `number_of_digits` controls the rounding of non-count values in the output, 
+The second parameter \code{number_of_digits} controls the rounding of non-count values in the output, 
 including all expected counts, uncertainty bounds and point estimates. By default
 2 digits are kept. 
 
