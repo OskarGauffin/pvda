@@ -31,9 +31,6 @@ confidence intervals, used in disproportionality analysis.
 The PRR is the proportion of reports with an event in set of exposed
 cases, divided with the proportion of reports with the event in a background
 or comparator, which does not include the exposed.
-The \emph{Reporting} highlights the correct interpretation, of examining
-reporting as the PRR is calculated from a reporting database.
-Note: the function is vectorized, see the examples.
 }
 \examples{
 
