@@ -90,8 +90,9 @@ Passing NULL, the default, uses all data in df as a single group.</p></dd>
 
 <dt>rule_of_N</dt>
 <dd><p>Numeric value. Sets estimates for ROR and PRR to NA when observed
-counts are less or equal to the passed value of <code>rule_of_N</code>. Default value
-is 3, 5 is sometimes more liberal alternative. Set to NULL if you don't want to apply any such rule.</p></dd>
+counts are strictly less than the passed value of <code>rule_of_N</code>. Default value
+is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
+don't want to apply any such rule.</p></dd>
 
 
 <dt>sign_lvl</dt>

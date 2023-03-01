@@ -119,14 +119,13 @@ documentation of each function.</p>
 </h3>
 <p>If the aim is to screen a wide range of drug-event pairs from
 report-level data using disproportionality analysis, this is handled
-through the function <code>da</code>.</p>
-<p>The <code>pvutils</code> package contains a simulated data set
-‘drug_event_df’. For simplicity, drugs are named Drug_A - Drug_Z, and
-events are named Event_1 - Event_1000. Further details on the
-proportions of each drug and event are described in the data object
-(execute <code>?df_drug_event</code>). We pass the data to a function
-that calculates expected counts, and then to a function which adds
-columns contaning disproportionality.</p>
+through the function .</p>
+<p>The package contains a simulated data set ‘drug_event_df’. For
+simplicity, drugs are named Drug_A - Drug_Z, and events are named
+Event_1 - Event_1000. Further details on the proportions of each drug
+and event are described in the data object (execute ). We pass the data
+to a function that calculates expected counts, and then to a function
+which adds columns contaning disproportionality.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_expected_counts.html">add_expected_counts</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -184,8 +183,7 @@ report contained the same drug-event pair five times.</p>
 but overall one can note that all expected counts are derived from the
 same contingency table (including marginal sums) of those who did and
 did not have the drug, and the adverse event respectively.</p>
-<p>The <code>add_expected_counts</code>-function has a single parameter,
-<code>expected_count_estimators</code> that can be used to turn off
+<p>The -function has a single parameter, that can be used to turn off
 calculation of expected counts for specific estimators. Note that IC by
 tradition uses expected counts referred to as the Relative Reporting
 Rate (RRR).</p>
@@ -203,21 +201,18 @@ Rate (RRR).</p>
 <div class="section level4">
 <h4 id="adding-the-disproportionality-estimators">Adding the disproportionality estimators<a class="anchor" aria-label="anchor" href="#adding-the-disproportionality-estimators"></a>
 </h4>
-<p>The <code>add_disproportionality</code> function has a
-<code>da_estimator</code> parameter, which by default includes IC, PRR
-and ROR. If a subset is preferred, just pass the desired estimators in
-lower case letters.</p>
-<p>The <code>add_disproportionality</code> function has two parameters.
-One is the <code>rule_of_N</code>, by default set to 3, which is
-sometimes referred to as “rule of three”. This sets ROR and PRR-values
-to NA if the observed count is less than the specified N. For
+<p>The function has a parameter, which by default includes IC, PRR and
+ROR. If not all of those are wanted, just pass the desired estimators
+instead.</p>
+<p>The function has two parameters. One is the , by default set to 3,
+which is sometimes referred to as “rule of three”. This sets ROR and
+PRR-values to NA if the observed count is less than the specified N. For
 completeness, note that the default shrinkage in the IC acts as a built
 in ‘rule of 3’, i.e. the shrinkage of +0.5 prevents the lower bound to
 exceed 0 at the default significance level of 95%.</p>
-<p>The second parameter <code>number_of_digits</code> controls the
-rounding of non-count values in the output, including all expected
-counts, uncertainty bounds and point estimates. By default 2 digits are
-kept.</p>
+<p>The second parameter controls the rounding of non-count values in the
+output, including all expected counts, uncertainty bounds and point
+estimates. By default 2 digits are kept.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,279 × 23</span></span></span>
 <span><span class="co">##    drug   event   obs n_drug n_event n_tot exp_rrr n_eve…¹ n_tot…² exp_prr     b</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -258,8 +253,8 @@ package, available on <a href="https://gitlab.com/iembry/vaers.git" class="exter
 2018, resulting in 4 146 778 rows to be processed by <code>da</code> in
 <code>pvutils</code>. Execution on a regular laptop took less than 7
 seconds.</p>
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-33e81f683fb2f56718e1" style="width:768px;height:768px;"></div>
-<script type="application/json" data-for="htmlwidget-33e81f683fb2f56718e1">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       label = \"Overview of package functions\",\n       labelloc = \"t\",\n       labeljust = \"c\",\n       fontname = \"Helvetica\",\n       fontcolor = \"gray30\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"3\" [label = \"ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,2!\"] \n  \"4\" [label = \"ci_for_prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,1!\"] \n  \"5\" [label = \"ci_for_ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,1!\"] \n  \"6\" [label = \"ci_for_ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,1!\"] \n  \"7\" [label = \"ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"8\" [label = \"prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,2!\"] \n  \"9\" [label = \"da\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,4!\"] \n  \"10\" [label = \"add_expected_counts\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,3!\"] \n  \"11\" [label = \"write_to_excel\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,3!\"] \n  \"12\" [label = \"add_disproportionality\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,3!\"] \n  \"3\"->\"6\" \n  \"7\"->\"5\" \n  \"8\"->\"4\" \n  \"9\"->\"12\" \n  \"9\"->\"10\" \n  \"9\"->\"11\" \n  \"10\"->\"8\" \n  \"10\"->\"7\" \n  \"12\"->\"3\" \n  \"12\"->\"8\" \n  \"12\"->\"7\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a773ba012c85e76c9bbe" style="width:768px;height:768px;"></div>
+<script type="application/json" data-for="htmlwidget-a773ba012c85e76c9bbe">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       label = \"Overview of package functions\",\n       labelloc = \"t\",\n       labeljust = \"c\",\n       fontname = \"Helvetica\",\n       fontcolor = \"gray30\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"3\" [label = \"ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,2!\"] \n  \"4\" [label = \"ci_for_prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,1!\"] \n  \"5\" [label = \"ci_for_ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,1!\"] \n  \"6\" [label = \"ci_for_ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,1!\"] \n  \"7\" [label = \"ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"8\" [label = \"prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,2!\"] \n  \"9\" [label = \"da\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,4!\"] \n  \"10\" [label = \"add_expected_counts\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,3!\"] \n  \"11\" [label = \"write_to_excel\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,3!\"] \n  \"12\" [label = \"add_disproportionality\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,3!\"] \n  \"3\"->\"6\" \n  \"7\"->\"5\" \n  \"8\"->\"4\" \n  \"9\"->\"12\" \n  \"9\"->\"10\" \n  \"9\"->\"11\" \n  \"10\"->\"8\" \n  \"10\"->\"7\" \n  \"12\"->\"3\" \n  \"12\"->\"8\" \n  \"12\"->\"7\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

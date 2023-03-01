@@ -51,7 +51,7 @@ interval, used in disproportionality analysis.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ic</span><span class="op">(</span><span class="va">obs</span>, <span class="va">exp</span>, shrinkage <span class="op">=</span> <span class="fl">0.5</span>, sign_lvl <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ic</span><span class="op">(</span>obs <span class="op">=</span> <span class="cn">NULL</span>, exp <span class="op">=</span> <span class="cn">NULL</span>, shrinkage <span class="op">=</span> <span class="fl">0.5</span>, sign_lvl <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -96,6 +96,12 @@ entire database as comparator or <em>background</em>) estimated as</p>
 <p>$$ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}$$</p>
 <p>where \(N_{drug}\), \(N_{event}\) and \(N_{TOT}\) are the number of
 reports with the drug, the event, and in the whole database respectively.</p>
+<p>The credibility interval is created from the quantiles of the posterior
+gamma distribution with shape (\(\hat{S}\)) and rate (\(\hat{R}\)) parameters as</p>
+<p>$$\hat{S} = \hat{O} + k$$
+$$\hat{R} = \hat{E} + k$$</p>
+<p>using the <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma</a></code> function. Parameter \(k\) is the shrinkage defined
+earlier.</p>
     </div>
     <div class="section level2">
     <h2 id="further-details">Further details<a class="anchor" aria-label="anchor" href="#further-details"></a></h2>
