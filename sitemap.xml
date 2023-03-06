@@ -37,6 +37,9 @@
     <loc>https://oskargauffin.github.io/pvutils/reference/ci_for_ror.html</loc>
   </url>
   <url>
+    <loc>https://oskargauffin.github.io/pvutils/reference/conf_lvl_to_quantile_prob.html</loc>
+  </url>
+  <url>
     <loc>https://oskargauffin.github.io/pvutils/reference/count_expected_prr.html</loc>
   </url>
   <url>
@@ -68,9 +71,6 @@
   </url>
   <url>
     <loc>https://oskargauffin.github.io/pvutils/reference/ror.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/sign_lvl_to_quantile_prob.html</loc>
   </url>
   <url>
     <loc>https://oskargauffin.github.io/pvutils/reference/write_to_excel.html</loc>

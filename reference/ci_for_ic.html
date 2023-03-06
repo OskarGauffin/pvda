@@ -54,7 +54,7 @@ credibility interval.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ci_for_ic</span><span class="op">(</span><span class="va">obs</span>, <span class="va">exp</span>, <span class="va">sign_lvl_probs</span>, <span class="va">shrinkage</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ci_for_ic</span><span class="op">(</span><span class="va">obs</span>, <span class="va">exp</span>, <span class="va">conf_lvl_probs</span>, <span class="va">shrinkage</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,9 +71,9 @@ to be expected given a comparator or <em>background</em>. Note that shrinkage
 (e.g. +0.5) is added inside the function and should not be included here.</p></dd>
 
 
-<dt>sign_lvl_probs</dt>
+<dt>conf_lvl_probs</dt>
 <dd><p>The probabilities of the posterior, based on
-a passed significance level (<code>sign_lvl</code>) in <code><a href="ic.html">ic</a></code>. For
+a passed confidence level (<code>conf_lvl</code>) in <code><a href="ic.html">ic</a></code>. For
 instance, if <code>sgn_lvl = .95</code> in <code>ic</code> is used, quantiles will be
 extracted at <code>sgn_lvl_probs</code> 0.025 and 0.975.</p></dd>
 
