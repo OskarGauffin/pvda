@@ -93,15 +93,19 @@ of "shrinkage" to protect against spurious associations.</p>
 <p>where \(\hat{O}\) = observed number of reports, \(k\) is the shrinkage
 (typically +0.5), and expected \(\hat{E}\) is (for RRR, and using the
 entire database as comparator or <em>background</em>) estimated as</p>
-<p>$$ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}$$</p>
-<p>where \(N_{drug}\), \(N_{event}\) and \(N_{TOT}\) are the number of
+<p>$$ \hat{E} = \frac{\hat{N}_{drug} \times \hat{N}_{event}}{\hat{N}_{TOT}}$$</p>
+<p>where \(\hat{N}_{drug}\), \(\hat{N}_{event}\) and \(\hat{N}_{TOT}\) are the number of
 reports with the drug, the event, and in the whole database respectively.</p>
 <p>The credibility interval is created from the quantiles of the posterior
 gamma distribution with shape (\(\hat{S}\)) and rate (\(\hat{R}\)) parameters as</p>
 <p>$$\hat{S} = \hat{O} + k$$
 $$\hat{R} = \hat{E} + k$$</p>
 <p>using the <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">stats::qgamma</a></code> function. Parameter \(k\) is the shrinkage defined
-earlier.</p>
+earlier. For completeness, a credibility interval of the gamma distributed \(X\) (i.e.
+\(X \sim \Gamma(\hat{S}, \hat{R})\) where \(\hat{S}\) and \(\hat{R}\) are shape and rate parameters)
+with associated quantile function \(Q_X(p)\) for a significance level \(\alpha\) is
+constructed as</p>
+<p>$$[Q_X(\alpha/2), Q_X(1-\alpha/2)]$$</p>
     </div>
     <div class="section level2">
     <h2 id="further-details">Further details<a class="anchor" aria-label="anchor" href="#further-details"></a></h2>

@@ -90,6 +90,22 @@ Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.</
     <p>The PRR is the proportion of reports with an event in set of exposed
 cases, divided with the proportion of reports with the event in a background
 or comparator, which does not include the exposed.</p>
+<p>The PRR is estimated from a observed-to-expected ratio, based on
+similar to the RRR and IC, but excludes the exposure of interest from the
+comparator.</p>
+<p>$$\hat{PRR} = \frac{\hat{O}}{\hat{E}}$$</p>
+<p>where \(\hat{O}\) is the observed number of reports, and expected \(\hat{E}\)
+is estimated as</p>
+<p>$$\hat{E} = \frac{\hat{N}_{drug} \times (\hat{N}_{event} - \hat{O})}{\hat{N}_{TOT}-\hat{N}_{drug}}$$</p>
+<p>where \(\hat{N}_{drug}\), \(\hat{N}_{event}\), \(\hat{O}\) and \(\hat{N}_{TOT}\) are
+the number of reports with the drug, the event, the drug and event, and
+in the whole database respectively.</p>
+<p>A confidence interval is created using a standard deviation and
+normal approximation as:
+$$\hat{s} = \sqrt{ 1/\hat{O} + 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) + 1/(\hat{N}_{TOT} - \hat{N}_{drug})}$$</p>
+<p>and $$[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = $$
+$$[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
+\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]$$</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
