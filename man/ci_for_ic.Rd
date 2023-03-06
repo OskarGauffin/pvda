@@ -4,7 +4,7 @@
 \alias{ci_for_ic}
 \title{Confidence intervals for Information Component (IC)}
 \usage{
-ci_for_ic(obs, exp, sign_lvl_probs, shrinkage)
+ci_for_ic(obs, exp, conf_lvl_probs, shrinkage)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports
@@ -15,8 +15,8 @@ inside the function and should not be included here.}
 to be expected given a comparator or \emph{background}. Note that shrinkage
 (e.g. +0.5) is added inside the function and should not be included here.}
 
-\item{sign_lvl_probs}{The probabilities of the posterior, based on
-a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For
+\item{conf_lvl_probs}{The probabilities of the posterior, based on
+a passed confidence level (\code{conf_lvl}) in \code{\link{ic}}. For
 instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
 extracted at \code{sgn_lvl_probs} 0.025 and 0.975.}
 

@@ -10,7 +10,7 @@ add_disproportionality(
   da_estimators = c("ic", "prr", "ror"),
   rule_of_N = 3,
   number_of_digits = 2,
-  sign_lvl = 0.95
+  conf_lvl = 0.95
 )
 }
 \arguments{
@@ -28,7 +28,7 @@ don't want to apply any such rule.}
 \item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
 an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
-\item{sign_lvl}{Significance level of confidence or credibility intervals.
+\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{

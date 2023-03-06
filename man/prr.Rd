@@ -4,7 +4,7 @@
 \alias{prr}
 \title{Proportional Reporting Rate}
 \usage{
-prr(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl = 0.95)
+prr(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl = 0.95)
 }
 \arguments{
 \item{obs}{Number of reports for the specific drug and event (i.e. the
@@ -16,7 +16,7 @@ observed count).}
 
 \item{n_tot_prr}{Number of reports in the background.}
 
-\item{sign_lvl}{Significance level of confidence or credibility intervals.
+\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{

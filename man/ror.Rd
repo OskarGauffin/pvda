@@ -4,7 +4,7 @@
 \alias{ror}
 \title{Reporting Odds Ratio}
 \usage{
-ror(a = NULL, b = NULL, c = NULL, d = NULL, sign_lvl = 0.95)
+ror(a = NULL, b = NULL, c = NULL, d = NULL, conf_lvl = 0.95)
 }
 \arguments{
 \item{a}{Number of reports for the specific drug and event (i.e. the
@@ -16,7 +16,7 @@ observed count).}
 
 \item{d}{Number of reports without the drug, without the event}
 
-\item{sign_lvl}{Significance level of confidence or credibility intervals.
+\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{

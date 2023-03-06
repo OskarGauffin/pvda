@@ -158,7 +158,7 @@ count_expected_ror <- function(count_dt) {
 #' (e.g. +0.5) is added inside the function and should not be included here.
 #' @param shrinkage A non-negative numeric value, to be added to
 #' observed and expected count. Default is 0.5.
-#' @inheritParams sign_lvl_to_quantile_prob
+#' @inheritParams conf_lvl_to_quantile_prob
 #'
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #'
@@ -174,7 +174,7 @@ count_expected_ror <- function(count_dt) {
 ic <- function(obs = NULL,
                exp = NULL,
                shrinkage = 0.5,
-               sign_lvl = 0.95) {
+               conf_lvl = 0.95) {
   # Run input checks
   checkmate::qassert(c(obs, exp), "N+[0,)")
   checkmate::qassert(shrinkage, "N1[0,)")
@@ -183,7 +183,7 @@ ic <- function(obs = NULL,
     stop("Vectors 'obs' and 'exp' are not of equal length.")
   }
 
-  quantile_prob <- sign_lvl_to_quantile_prob(sign_lvl)
+  quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
 
   output <- tibble::tibble(
     "ic_lower" = ci_for_ic(obs, exp, quantile_prob$lower, shrinkage),
@@ -209,7 +209,7 @@ ic <- function(obs = NULL,
 #' @param n_drug Number of reports with the drug, without the event
 #' @param n_event_prr Number of reports with the event in the background.
 #' @param n_tot_prr Number of reports in the background.
-#' @inheritParams sign_lvl_to_quantile_prob
+#' @inheritParams conf_lvl_to_quantile_prob
 #'
 #' @details The PRR is estimated from a observed-to-expected ratio, based on
 #' similar to the RRR and IC, but excludes the exposure of interest from the
@@ -263,7 +263,7 @@ prr <- function(obs,
                 n_drug,
                 n_event_prr,
                 n_tot_prr,
-                sign_lvl = 0.95) {
+                conf_lvl = 0.95) {
   checkmate::qassert(c(obs, n_drug, n_event_prr, n_tot_prr), "N+[0,)")
 
   # Check that all vectors have the same length, seemed
@@ -283,7 +283,7 @@ prr <- function(obs,
   n_event_prr <- as.numeric(n_event_prr)
   n_tot_prr <- as.numeric(n_tot_prr)
 
-  quantile_prob <- sign_lvl_to_quantile_prob(sign_lvl)
+  quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
 
   output <- tibble::tibble(
     "prr_lower" = ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$lower),
@@ -308,7 +308,7 @@ prr <- function(obs,
 #' @param b Number of reports with the drug, without the event
 #' @param c Number of reports without the drug, with the event
 #' @param d Number of reports without the drug, without the event
-#' @inheritParams sign_lvl_to_quantile_prob
+#' @inheritParams conf_lvl_to_quantile_prob
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #' Number of rows equals length of inputs a, b, c, d.
 #' @details A reporting odds ratio is simply an odds ratio based on adverse event
@@ -349,7 +349,7 @@ ror <- function(a = NULL,
                 b = NULL,
                 c = NULL,
                 d = NULL,
-                sign_lvl = 0.95) {
+                conf_lvl = 0.95) {
   checkmate::qassert(c(a, b, c, d), "N+[0,)")
 
   # Check that all vectors have the same length, seemed
@@ -360,7 +360,7 @@ ror <- function(a = NULL,
     stop("Vectors a, b, c and d are not of equal length.")
   }
 
-  quantile_prob <- sign_lvl_to_quantile_prob(sign_lvl)
+  quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
 
   # Integer overflow on vaers-sized data sets if these are not converted to double
   a <- as.numeric(a)
@@ -377,20 +377,20 @@ ror <- function(a = NULL,
   return(output)
 }
 
-# 2.1 sign_lvl_to_quantile_prob ----
-#' @title Quantile probabilities from significance level
+# 2.1 conf_lvl_to_quantile_prob ----
+#' @title Quantile probabilities from confidence level
 #' @description Calculates equi-tailed quantile probabilities from a
-#' significance level
-#' @param sign_lvl Significance level of confidence or credibility intervals.
+#' confidence level
+#' @param conf_lvl Confidencelevel of confidence or credibility intervals.
 #' Default is 0.95 (i.e. 95 \% confidence interval)
 #' @return A list with two numerical vectors, "lower" and "upper".
 #' @examples
-#' sign_lvl_to_quantile_prob(0.95)
+#' conf_lvl_to_quantile_prob(0.95)
 #' @export
-sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95) {
-  checkmate::qassert(sign_lvl, "N1[0,1]")
+conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
+  checkmate::qassert(conf_lvl, "N1[0,1]")
 
-  lower_prob <- (1 - sign_lvl) / 2
+  lower_prob <- (1 - conf_lvl) / 2
   upper_prob <- 1 - lower_prob
   output <- list("lower" = lower_prob, "upper" = upper_prob)
 
@@ -403,8 +403,8 @@ sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95) {
 #' @description Mainly used in \code{link{ic}}. Produces quantiles of the
 #' posterior gamma distribution. Called twice in \code{ic} to create a
 #' credibility interval.
-#' @param sign_lvl_probs The probabilities of the posterior, based on
-#' a passed significance level (\code{sign_lvl}) in \code{\link{ic}}. For
+#' @param conf_lvl_probs The probabilities of the posterior, based on
+#' a passed confidence level (\code{conf_lvl}) in \code{\link{ic}}. For
 #' instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
 #' extracted at \code{sgn_lvl_probs} 0.025 and 0.975.
 #' @seealso \code{\link{ic}}
@@ -412,10 +412,10 @@ sign_lvl_to_quantile_prob <- function(sign_lvl = 0.95) {
 #' @export
 ci_for_ic <- function(obs,
                       exp,
-                      sign_lvl_probs,
+                      conf_lvl_probs,
                       shrinkage) {
   output <- log2(stats::qgamma(
-    p = sign_lvl_probs,
+    p = conf_lvl_probs,
     shape = obs + shrinkage,
     rate = exp + shrinkage
   ))
@@ -427,16 +427,16 @@ ci_for_ic <- function(obs,
 #' @description Mainly for use in \code{\link{prr}}. Produces (symmetric,
 #' normality based) confidence bounds for the PRR, for a passed probability.
 #' Called twice in \code{prr} to create confidence intervals.
-#' @param sign_lvl_probs The probabilities of the normal distribution, based on
-#' a passed significance level (\code{sign_lvl}) in \code{\link{prr}}. If
+#' @param conf_lvl_probs The probabilities of the normal distribution, based on
+#' a passed confidence level (\code{conf_lvl}) in \code{\link{prr}}. If
 #' \code{sgn_lvl = .95} in \code{prr}, quantiles of the normal distribution will
 #' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
 #' @seealso \code{\link{prr}}
 #' @inheritParams prr
 #' @export
-ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
+ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs) {
   s_hat <- sqrt(1 / obs - 1 / n_drug + 1 / n_event_prr - 1 / n_tot_prr)
-  (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
+  (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(conf_lvl_probs) * s_hat)
 }
 
 # 2.4 ci_for_ror ----
@@ -444,15 +444,15 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
 #' @description Mainly for use in \code{\link{ror}}. Produces (symmetric,
 #' normality based) confidence bounds for the ROR, for a passed probability.
 #' Called twice in \code{ror} to create confidence intervals.
-#' @param sign_lvl_probs The probabilities of the normal distribution, based on
-#' a passed significance level (\code{sign_lvl}) in \code{\link{ror}}. If
+#' @param conf_lvl_probs The probabilities of the normal distribution, based on
+#' a passed confidence level (\code{conf_lvl}) in \code{\link{ror}}. If
 #' \code{sgn_lvl = .95} in \code{ror}, quantiles of the normal distribution will
 #' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
 #' @seealso \code{\link{ror}}
 #' @inheritParams ror
 #' @export
-ci_for_ror <- function(a, b, c, d, sign_lvl_probs) {
-  exp(log((a * d) / (b * c)) + stats::qnorm(sign_lvl_probs) *
+ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
+  exp(log((a * d) / (b * c)) + stats::qnorm(conf_lvl_probs) *
     sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 

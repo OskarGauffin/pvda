@@ -9,7 +9,7 @@ da(
   da_estimators = c("ic", "prr", "ror"),
   group_by = NULL,
   rule_of_N = 3,
-  sign_lvl = 0.95,
+  conf_lvl = 0.95,
   number_of_digits = 2,
   excel_path = NULL
 )
@@ -32,7 +32,7 @@ counts are strictly less than the passed value of \code{rule_of_N}. Default valu
 is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
 don't want to apply any such rule.}
 
-\item{sign_lvl}{Significance level of confidence or credibility intervals.
+\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 
 \item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing

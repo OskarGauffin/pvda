@@ -55,7 +55,7 @@ da <- function(df = NULL,
                da_estimators = c("ic", "prr", "ror"),
                group_by = NULL,
                rule_of_N = 3,
-               sign_lvl = 0.95,
+               conf_lvl = 0.95,
                number_of_digits = 2,
                excel_path = NULL) {
 
@@ -70,7 +70,7 @@ da <- function(df = NULL,
       output <- df |>
         pvutils::add_expected_counts(expected_count_estimators = expected_count_estimators) |>
         pvutils::add_disproportionality(da_estimators = da_estimators,
-                                        sign_lvl = sign_lvl,
+                                        conf_lvl = conf_lvl,
                                         rule_of_N = rule_of_N,
                                         number_of_digits = number_of_digits)
     } else {
@@ -83,7 +83,7 @@ da <- function(df = NULL,
                            group_by = NULL,
                            expected_count_estimators = NULL,
                            da_estimators = NULL,
-                           sign_lvl = NULL,
+                           conf_lvl = NULL,
                            rule_of_N = rule_of_N,
                            number_of_digits = number_of_digits){
 
@@ -96,7 +96,7 @@ da <- function(df = NULL,
       df |>
       pvutils::add_expected_counts(expected_count_estimators = expected_count_estimators) |>
       pvutils::add_disproportionality(da_estimators = da_estimators,
-                                      sign_lvl = sign_lvl,
+                                      conf_lvl = conf_lvl,
                                       rule_of_N = rule_of_N,
                                       number_of_digits = number_of_digits) |>
       # Ideally, group-variable should be preserved throughout the toolchain
@@ -110,7 +110,7 @@ da <- function(df = NULL,
                group_by = group_by,
                expected_count_estimators = expected_count_estimators,
                da_estimators = da_estimators,
-               sign_lvl = sign_lvl,
+               conf_lvl = conf_lvl,
                rule_of_N = rule_of_N,
                number_of_digits = number_of_digits) |>
     purrr::list_rbind()
@@ -224,7 +224,7 @@ add_disproportionality <- function(df = NULL,
                                    da_estimators = c("ic", "prr", "ror"),
                                    rule_of_N = 3,
                                    number_of_digits = 2,
-                                   sign_lvl = 0.95) {
+                                   conf_lvl = 0.95) {
 
   if( ! all(da_estimators %in% c("ic", "prr", "ror"))){
     stop("Passed parameter 'da_estimators' must consist of 'ic', 'prr' or 'ror'")

@@ -4,7 +4,7 @@
 \alias{ci_for_prr}
 \title{Confidence intervals for Proportional Reporting Rate}
 \usage{
-ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs)
+ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs)
 }
 \arguments{
 \item{obs}{Number of reports for the specific drug and event (i.e. the
@@ -16,8 +16,8 @@ observed count).}
 
 \item{n_tot_prr}{Number of reports in the background.}
 
-\item{sign_lvl_probs}{The probabilities of the normal distribution, based on
-a passed significance level (\code{sign_lvl}) in \code{\link{prr}}. If
+\item{conf_lvl_probs}{The probabilities of the normal distribution, based on
+a passed confidence level (\code{conf_lvl}) in \code{\link{prr}}. If
 \code{sgn_lvl = .95} in \code{prr}, quantiles of the normal distribution will
 be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.}
 }

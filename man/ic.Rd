@@ -4,7 +4,7 @@
 \alias{ic}
 \title{Information component}
 \usage{
-ic(obs = NULL, exp = NULL, shrinkage = 0.5, sign_lvl = 0.95)
+ic(obs = NULL, exp = NULL, shrinkage = 0.5, conf_lvl = 0.95)
 }
 \arguments{
 \item{obs}{A numeric vector with observed counts, i.e. number of reports
@@ -18,7 +18,7 @@ to be expected given a comparator or \emph{background}. Note that shrinkage
 \item{shrinkage}{A non-negative numeric value, to be added to
 observed and expected count. Default is 0.5.}
 
-\item{sign_lvl}{Significance level of confidence or credibility intervals.
+\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 }
 \value{
