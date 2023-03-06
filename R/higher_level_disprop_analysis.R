@@ -193,7 +193,7 @@ add_expected_counts <- function(df = NULL,
   }
 
   # Until the base pipe can handle an arrange(desc(obs)):
-  desc_obs_order <- dplyr::desc(x=as.data.frame(count_dt)$obs)
+  desc_obs_order <- dplyr::desc(x = as.data.frame(count_dt)$obs)
 
   count_df <-
     count_dt |>

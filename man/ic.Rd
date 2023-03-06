@@ -39,9 +39,9 @@ where \eqn{\hat{O}} = observed number of reports, \eqn{k} is the shrinkage
 (typically +0.5), and expected \eqn{\hat{E}} is (for RRR, and using the
 entire database as comparator or \emph{background}) estimated as
 
-\deqn{ \hat{E} = \frac{N_{drug} \times N_{event}}{N_{TOT}}}
+\deqn{ \hat{E} = \frac{\hat{N}_{drug} \times \hat{N}_{event}}{\hat{N}_{TOT}}}
 
-where \eqn{N_{drug}}, \eqn{N_{event}} and \eqn{N_{TOT}} are the number of
+where \eqn{\hat{N}_{drug}}, \eqn{\hat{N}_{event}} and \eqn{\hat{N}_{TOT}} are the number of
 reports with the drug, the event, and in the whole database respectively.
 
 The credibility interval is created from the quantiles of the posterior
@@ -51,7 +51,12 @@ gamma distribution with shape (\eqn{\hat{S}}) and rate (\eqn{\hat{R}}) parameter
 \deqn{\hat{R} = \hat{E} + k}
 
 using the \code{stats::qgamma} function. Parameter \eqn{k} is the shrinkage defined
-earlier.
+earlier. For completeness, a credibility interval of the gamma distributed \eqn{X} (i.e.
+\eqn{X \sim \Gamma(\hat{S}, \hat{R})} where \eqn{\hat{S}} and \eqn{\hat{R}} are shape and rate parameters)
+with associated quantile function \eqn{Q_X(p)} for a significance level \eqn{\alpha} is
+constructed as
+
+\deqn{[Q_X(\alpha/2), Q_X(1-\alpha/2)]}
 }
 \section{Further details}{
 

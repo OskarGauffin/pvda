@@ -31,6 +31,29 @@ confidence intervals, used in disproportionality analysis.
 The PRR is the proportion of reports with an event in set of exposed
 cases, divided with the proportion of reports with the event in a background
 or comparator, which does not include the exposed.
+
+The PRR is estimated from a observed-to-expected ratio, based on
+similar to the RRR and IC, but excludes the exposure of interest from the
+comparator.
+
+\deqn{\hat{PRR} = \frac{\hat{O}}{\hat{E}}}
+
+where \eqn{\hat{O}} is the observed number of reports, and expected \eqn{\hat{E}}
+is estimated as
+
+\deqn{\hat{E} = \frac{\hat{N}_{drug} \times (\hat{N}_{event} - \hat{O})}{\hat{N}_{TOT}-\hat{N}_{drug}}}
+
+where \eqn{\hat{N}_{drug}}, \eqn{\hat{N}_{event}}, \eqn{\hat{O}} and \eqn{\hat{N}_{TOT}} are
+the number of reports with the drug, the event, the drug and event, and
+in the whole database respectively.
+
+A confidence interval is created using a standard deviation and
+normal approximation as:
+\deqn{\hat{s} = \sqrt{ 1/\hat{O} + 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) + 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
+
+and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
+\deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
+\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]}
 }
 \examples{
 
