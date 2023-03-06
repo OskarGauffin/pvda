@@ -4,7 +4,7 @@
 \alias{ror}
 \title{Reporting Odds Ratio}
 \usage{
-ror(a, b, c, d, sign_lvl = 0.95)
+ror(a = NULL, b = NULL, c = NULL, d = NULL, sign_lvl = 0.95)
 }
 \arguments{
 \item{a}{Number of reports for the specific drug and event (i.e. the
@@ -41,13 +41,28 @@ where \eqn{a} = observed count (i.e. number of reports with exposure and
 outcome), \eqn{b} = number of reports with the drug and without the event,
 \eqn{c} = number of reports without the drug with the event and \eqn{d} =
 number of reports with neither of the drug and the event.
+
+A confidence interval for the ROR can be derived through the delta method,
+with a standard deviation:
+
+\deqn{\hat{s} = \sqrt{1/a + 1/b + 1/c + 1/d}}
+
+with the resulting confidence interval for significance level \eqn{\alpha}
+
+\deqn{[\hat{ROR} \times exp(\Phi_{\alpha/2} \times \hat{s}), \hat{ROR} \times exp(\Phi_{1-\alpha/2} \times \hat{s})]}
 }
 \examples{
 
-pvutils::ror(a = 5, b = 10, c = 20, d = 10000)
+pvutils::ror(a = 5,
+             b = 10,
+             c = 20,
+             d = 10000)
 
 # Note that a, b, c and d can be vectors (of equal length, no recycling)
-pvutils::ror(a = c(5, 10), b = c(10, 20), c = c(15, 30), d = c(10000, 10000))
+pvutils::ror(a = c(5, 10),
+             b = c(10, 20),
+             c = c(15, 30),
+             d = c(10000, 10000))
 }
 \references{
 \insertRef{Montastruc_2011}{pvutils}
