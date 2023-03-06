@@ -1,12 +1,12 @@
 # TODO
 
-# Add on CI for IC DONE
-# Write up ROR AND PRR formulas in documentation
+# Write up ROR formula in documentation
 # Overall QC check on ic, prr, ror docs
 # Sort grouped output, move da columns to left,
 # rename da bound columns to sign_lvl-names
 # Update vignette
 # Do QC on the ROR; PRR; IC values, in point and bounds
+# Change the df parameters to !! instead of fixed names
 # commit to CRAN
 
 ### Long term, want to, not for now

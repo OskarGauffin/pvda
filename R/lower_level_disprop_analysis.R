@@ -226,21 +226,25 @@ ic <- function(obs = NULL,
 #' the number of reports with the drug, the event, the drug and event, and
 #' in the whole database respectively.
 #'
-#' A confidence interval is created using a standard deviation and
-#' normal approximation as:
-#' \deqn{\hat{s} = \sqrt{ 1/\hat{O} + 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) + 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
+#' A confidence interval is derived in Gravel (2009), using the delta method:
+#' \deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 #'
 #' and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
 #' \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
 #' \frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]}
 #'
+#' Another version of this standard deviation is sometimes used where the last
+#' fraction is added rather than subtracted, with negligible practical implications.
 #'
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #' Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.
 #'
 #' @examples
 #'
-#' pvutils::prr(obs = 5, n_drug = 10, n_event_prr = 20, n_tot_prr = 10000)
+#' pvutils::prr(obs = 5,
+#' n_drug = 10,
+#' n_event_prr = 20,
+#' n_tot_prr = 10000)
 #'
 #' # Note that input parameters can be vectors (of equal length, no recycling)
 #' pvutils::prr(
@@ -249,7 +253,10 @@ ic <- function(obs = NULL,
 #'   n_event_prr = c(15, 30),
 #'   n_tot_prr = c(10000, 10000)
 #' )
-#' @references \insertRef{Montastruc_2011}{pvutils}
+#' @references
+#' \insertRef{Montastruc_2011}{pvutils}
+#'
+#' \insertRef{MscThesis}{pvutils}
 #' @export
 #'
 prr <- function(obs,
@@ -407,7 +414,7 @@ ci_for_ic <- function(obs,
 #' @inheritParams prr
 #' @export
 ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, sign_lvl_probs) {
-  s_hat <- sqrt(1 / obs + 1 / n_drug + 1 / n_event_prr + 1 / n_tot_prr)
+  s_hat <- sqrt(1 / obs - 1 / n_drug + 1 / n_event_prr - 1 / n_tot_prr)
   (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(sign_lvl_probs) * s_hat)
 }
 

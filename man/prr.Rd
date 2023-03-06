@@ -47,17 +47,22 @@ where \eqn{\hat{N}_{drug}}, \eqn{\hat{N}_{event}}, \eqn{\hat{O}} and \eqn{\hat{N
 the number of reports with the drug, the event, the drug and event, and
 in the whole database respectively.
 
-A confidence interval is created using a standard deviation and
-normal approximation as:
-\deqn{\hat{s} = \sqrt{ 1/\hat{O} + 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) + 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
+A confidence interval is derived in Gravel (2009), using the delta method:
+\deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 
 and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
 \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
 \frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]}
+
+Another version of this standard deviation is sometimes used where the last
+fraction is added rather than subtracted, with negligible practical implications.
 }
 \examples{
 
-pvutils::prr(obs = 5, n_drug = 10, n_event_prr = 20, n_tot_prr = 10000)
+pvutils::prr(obs = 5,
+n_drug = 10,
+n_event_prr = 20,
+n_tot_prr = 10000)
 
 # Note that input parameters can be vectors (of equal length, no recycling)
 pvutils::prr(
@@ -69,4 +74,6 @@ pvutils::prr(
 }
 \references{
 \insertRef{Montastruc_2011}{pvutils}
+
+\insertRef{MscThesis}{pvutils}
 }
