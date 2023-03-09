@@ -9,6 +9,7 @@
 #' @title Count Expected for Relative Reporting Rate
 #' @description Internal function to provide expected counts related to the RRR
 #' @param df See documentation for add_expected_counts
+#' @param df_colnames Some description to be added
 #' @return A data frame with columns for obs, n_drug,
 #' n_event, n_tot and (RRR) expected
 #' @seealso
@@ -16,28 +17,44 @@
 #'  \code{\link[dplyr]{distinct}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{n_distinct}}, \code{\link[dplyr]{group_by}}, \code{\link[dplyr]{count}}, \code{\link[dplyr]{rename}}, \code{\link[dplyr]{select}}
 #' @importFrom dtplyr lazy_dt
 #' @importFrom dplyr distinct mutate n_distinct group_by ungroup count rename select
-count_expected_rrr <- function(df) {
-  NULL -> desc -> ends_with -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot ->
-  event -> drug -> report_id
+count_expected_rrr <- function(df_colnames, df) {
+  NULL -> desc -> ends_with -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot
+  assign(df_colnames$report_id, NULL)
+  assign(df_colnames$event, NULL)
+  assign(df_colnames$drug, NULL)
+
+  report_id <- rlang::sym(df_colnames$report_id)
+  drug <- rlang::sym(df_colnames$drug)
+  event <- rlang::sym(df_colnames$event)
 
   #  Note that although dplyr from v 1.1.0 supports .by-grouping
   #  this does not seem to be the case for dtplyr (which is used here)
   count_dt <- dtplyr::lazy_dt(df, immutable = FALSE) |>
     dplyr::distinct() |>
-    dplyr::mutate(n_tot = dplyr::n_distinct(report_id)) |>
-    dplyr::group_by(drug) |>
-    dplyr::mutate(n_drug = dplyr::n_distinct(report_id)) |>
-    dplyr::group_by(drug) |>
-    dplyr::group_by(event) |>
-    dplyr::mutate(n_event = dplyr::n_distinct(report_id)) |>
+    dplyr::mutate(n_tot = dplyr::n_distinct(!!report_id)) |>
+    dplyr::group_by(!!drug) |>
+    dplyr::mutate(n_drug = dplyr::n_distinct(!!report_id)) |>
+    dplyr::group_by(!!drug) |>
+    dplyr::group_by(!!event) |>
+    dplyr::mutate(n_event = dplyr::n_distinct(!!report_id)) |>
     dplyr::ungroup() |>
-    dplyr::count(drug, event, n_tot, n_drug, n_event) |>
+    dplyr::count(!!drug,
+                 !!event,
+                 n_tot,
+                 n_drug,
+                 n_event) |>
     dplyr::rename(obs = n) |>
     # Note that the as.numeric must be called in the same mutate as we do
     # the multiplication
     dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
       as.numeric(n_tot)) |>
-    dplyr::select(drug, event, obs, n_drug, n_event, n_tot, exp_rrr)
+    dplyr::select(!!drug,
+                  !!event,
+                  obs,
+                  n_drug,
+                  n_event,
+                  n_tot,
+                  exp_rrr)
 
   return(count_dt)
 }
@@ -57,9 +74,7 @@ count_expected_rrr <- function(df) {
 count_expected_prr <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_prr -> n_tot_prr ->
-  n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot ->
-  event -> drug -> report_id
-
+  n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -90,7 +105,7 @@ count_expected_prr <- function(count_dt) {
 count_expected_ror <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_ror -> d -> b -> n -> n_event -> n_drug ->
-  n_tot -> event -> drug -> report_id -> obs -> n_event_prr -> n_tot_prr
+  n_tot -> obs -> n_event_prr -> n_tot_prr
 
   count_dt <- count_dt |>
     dplyr::mutate(

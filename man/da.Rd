@@ -6,8 +6,9 @@
 \usage{
 da(
   df = NULL,
+  df_colnames = list(report_id = "report_id", drug = "drug", event = "event", group_by =
+    NULL),
   da_estimators = c("ic", "prr", "ror"),
-  group_by = NULL,
   rule_of_N = 3,
   conf_lvl = 0.95,
   number_of_digits = 2,
@@ -19,13 +20,12 @@ da(
 a tibble or data.frame, containing patient level reported drug-event-pairs.
 See below for further details.}
 
+\item{df_colnames}{Provide a list with the names of the variables to use in `df`
+i.e. report_id, drug, event and optionally group_by.}
+
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").}
-
-\item{group_by}{Provide a string with the name of a grouping variable in `df`
-to perform subgroup analyses (i.e. run disproportionality analysis within each group).
-Passing NULL, the default, uses all data in df as a single group.}
 
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of \code{rule_of_N}. Default value
@@ -61,16 +61,36 @@ da_1 <-
 drug_event_df |>
 da()
 
+### Run a disproportionality analysis on a data frame with your own column names
+# Create the list with colnames for the data
+your_own_colnames <-
+list(report_id = "repId",
+     drug = "drug",
+     event = "event",
+     group_by = NULL)
+
+# Rename the report_id variable and run again
+drug_event_df |>
+dplyr::rename(repId = report_id) |>
+da(df_colnames = your_own_colnames)
+
 ### Run a disproportionality across two subgroups
 # Create two groups (even/uneven report_ids) in drug_event_df
 drug_event_df_with_grouping  <-
 drug_event_df |>
 dplyr::mutate("group" = report_id \%\% 2)
 
+# Set the colname for the group_by-parameter to "group"
+your_own_colnames <-
+     list(report_id = "report_id",
+          drug = "drug",
+          event = "event",
+          group_by = "group")
+
 # Execute da across the subgroups
 da_2 <-
 drug_event_df_with_grouping |>
-da(group_by = "group")
+da(df_colnames = your_own_colnames)
 }
 \seealso{
 \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}

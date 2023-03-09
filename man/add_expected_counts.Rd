@@ -6,6 +6,7 @@
 \usage{
 add_expected_counts(
   df = NULL,
+  df_colnames = NULL,
   expected_count_estimators = c("rrr", "prr", "ror")
 )
 }
@@ -13,6 +14,8 @@ add_expected_counts(
 \item{df}{An object possible to convert to a data table, e.g.
 a tibble or data.frame, containing patient level reported drug-event-pairs.
 See below for further details.}
+
+\item{df_colnames}{Some description}
 
 \item{expected_count_estimators}{A character vector containing the desired
 expected count estimators. Defaults to the implemented options, i.e.

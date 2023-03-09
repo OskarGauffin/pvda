@@ -4,9 +4,11 @@
 \alias{count_expected_rrr}
 \title{Count Expected for Relative Reporting Rate}
 \usage{
-count_expected_rrr(df)
+count_expected_rrr(df_colnames, df)
 }
 \arguments{
+\item{df_colnames}{Some description to be added}
+
 \item{df}{See documentation for add_expected_counts}
 }
 \value{

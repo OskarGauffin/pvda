@@ -29,7 +29,13 @@ test_that("Function ror works", {
 
 
 test_that("Function add_expected_count works", {
-  produced_output <- pvutils::add_expected_counts(drug_event_df,
+
+  df_colnames = list(report_id = "report_id",
+                     drug = "drug",
+                     event = "event")
+
+  produced_output <- pvutils::add_expected_counts(pvutils::drug_event_df,
+                                                  df_colnames,
   expected_count_estimators = c("rrr", "prr", "ror")
   )
 
@@ -51,8 +57,7 @@ test_that("Function add_expected_count works", {
 
 test_that("The whole disproportionality function chain runs without NA output except in PRR and ROR", {
   output <- pvutils::drug_event_df |>
-    pvutils::add_expected_counts() |>
-    pvutils::add_disproportionality() |>
+    pvutils::da() |>
     dplyr::select(-dplyr::starts_with("ror")) |>
     dplyr::select(-dplyr::starts_with("prr"))
 
@@ -63,7 +68,10 @@ test_that("The grouping functionality runs", {
 
   drug_event_df_with_grouping  <- pvutils::drug_event_df |>
     dplyr::mutate("group" = report_id %% 2)
-  da_1 <- drug_event_df_with_grouping |> pvutils::da(group_by = "group")
+  da_1 <- drug_event_df_with_grouping |> pvutils::da(df_colnames = list(report_id = "report_id",
+                                                                        drug = "drug",
+                                                                        event = "event",
+                                                                        group_by = "group"))
 
   first_row_ic_group_0 <- as.numeric(da_1[1,]$ic)
   manual_calc_ic_first_row_group_0 <- as.numeric(log2((14 + 0.5)/(da_1[1,8] + 0.5)))
