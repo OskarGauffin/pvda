@@ -58,8 +58,8 @@
 
 
 
-<script src="Disproportionality_analysis_files/htmlwidgets-1.6.1/htmlwidgets.js"></script><script src="Disproportionality_analysis_files/viz-1.8.2/viz.js"></script><link href="Disproportionality_analysis_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="Disproportionality_analysis_files/grViz-binding-1.0.9/grViz.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Disproportionality_analysis</h1>
             
@@ -127,26 +127,9 @@ and event are described in the data object (execute ). We pass the data
 to a function that calculates expected counts, and then to a function
 which adds columns contaning disproportionality.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/add_expected_counts.html">add_expected_counts</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/add_disproportionality.html">add_disproportionality</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,279 × 23</span></span></span>
-<span><span class="co">##    drug   event   obs n_drug n_event n_tot exp_rrr n_eve…¹ n_tot…² exp_prr     b</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Drug_A Even…    21    359     174  <span style="text-decoration: underline;">1</span>000    62.5     153     641    85.7   338</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Drug_A Even…    21    359     155  <span style="text-decoration: underline;">1</span>000    55.6     134     641    75.0   338</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Drug_C Even…    21    298     174  <span style="text-decoration: underline;">1</span>000    51.9     153     702    64.9   277</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Drug_E Even…    21    279     186  <span style="text-decoration: underline;">1</span>000    51.9     165     721    63.8   258</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Drug_D Even…    20    275     163  <span style="text-decoration: underline;">1</span>000    44.8     143     725    54.2   255</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Drug_A Even…    19    359     186  <span style="text-decoration: underline;">1</span>000    66.8     167     641    93.5   340</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Drug_A Even…    19    359     138  <span style="text-decoration: underline;">1</span>000    49.5     119     641    66.6   340</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Drug_C Even…    19    298     163  <span style="text-decoration: underline;">1</span>000    48.6     144     702    61.1   279</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Drug_E Even…    19    279     138  <span style="text-decoration: underline;">1</span>000    38.5     119     721    46.0   260</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> Drug_A Even…    18    359     163  <span style="text-decoration: underline;">1</span>000    58.5     145     641    81.2   341</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 1,269 more rows, 12 more variables: c &lt;int&gt;, d &lt;int&gt;, exp_ror &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ic_lower &lt;dbl&gt;, ic &lt;dbl&gt;, ic_upper &lt;dbl&gt;, prr_lower &lt;dbl&gt;, prr &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   prr_upper &lt;dbl&gt;, ror_lower &lt;dbl&gt;, ror &lt;dbl&gt;, ror_upper &lt;dbl&gt;, and</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​n_event_prr, ²​n_tot_prr</span></span></span></code></pre>
+<code class="sourceCode R"><span><span class="co"># drug_event_df |&gt;</span></span>
+<span><span class="co">#   add_expected_counts() |&gt;</span></span>
+<span><span class="co">#   add_disproportionality()</span></span></code></pre></div>
 <p>We will now step through these steps in detail.</p>
 <div class="section level4">
 <h4 id="passing-a-correctly-structured-input-data">Passing a correctly structured input data<a class="anchor" aria-label="anchor" href="#passing-a-correctly-structured-input-data"></a>
@@ -159,7 +142,7 @@ drug_event_df are from the same report, with report_id = 1. The first
 row reports a Drug_D and an adverse event named Event_5.The next three
 rows are from another report, where for instance drug B has been
 reported for two different events, event 15 and event 33.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
 <span><span class="co">##   report_id drug   event   </span></span>
@@ -187,16 +170,10 @@ did not have the drug, and the adverse event respectively.</p>
 calculation of expected counts for specific estimators. Note that IC by
 tradition uses expected counts referred to as the Relative Reporting
 Rate (RRR).</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/add_expected_counts.html">add_expected_counts</a></span><span class="op">(</span>expected_count_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"prr"</span>, <span class="st">"ror"</span>, <span class="st">"rrr"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 14</span></span></span>
-<span><span class="co">##   drug   event    obs n_drug n_event n_tot exp_rrr n_eve…¹ n_tot…² exp_prr     b</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> Drug_A Event…    21    359     174  <span style="text-decoration: underline;">1</span>000    62.5     153     641    85.7   338</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 3 more variables: c &lt;int&gt;, d &lt;int&gt;, exp_ror &lt;dbl&gt;, and abbreviated</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   variable names ¹​n_event_prr, ²​n_tot_prr</span></span></span></code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># drug_event_df |&gt;</span></span>
+<span><span class="co">#   add_expected_counts(expected_count_estimators = c("prr", "ror", "rrr")) |&gt;</span></span>
+<span><span class="co">#   head(1)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="adding-the-disproportionality-estimators">Adding the disproportionality estimators<a class="anchor" aria-label="anchor" href="#adding-the-disproportionality-estimators"></a>
@@ -213,23 +190,6 @@ exceed 0 at the default significance level of 95%.</p>
 <p>The second parameter controls the rounding of non-count values in the
 output, including all expected counts, uncertainty bounds and point
 estimates. By default 2 digits are kept.</p>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,279 × 23</span></span></span>
-<span><span class="co">##    drug   event   obs n_drug n_event n_tot exp_rrr n_eve…¹ n_tot…² exp_prr     b</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Drug_A Even…    21    359     174  <span style="text-decoration: underline;">1</span>000    62.5     153     641    85.7   338</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Drug_A Even…    21    359     155  <span style="text-decoration: underline;">1</span>000    55.6     134     641    75.0   338</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Drug_C Even…    21    298     174  <span style="text-decoration: underline;">1</span>000    51.9     153     702    64.9   277</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Drug_E Even…    21    279     186  <span style="text-decoration: underline;">1</span>000    51.9     165     721    63.8   258</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Drug_D Even…    20    275     163  <span style="text-decoration: underline;">1</span>000    44.8     143     725    54.2   255</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Drug_A Even…    19    359     186  <span style="text-decoration: underline;">1</span>000    66.8     167     641    93.5   340</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Drug_A Even…    19    359     138  <span style="text-decoration: underline;">1</span>000    49.5     119     641    66.6   340</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Drug_C Even…    19    298     163  <span style="text-decoration: underline;">1</span>000    48.6     144     702    61.1   279</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Drug_E Even…    19    279     138  <span style="text-decoration: underline;">1</span>000    38.5     119     721    46.0   260</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> Drug_A Even…    18    359     163  <span style="text-decoration: underline;">1</span>000    58.5     145     641    81.2   341</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 1,269 more rows, 12 more variables: c &lt;int&gt;, d &lt;int&gt;, exp_ror &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ic_lower &lt;dbl&gt;, ic &lt;dbl&gt;, ic_upper &lt;dbl&gt;, prr_lower &lt;dbl&gt;, prr &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   prr_upper &lt;dbl&gt;, ror_lower &lt;dbl&gt;, ror &lt;dbl&gt;, ror_upper &lt;dbl&gt;, and</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​n_event_prr, ²​n_tot_prr</span></span></span></code></pre>
 <p>In short, the add_disproportionality is a wrapper around ror, prr and
 ic. For further details around those estimators, see the documentation
 of corresponding function.</p>
@@ -253,8 +213,6 @@ package, available on <a href="https://gitlab.com/iembry/vaers.git" class="exter
 2018, resulting in 4 146 778 rows to be processed by <code>da</code> in
 <code>pvutils</code>. Execution on a regular laptop took less than 7
 seconds.</p>
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-621aac8cc0343033f7e2" style="width:768px;height:768px;"></div>
-<script type="application/json" data-for="htmlwidget-621aac8cc0343033f7e2">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       label = \"Overview of package functions\",\n       labelloc = \"t\",\n       labeljust = \"c\",\n       fontname = \"Helvetica\",\n       fontcolor = \"gray30\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"conf_lvl_to_quantile_prob\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,1!\"] \n  \"3\" [label = \"ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,2!\"] \n  \"4\" [label = \"ci_for_prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2,1!\"] \n  \"5\" [label = \"ci_for_ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,1!\"] \n  \"6\" [label = \"ci_for_ic\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"3,1!\"] \n  \"7\" [label = \"ror\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0,2!\"] \n  \"8\" [label = \"prr\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1,2!\"] \n  \"9\" [label = \"da\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1.5,4!\"] \n  \"10\" [label = \"add_expected_counts\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"0.5,3!\"] \n  \"11\" [label = \"write_to_excel\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"2.5,3!\"] \n  \"12\" [label = \"add_disproportionality\", fontsize = \"6\", shape = \"rectangle\", fixedsize = \"FALSE\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\", pos = \"1.5,3!\"] \n  \"3\"->\"1\" \n  \"3\"->\"6\" \n  \"7\"->\"1\" \n  \"7\"->\"5\" \n  \"8\"->\"1\" \n  \"8\"->\"4\" \n  \"9\"->\"12\" \n  \"9\"->\"10\" \n  \"9\"->\"11\" \n  \"10\"->\"8\" \n  \"10\"->\"7\" \n  \"12\"->\"3\" \n  \"12\"->\"8\" \n  \"12\"->\"7\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
