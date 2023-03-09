@@ -104,43 +104,6 @@ da <- function(df = NULL,
       stop("Passed grouping column name '", df_colnames$group_by, "' not found in passed df.")
     }
     # When subgroups are provided:
-
-    grouped_da <- function(df = NULL,
-                           df_colnames = list(report_id = "report_id",
-                                              drug = "drug",
-                                              event = "event",
-                                              group_by = "group"),
-                           group_by = NULL,
-                           expected_count_estimators = NULL,
-                           da_estimators = NULL,
-                           conf_lvl = NULL,
-                           rule_of_N = NULL,
-                           number_of_digits = NULL){
-
-      assign(df_colnames$event, NULL)
-      assign(df_colnames$drug, NULL)
-      assign(df_colnames$group_by, NULL)
-
-      drug <- rlang::sym(df_colnames$drug)
-      event <- rlang::sym(df_colnames$event)
-      group_by <- rlang::sym(df_colnames$group_by)
-
-      current_group <- df |>
-        dplyr::slice(1) |>
-        dplyr::pull(!! group_by)
-
-      df |>
-        pvutils::add_expected_counts(df_colnames = df_colnames,
-                                     expected_count_estimators = expected_count_estimators) |>
-        pvutils::add_disproportionality(da_estimators = da_estimators,
-                                        conf_lvl = conf_lvl,
-                                        rule_of_N = rule_of_N,
-                                        number_of_digits = number_of_digits) |>
-        # Ideally, group-variable should be preserved throughout the toolchain
-        dplyr::bind_cols(!!group_by := current_group) |>
-        dplyr::select(!!drug, !!event, !!group_by, everything())
-    }
-
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
@@ -157,6 +120,53 @@ da <- function(df = NULL,
   write_to_excel(output, excel_path)
 
   return(invisible(output))
+}
+# 0.1.1 grouped_da -----
+#' @title Disproportionality Analysis by Subgroups
+#' @description A package internal wrapper for executing da across subgroups
+#' @param df See the da function
+#' @param df_colnames See the da function
+#' @param group_by For convenience, the df_colnames$group_by is passed as a separate parameter
+#' @param expected_count_estimators See the da function
+#' @param da_estimators See the da function
+#' @param conf_lvl See the da function
+#' @param rule_of_N See the da function
+#' @param number_of_digits See the da function
+#' @return See the da function
+#' @details See the da documentation
+#' @importFrom rlang sym
+#' @importFrom dplyr slice pull bind_cols select
+grouped_da <- function(df = NULL,
+                       df_colnames = NULL,
+                       group_by = NULL,
+                       expected_count_estimators = NULL,
+                       da_estimators = NULL,
+                       conf_lvl = NULL,
+                       rule_of_N = NULL,
+                       number_of_digits = NULL){
+
+  assign(df_colnames$event, NULL)
+  assign(df_colnames$drug, NULL)
+  assign(df_colnames$group_by, NULL)
+
+  drug <- rlang::sym(df_colnames$drug)
+  event <- rlang::sym(df_colnames$event)
+  group_by <- rlang::sym(df_colnames$group_by)
+
+  current_group <- df |>
+    dplyr::slice(1) |>
+    dplyr::pull(!! group_by)
+
+  df |>
+    pvutils::add_expected_counts(df_colnames = df_colnames,
+                                 expected_count_estimators = expected_count_estimators) |>
+    pvutils::add_disproportionality(da_estimators = da_estimators,
+                                    conf_lvl = conf_lvl,
+                                    rule_of_N = rule_of_N,
+                                    number_of_digits = number_of_digits) |>
+
+    dplyr::bind_cols(!!group_by := current_group) |>
+    dplyr::select(!!drug, !!event, !!group_by, everything())
 }
 
 # 1.1 add_expected_counts ----
@@ -184,7 +194,6 @@ da <- function(df = NULL,
 #' rename select ungroup
 #' @import data.table
 #' @export
-
 add_expected_counts <- function(df = NULL,
                                 df_colnames = NULL,
                                 expected_count_estimators = c("rrr", "prr", "ror")) {
