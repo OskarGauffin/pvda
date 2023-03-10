@@ -20,8 +20,11 @@ da(
 a tibble or data.frame, containing patient level reported drug-event-pairs.
 See below for further details.}
 
-\item{df_colnames}{Provide a list with the names of the variables to use in `df`
-i.e. report_id, drug, event and optionally group_by.}
+\item{df_colnames}{Provide a list with the column names of the variables to use
+passed in \code{df}`i.e. point \code{da} to the column with the report_ids
+(\code{report_id}), the drug names (\code{drug}), the adverse event names
+(\code{event}) and optionally which subgroups to calculate disproportionality
+across through \code{group_by}. See the examples.}
 
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults

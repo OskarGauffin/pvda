@@ -1,6 +1,7 @@
 # TODO
 
-# update documentation on grouped_df in add_expected_counts
+# "Rule of N" (should be a separate fcn)
+# Sorting should be done as a last step, now it's in add_expected_count
 # Sort grouped output, move da columns to left,
 # rename da bound columns to sign_lvl-names
 # Overall QC check on ic, prr, ror docs

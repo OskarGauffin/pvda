@@ -15,7 +15,11 @@ add_expected_counts(
 a tibble or data.frame, containing patient level reported drug-event-pairs.
 See below for further details.}
 
-\item{df_colnames}{Some description}
+\item{df_colnames}{Provide a list with the column names of the variables to use
+passed in \code{df}`i.e. point \code{da} to the column with the report_ids
+(\code{report_id}), the drug names (\code{drug}), the adverse event names
+(\code{event}) and optionally which subgroups to calculate disproportionality
+across through \code{group_by}. See the examples.}
 
 \item{expected_count_estimators}{A character vector containing the desired
 expected count estimators. Defaults to the implemented options, i.e.
@@ -36,5 +40,6 @@ Produces various counts used in disproportionality analysis.
  contained drug X for event Y and event Z, two rows would be added, with the
  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
  numeric or character. Columns \code{drug} and \code{event} must be of type character.
+ You can use other names for your columns, as long as you specify them in df_colnames.
 }
 

@@ -14,16 +14,11 @@
 #' @inheritParams add_expected_counts
 #' @inheritParams add_disproportionality
 #' @inheritParams ror
-#' @param df_colnames Provide a list with the names of the variables to use in `df`
-#' i.e. report_id, drug, event and optionally group_by.
-
 #' @param excel_path To write the output of \code{da} to an excel file, provide a path
 #' to a folder e.g. to write to your current working directory, pass \code{getwd()}.
 #'  The excel file will by default be named \code{da.xlsx}. To control the excel file name,
 #'  pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
 #'  do not want to export the output to an excel file, pass NULL (the default).
-#'
-#'
 #' @inheritParams add_expected_counts The df object
 #' @return \code{da} returns a data frame (invisibly) containing counts and
 #' estimates related to supported disproportionality estimators. Each row
@@ -115,6 +110,7 @@ da <- function(df = NULL,
                  rule_of_N = rule_of_N,
                  number_of_digits = number_of_digits) |>
       purrr::list_rbind()
+
   }
 
   write_to_excel(output, excel_path)
@@ -175,7 +171,11 @@ grouped_da <- function(df = NULL,
 #' @param df An object possible to convert to a data table, e.g.
 #' a tibble or data.frame, containing patient level reported drug-event-pairs.
 #' See below for further details.
-#' @param df_colnames Some description
+#' @param df_colnames Provide a list with the column names of the variables to use
+#' passed in \code{df}`i.e. point \code{da} to the column with the report_ids
+#' (\code{report_id}), the drug names (\code{drug}), the adverse event names
+#' (\code{event}) and optionally which subgroups to calculate disproportionality
+#' across through \code{group_by}. See the examples.
 #' @param expected_count_estimators A character vector containing the desired
 #' expected count estimators. Defaults to the implemented options, i.e.
 #' c("rrr", "prr", "ror").
@@ -188,6 +188,7 @@ grouped_da <- function(df = NULL,
 #'  contained drug X for event Y and event Z, two rows would be added, with the
 #'  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
 #'  numeric or character. Columns \code{drug} and \code{event} must be of type character.
+#'  You can use other names for your columns, as long as you specify them in df_colnames.
 #'
 #' @return A tibble containing the various counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
@@ -197,7 +198,7 @@ grouped_da <- function(df = NULL,
 add_expected_counts <- function(df = NULL,
                                 df_colnames = NULL,
                                 expected_count_estimators = c("rrr", "prr", "ror")) {
-  # Something complains if we don't put obs to NULL. Similar requirements
+  # dtplyr/data.table complains if we don't put obs to NULL. Similar requirements
   # in lower level functions (count_expected_rrr, count_expected_prr,
   # count_expected_ic) called in this function
   obs <- NULL
@@ -314,7 +315,7 @@ add_disproportionality <- function(df = NULL,
     da_df <- da_df |> dplyr::bind_cols(ror_df)
   }
 
-  # "Rule of three"
+  # "Rule of N" (should be a separate fcn)
   if (any(c("ror", "prr") %in% da_estimators) & !is.null(rule_of_N)) {
     # Apply rule of N to these colnames
     da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
