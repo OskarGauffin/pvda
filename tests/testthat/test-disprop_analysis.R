@@ -78,3 +78,19 @@ test_that("The grouping functionality runs", {
 
   expect_equal(manual_calc_ic_first_row_group_0, first_row_ic_group_0)
 })
+
+test_that("Custom column names can be passed through the df_colnames list", {
+
+  drug_event_df_custom_names  <- pvutils::drug_event_df |>
+    dplyr::rename( RepId= report_id, Drug = drug, Event = event)
+  da_1 <- drug_event_df_custom_names |> pvutils::da(df_colnames = list(report_id = "RepId",
+                                                                        drug = "Drug",
+                                                                        event = "Event",
+                                                                        group_by = NULL))
+
+
+  custom_colnames <- colnames(da_1)[1:2]
+
+  expect_equal(custom_colnames, c("Drug", "Event"))
+})
+
