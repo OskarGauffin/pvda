@@ -47,7 +47,7 @@ count_expected_rrr <- function(df_colnames, df) {
     # Note that the as.numeric must be called in the same mutate as we do
     # the multiplication
     dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
-      as.numeric(n_tot)) |>
+                    as.numeric(n_tot)) |>
     dplyr::select(!!drug,
                   !!event,
                   obs,
@@ -74,7 +74,7 @@ count_expected_rrr <- function(df_colnames, df) {
 count_expected_prr <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_prr -> n_tot_prr ->
-  n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
+    n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -82,7 +82,7 @@ count_expected_prr <- function(count_dt) {
       n_tot_prr = n_tot - n_drug
     ) |>
     dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
-      as.numeric(n_tot_prr)) |>
+                    as.numeric(n_tot_prr)) |>
     dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
 
   return(count_dt)
@@ -105,7 +105,7 @@ count_expected_prr <- function(count_dt) {
 count_expected_ror <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_ror -> d -> b -> n -> n_event -> n_drug ->
-  n_tot -> obs -> n_event_prr -> n_tot_prr
+    n_tot -> obs -> n_event_prr -> n_tot_prr
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -199,11 +199,12 @@ ic <- function(obs = NULL,
   }
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
+  ic_colnames <- da_colnames(quantile_prob, da_name = "ic")
 
   output <- tibble::tibble(
-    "ic_lower" = ci_for_ic(obs, exp, quantile_prob$lower, shrinkage),
+    !!ic_colnames$lower := ci_for_ic(obs, exp, quantile_prob$lower, shrinkage),
     "ic" = log2((obs + shrinkage) / (exp + shrinkage)),
-    "ic_upper" = ci_for_ic(obs, exp, quantile_prob$upper, shrinkage)
+    !!ic_colnames$upper := ci_for_ic(obs, exp, quantile_prob$upper, shrinkage)
   )
 
   return(output)
@@ -299,11 +300,12 @@ prr <- function(obs,
   n_tot_prr <- as.numeric(n_tot_prr)
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
+  prr_colnames <- da_colnames(quantile_prob, "prr")
 
   output <- tibble::tibble(
-    "prr_lower" = ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$lower),
+    !!prr_colnames$lower := ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$lower),
     "prr" = obs / n_drug * (n_event_prr / n_tot_prr),
-    "prr_upper" = ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$upper)
+    !!prr_colnames$upper := ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$upper)
   )
   output
 }
@@ -376,6 +378,7 @@ ror <- function(a = NULL,
   }
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
+  ror_colnames <- da_colnames(quantile_prob, "ror")
 
   # Integer overflow on vaers-sized data sets if these are not converted to double
   a <- as.numeric(a)
@@ -384,9 +387,9 @@ ror <- function(a = NULL,
   d <- as.numeric(d)
 
   output <- tibble::tibble(
-    "ror_lower" = ci_for_ror(a, b, c, d, quantile_prob$lower),
+    !!ror_colnames$lower := ci_for_ror(a, b, c, d, quantile_prob$lower),
     "ror" = a * d / (b * c),
-    "ror_upper" = ci_for_ror(a, b, c, d, quantile_prob$upper)
+    !!ror_colnames$upper := ci_for_ror(a, b, c, d, quantile_prob$upper)
   )
 
   return(output)
@@ -413,7 +416,25 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 }
 
 
-# 2.2 ci_for_ic ----
+# 2.2 da_colnames -----
+
+#' @title An internal function creating colnames for da confidence/credibility bounds
+#' @description Given the output from quantile_prob, and a da_name string,
+#' create column names such as PRR025, ROR025 and IC025
+#' @param quantile_prob A list with two parameters, lower and upper. Default: list(lower = 0.025, upper = 0.975)
+#' @param da_name A string, such as "ic", "prr" or "ror". Default: NULL
+#' @return A list with two symbols, to be inserted in the dtplyr-chain
+da_colnames <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
+                        da_name = NULL){
+
+  ic_lower_name = paste0(da_name, 100*quantile_prob$lower)
+  ic_upper_name = paste0(da_name, 100*quantile_prob$upper)
+
+  return(list(
+    lower = rlang::sym(ic_lower_name),
+    upper = rlang::sym(ic_upper_name)))
+}
+# 2.3 ci_for_ic ----
 #' @title Confidence intervals for Information Component (IC)
 #' @description Mainly used in \code{link{ic}}. Produces quantiles of the
 #' posterior gamma distribution. Called twice in \code{ic} to create a
@@ -437,7 +458,7 @@ ci_for_ic <- function(obs,
   return(output)
 }
 
-# 2.3 ci_for_prr ----
+# 2.4 ci_for_prr ----
 #' @title Confidence intervals for Proportional Reporting Rate
 #' @description Mainly for use in \code{\link{prr}}. Produces (symmetric,
 #' normality based) confidence bounds for the PRR, for a passed probability.
@@ -454,7 +475,7 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs) {
   (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(conf_lvl_probs) * s_hat)
 }
 
-# 2.4 ci_for_ror ----
+# 2.5 ci_for_ror ----
 #' @title Confidence intervals for Reporting Odds Ratio
 #' @description Mainly for use in \code{\link{ror}}. Produces (symmetric,
 #' normality based) confidence bounds for the ROR, for a passed probability.
@@ -468,7 +489,7 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs) {
 #' @export
 ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(conf_lvl_probs) *
-    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
 #-----------------------------------

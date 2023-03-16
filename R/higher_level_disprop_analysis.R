@@ -145,9 +145,9 @@ grouped_da <- function(df = NULL,
   assign(df_colnames$drug, NULL)
   assign(df_colnames$group_by, NULL)
 
-  drug <- rlang::sym(df_colnames$drug)
-  event <- rlang::sym(df_colnames$event)
-  group_by <- rlang::sym(df_colnames$group_by)
+  drug <- rlang::sym(df_colnames[["drug"]])
+  event <- rlang::sym(df_colnames[["event"]])
+  group_by <- rlang::sym(df_colnames[["group_by"]])
 
   current_group <- df |>
     dplyr::slice(1) |>
