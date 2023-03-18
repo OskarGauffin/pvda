@@ -1,5 +1,7 @@
 # pvutils
 
+An R package for executing disproportionality analyses. 
+
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvutils/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvutils?branch=main)
 
