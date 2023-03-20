@@ -77,8 +77,9 @@ test_that("The grouping functionality runs", {
 
   first_row_ic_group_0 <- as.numeric(da_1[1, ]$ic)
   manual_calc_ic_first_row_group_0 <- as.numeric(log2((14 + 0.5) / (da_1[1, 8] + 0.5)))
+  manual_calc_ic_first_row_group_0 <- round(manual_calc_ic_first_row_group_0, 2)
 
-  expect_equal(manual_calc_ic_first_row_group_0, first_row_ic_group_0)
+  expect_equal(first_row_ic_group_0, manual_calc_ic_first_row_group_0)
 })
 
 test_that("Custom column names can be passed through the df_colnames list", {

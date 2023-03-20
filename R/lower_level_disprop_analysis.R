@@ -516,9 +516,13 @@ ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
 apply_rule_of_N <- function(da_df = NULL,
                             da_estimators = c("ic", "prr", "ror"),
                             rule_of_N = NULL) {
+
+  if(!is.null(rule_of_N)){
+
+  # Rule of N = 3 is built into the IC
   da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
 
-  # Only need to do this check once
+  # We only need to check the observed once
   replace_these_rows <- da_df[["obs"]] < rule_of_N
 
   da_df <-
@@ -526,10 +530,35 @@ apply_rule_of_N <- function(da_df = NULL,
     dplyr::mutate(
       dplyr::across(
         dplyr::starts_with(da_estimators_not_ic),
-        ~ ifelse(obs < rule_of_N, NA, .x)
+        ~ ifelse(replace_these_rows, NA, .x)
       )
     )
+  }
 
   return(da_df)
 }
+# 2.7 round_columns_with_many_decimals
+
+
+#' @title Rounds columns in da_df with many decimals
+#' @description Internal function containing a mutate + across
+#' @param da_df See add_disproportionality
+#' @param da_estimators See add_disproportionality
+#' @param number_of_digits See add_disproportionality
+#' @return A df with rounded columns
+#' @importFrom dplyr mutate across starts_with
+round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL, number_of_digits = NULL){
+
+  if(!is.null(number_of_digits)){
+  da_df <-
+    da_df |> dplyr::mutate(dplyr::across(
+      dplyr::starts_with(c("exp", da_estimators)),
+      ~ round(.x, digits = number_of_digits)
+    ))
+  }
+  return(da_df)
+
+}
+
+
 #-----------------------------------

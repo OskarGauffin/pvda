@@ -109,13 +109,13 @@ da <- function(df = NULL,
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
-        df_colnames = df_colnames,
-        group_by = df_colnames$group_by,
-        expected_count_estimators = expected_count_estimators,
-        da_estimators = da_estimators,
-        conf_lvl = conf_lvl,
-        rule_of_N = rule_of_N,
-        number_of_digits = number_of_digits
+                 df_colnames = df_colnames,
+                 group_by = df_colnames$group_by,
+                 expected_count_estimators = expected_count_estimators,
+                 da_estimators = da_estimators,
+                 conf_lvl = conf_lvl,
+                 rule_of_N = rule_of_N,
+                 number_of_digits = number_of_digits
       ) |>
       purrr::list_rbind()
   }
@@ -323,21 +323,10 @@ add_disproportionality <- function(df = NULL,
     da_df <- da_df |> dplyr::bind_cols(ror_df)
   }
 
-  # Apply rule of N to da colnames without "ic"
-  if (any(c("ror", "prr") %in% da_estimators) & !is.null(rule_of_N)) {
-    da_df <- apply_rule_of_N(da_df, da_estimators, rule_of_N)
-  }
-
-  # Rounding of output
-  if (!is.null(number_of_digits)) {
-    # Only apply to non-report-count columns, i.e. expected or da_estimates
-    da_df |> dplyr::mutate(dplyr::across(
-      dplyr::starts_with(c("exp", da_estimators)),
-      ~ round(.x, digits = number_of_digits)
-    ))
-  }
-
-  return(da_df)
+  # Do some clean up
+    da_df <-
+      da_df |>
+      apply_rule_of_N(da_estimators, rule_of_N) |>
+      round_columns_with_many_decimals(da_estimators, number_of_digits)
 }
-
-# See lower_level_disprop_analysis.R for further details ----
+  # See lower_level_disprop_analysis.R for further details ----
