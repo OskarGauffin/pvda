@@ -1,15 +1,15 @@
 # TODO
 
-#setDT
-# "Rule of N" (should be a separate fcn)
 # Sorting should be done as a last step, now it's in add_expected_count
 # Sort grouped output, move da columns to left,
 # Overall QC check on ic, prr, ror docs
 # Do QC on the ROR; PRR; IC values, in point and bounds
 # Update vignette
 # commit to CRAN
+# Should not be a "df" object when running?
 
 ### Long term, want to, not for now
+#setDT instead of as.data.frame ?
 # Set up pkgdown site
 # Add wrappers to quantreg on median TTO with xy-bootstrap CIs
 # Temporal disproportionality for a specific set of drug-event-pairs

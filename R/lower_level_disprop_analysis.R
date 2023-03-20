@@ -38,23 +38,27 @@ count_expected_rrr <- function(df_colnames, df) {
     dplyr::group_by(!!event) |>
     dplyr::mutate(n_event = dplyr::n_distinct(!!report_id)) |>
     dplyr::ungroup() |>
-    dplyr::count(!!drug,
-                 !!event,
-                 n_tot,
-                 n_drug,
-                 n_event) |>
+    dplyr::count(
+      !!drug,
+      !!event,
+      n_tot,
+      n_drug,
+      n_event
+    ) |>
     dplyr::rename(obs = n) |>
     # Note that the as.numeric must be called in the same mutate as we do
     # the multiplication
     dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
-                    as.numeric(n_tot)) |>
-    dplyr::select(!!drug,
-                  !!event,
-                  obs,
-                  n_drug,
-                  n_event,
-                  n_tot,
-                  exp_rrr)
+      as.numeric(n_tot)) |>
+    dplyr::select(
+      !!drug,
+      !!event,
+      obs,
+      n_drug,
+      n_event,
+      n_tot,
+      exp_rrr
+    )
 
   return(count_dt)
 }
@@ -74,7 +78,7 @@ count_expected_rrr <- function(df_colnames, df) {
 count_expected_prr <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_prr -> n_tot_prr ->
-    n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
+  n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -82,7 +86,7 @@ count_expected_prr <- function(count_dt) {
       n_tot_prr = n_tot - n_drug
     ) |>
     dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
-                    as.numeric(n_tot_prr)) |>
+      as.numeric(n_tot_prr)) |>
     dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
 
   return(count_dt)
@@ -105,7 +109,7 @@ count_expected_prr <- function(count_dt) {
 count_expected_ror <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_ror -> d -> b -> n -> n_event -> n_drug ->
-    n_tot -> obs -> n_event_prr -> n_tot_prr
+  n_tot -> obs -> n_event_prr -> n_tot_prr
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -257,10 +261,12 @@ ic <- function(obs = NULL,
 #'
 #' @examples
 #'
-#' pvutils::prr(obs = 5,
-#' n_drug = 10,
-#' n_event_prr = 20,
-#' n_tot_prr = 10000)
+#' pvutils::prr(
+#'   obs = 5,
+#'   n_drug = 10,
+#'   n_event_prr = 20,
+#'   n_tot_prr = 10000
+#' )
 #'
 #' # Note that input parameters can be vectors (of equal length, no recycling)
 #' pvutils::prr(
@@ -348,16 +354,20 @@ prr <- function(obs,
 #'
 #' @examples
 #'
-#' pvutils::ror(a = 5,
-#'              b = 10,
-#'              c = 20,
-#'              d = 10000)
+#' pvutils::ror(
+#'   a = 5,
+#'   b = 10,
+#'   c = 20,
+#'   d = 10000
+#' )
 #'
 #' # Note that a, b, c and d can be vectors (of equal length, no recycling)
-#' pvutils::ror(a = c(5, 10),
-#'              b = c(10, 20),
-#'              c = c(15, 30),
-#'              d = c(10000, 10000))
+#' pvutils::ror(
+#'   a = c(5, 10),
+#'   b = c(10, 20),
+#'   c = c(15, 30),
+#'   d = c(10000, 10000)
+#' )
 #' @references
 #' \insertRef{Montastruc_2011}{pvutils}
 #' @export
@@ -425,14 +435,14 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 #' @param da_name A string, such as "ic", "prr" or "ror". Default: NULL
 #' @return A list with two symbols, to be inserted in the dtplyr-chain
 da_colnames <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
-                        da_name = NULL){
-
-  ic_lower_name = paste0(da_name, 100*quantile_prob$lower)
-  ic_upper_name = paste0(da_name, 100*quantile_prob$upper)
+                        da_name = NULL) {
+  ic_lower_name <- paste0(da_name, 100 * quantile_prob$lower)
+  ic_upper_name <- paste0(da_name, 100 * quantile_prob$upper)
 
   return(list(
     lower = rlang::sym(ic_lower_name),
-    upper = rlang::sym(ic_upper_name)))
+    upper = rlang::sym(ic_upper_name)
+  ))
 }
 # 2.3 ci_for_ic ----
 #' @title Confidence intervals for Information Component (IC)
@@ -489,7 +499,37 @@ ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs) {
 #' @export
 ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(conf_lvl_probs) *
-        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
+# 2.6 apply_rule_of_N ----
+#' @title apply_rule_of_N
+#' @description Internal fcn to set da-columns to NA when observed count < 3
+#' @param da_df See the intermediate object da_df in add_disproportionality
+#' @param da_estimators Default is c("ic", "prr", "ror").
+#' @param rule_of_N PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details Sometimes, you want to protect yourself from spurious findings based
+#' on small observed counts combined with infinitesimal expected counts.
+#' @importFrom stringr str_subset
+#' @importFrom dplyr mutate across starts_with cur_column
+apply_rule_of_N <- function(da_df = NULL,
+                            da_estimators = c("ic", "prr", "ror"),
+                            rule_of_N = NULL) {
+  da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
+
+  # Only need to do this check once
+  replace_these_rows <- da_df[["obs"]] < rule_of_N
+
+  da_df <-
+    da_df |>
+    dplyr::mutate(
+      dplyr::across(
+        dplyr::starts_with(da_estimators_not_ic),
+        ~ ifelse(obs < rule_of_N, NA, .x)
+      )
+    )
+
+  return(da_df)
+}
 #-----------------------------------

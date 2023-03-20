@@ -26,39 +26,43 @@
 #' @examples
 #' ### Run a disproportionality analysis
 #' da_1 <-
-#' drug_event_df |>
-#' da()
+#'   drug_event_df |>
+#'   da()
 #'
 #' ### Run a disproportionality analysis on a data frame with your own column names
 #' # Create the list with colnames for the data
 #' your_own_colnames <-
-#' list(report_id = "repId",
-#'      drug = "drug",
-#'      event = "event",
-#'      group_by = NULL)
+#'   list(
+#'     report_id = "repId",
+#'     drug = "drug",
+#'     event = "event",
+#'     group_by = NULL
+#'   )
 #'
 #' # Rename the report_id variable and run again
 #' drug_event_df |>
-#' dplyr::rename(repId = report_id) |>
-#' da(df_colnames = your_own_colnames)
+#'   dplyr::rename(repId = report_id) |>
+#'   da(df_colnames = your_own_colnames)
 #'
 #' ### Run a disproportionality across two subgroups
 #' # Create two groups (even/uneven report_ids) in drug_event_df
-#' drug_event_df_with_grouping  <-
-#' drug_event_df |>
-#' dplyr::mutate("group" = report_id %% 2)
+#' drug_event_df_with_grouping <-
+#'   drug_event_df |>
+#'   dplyr::mutate("group" = report_id %% 2)
 #'
 #' # Set the colname for the group_by-parameter to "group"
 #' your_own_colnames <-
-#'      list(report_id = "report_id",
-#'           drug = "drug",
-#'           event = "event",
-#'           group_by = "group")
+#'   list(
+#'     report_id = "report_id",
+#'     drug = "drug",
+#'     event = "event",
+#'     group_by = "group"
+#'   )
 #'
 #' # Execute da across the subgroups
 #' da_2 <-
-#' drug_event_df_with_grouping |>
-#' da(df_colnames = your_own_colnames)
+#'   drug_event_df_with_grouping |>
+#'   da(df_colnames = your_own_colnames)
 #' @seealso
 #'  \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
 #' @export
@@ -66,51 +70,54 @@
 #' @importFrom dplyr bind_cols select pull slice
 #' @importFrom purrr map list_rbind
 da <- function(df = NULL,
-               df_colnames = list(report_id = "report_id",
-                                  drug = "drug",
-                                  event = "event",
-                                  group_by = NULL),
+               df_colnames = list(
+                 report_id = "report_id",
+                 drug = "drug",
+                 event = "event",
+                 group_by = NULL
+               ),
                da_estimators = c("ic", "prr", "ror"),
                rule_of_N = 3,
                conf_lvl = 0.95,
                number_of_digits = 2,
                excel_path = NULL) {
-
   checkmate::qassert(df_colnames$group_by, c("S1", "0"))
   checkmate::qassert(excel_path, c("S1", "0"))
 
   # ic uses expected counts from rrr
-  expected_count_estimators = gsub("ic", "rrr", da_estimators)
+  expected_count_estimators <- gsub("ic", "rrr", da_estimators)
 
   assign(df_colnames$report_id, NULL)
   assign(df_colnames$drug, NULL)
   assign(df_colnames$event, NULL)
 
-  if(is.null(df_colnames$group_by)){
+  if (is.null(df_colnames$group_by)) {
     # No subgrouping provided:
     output <- df |>
       pvutils::add_expected_counts(df_colnames, expected_count_estimators = expected_count_estimators) |>
-      pvutils::add_disproportionality(da_estimators = da_estimators,
-                                      conf_lvl = conf_lvl,
-                                      rule_of_N = rule_of_N,
-                                      number_of_digits = number_of_digits)
+      pvutils::add_disproportionality(
+        da_estimators = da_estimators,
+        conf_lvl = conf_lvl,
+        rule_of_N = rule_of_N,
+        number_of_digits = number_of_digits
+      )
   } else {
-    if(! df_colnames$group_by %in% colnames(df)){
+    if (!df_colnames$group_by %in% colnames(df)) {
       stop("Passed grouping column name '", df_colnames$group_by, "' not found in passed df.")
     }
     # When subgroups are provided:
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
-                 df_colnames = df_colnames,
-                 group_by = df_colnames$group_by,
-                 expected_count_estimators = expected_count_estimators,
-                 da_estimators = da_estimators,
-                 conf_lvl = conf_lvl,
-                 rule_of_N = rule_of_N,
-                 number_of_digits = number_of_digits) |>
+        df_colnames = df_colnames,
+        group_by = df_colnames$group_by,
+        expected_count_estimators = expected_count_estimators,
+        da_estimators = da_estimators,
+        conf_lvl = conf_lvl,
+        rule_of_N = rule_of_N,
+        number_of_digits = number_of_digits
+      ) |>
       purrr::list_rbind()
-
   }
 
   write_to_excel(output, excel_path)
@@ -139,8 +146,7 @@ grouped_da <- function(df = NULL,
                        da_estimators = NULL,
                        conf_lvl = NULL,
                        rule_of_N = NULL,
-                       number_of_digits = NULL){
-
+                       number_of_digits = NULL) {
   assign(df_colnames$event, NULL)
   assign(df_colnames$drug, NULL)
   assign(df_colnames$group_by, NULL)
@@ -151,16 +157,19 @@ grouped_da <- function(df = NULL,
 
   current_group <- df |>
     dplyr::slice(1) |>
-    dplyr::pull(!! group_by)
+    dplyr::pull(!!group_by)
 
   df |>
-    pvutils::add_expected_counts(df_colnames = df_colnames,
-                                 expected_count_estimators = expected_count_estimators) |>
-    pvutils::add_disproportionality(da_estimators = da_estimators,
-                                    conf_lvl = conf_lvl,
-                                    rule_of_N = rule_of_N,
-                                    number_of_digits = number_of_digits) |>
-
+    pvutils::add_expected_counts(
+      df_colnames = df_colnames,
+      expected_count_estimators = expected_count_estimators
+    ) |>
+    pvutils::add_disproportionality(
+      da_estimators = da_estimators,
+      conf_lvl = conf_lvl,
+      rule_of_N = rule_of_N,
+      number_of_digits = number_of_digits
+    ) |>
     dplyr::bind_cols(!!group_by := current_group) |>
     dplyr::select(!!drug, !!event, !!group_by, everything())
 }
@@ -208,10 +217,10 @@ add_expected_counts <- function(df = NULL,
 
   df_colnames_wo_group_vec <-
     df |>
-    dplyr::select(- df_colnames$group_by) |>
+    dplyr::select(-df_colnames$group_by) |>
     colnames()
 
-  if ( ! any(utils::hasName(df, df_colnames_wo_group_vec))){
+  if (!any(utils::hasName(df, df_colnames_wo_group_vec))) {
     stop("At least one of column names 'report_id', 'drug' and 'event' is not
          found. Please check the passed df object.")
   }
@@ -277,8 +286,7 @@ add_disproportionality <- function(df = NULL,
                                    rule_of_N = 3,
                                    number_of_digits = 2,
                                    conf_lvl = 0.95) {
-
-  if( ! all(da_estimators %in% c("ic", "prr", "ror"))){
+  if (!all(da_estimators %in% c("ic", "prr", "ror"))) {
     stop("Passed parameter 'da_estimators' must consist of 'ic', 'prr' or 'ror'")
   }
   checkmate::qassert(rule_of_N, c("N1[0,]", "0"))
@@ -315,19 +323,9 @@ add_disproportionality <- function(df = NULL,
     da_df <- da_df |> dplyr::bind_cols(ror_df)
   }
 
-  # "Rule of N" (should be a separate fcn)
+  # Apply rule of N to da colnames without "ic"
   if (any(c("ror", "prr") %in% da_estimators) & !is.null(rule_of_N)) {
-    # Apply rule of N to these colnames
-    da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
-
-    # Only need to do this check once
-    replace_these_rows <- da_df[["obs"]] < rule_of_N
-
-    da_df |>
-      dplyr::mutate(dplyr::across(
-        dplyr::starts_with(da_estimators_not_ic),
-        ~ ifelse(replace_these_rows, NA, dplyr::cur_column())
-      ))
+    da_df <- apply_rule_of_N(da_df, da_estimators, rule_of_N)
   }
 
   # Rounding of output
@@ -343,4 +341,3 @@ add_disproportionality <- function(df = NULL,
 }
 
 # See lower_level_disprop_analysis.R for further details ----
-

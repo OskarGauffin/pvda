@@ -29,14 +29,15 @@ test_that("Function ror works", {
 
 
 test_that("Function add_expected_count works", {
-
-  df_colnames = list(report_id = "report_id",
-                     drug = "drug",
-                     event = "event")
+  df_colnames <- list(
+    report_id = "report_id",
+    drug = "drug",
+    event = "event"
+  )
 
   produced_output <- pvutils::add_expected_counts(pvutils::drug_event_df,
-                                                  df_colnames,
-  expected_count_estimators = c("rrr", "prr", "ror")
+    df_colnames,
+    expected_count_estimators = c("rrr", "prr", "ror")
   )
 
   # Should return as many rows as there are unique report_ids in drug_event_df
@@ -65,32 +66,33 @@ test_that("The whole disproportionality function chain runs without NA output ex
 })
 
 test_that("The grouping functionality runs", {
-
-  drug_event_df_with_grouping  <- pvutils::drug_event_df |>
+  drug_event_df_with_grouping <- pvutils::drug_event_df |>
     dplyr::mutate("group" = report_id %% 2)
-  da_1 <- drug_event_df_with_grouping |> pvutils::da(df_colnames = list(report_id = "report_id",
-                                                                        drug = "drug",
-                                                                        event = "event",
-                                                                        group_by = "group"))
+  da_1 <- drug_event_df_with_grouping |> pvutils::da(df_colnames = list(
+    report_id = "report_id",
+    drug = "drug",
+    event = "event",
+    group_by = "group"
+  ))
 
-  first_row_ic_group_0 <- as.numeric(da_1[1,]$ic)
-  manual_calc_ic_first_row_group_0 <- as.numeric(log2((14 + 0.5)/(da_1[1,8] + 0.5)))
+  first_row_ic_group_0 <- as.numeric(da_1[1, ]$ic)
+  manual_calc_ic_first_row_group_0 <- as.numeric(log2((14 + 0.5) / (da_1[1, 8] + 0.5)))
 
   expect_equal(manual_calc_ic_first_row_group_0, first_row_ic_group_0)
 })
 
 test_that("Custom column names can be passed through the df_colnames list", {
-
-  drug_event_df_custom_names  <- pvutils::drug_event_df |>
-    dplyr::rename( RepId= report_id, Drug = drug, Event = event)
-  da_1 <- drug_event_df_custom_names |> pvutils::da(df_colnames = list(report_id = "RepId",
-                                                                        drug = "Drug",
-                                                                        event = "Event",
-                                                                        group_by = NULL))
+  drug_event_df_custom_names <- pvutils::drug_event_df |>
+    dplyr::rename(RepId = report_id, Drug = drug, Event = event)
+  da_1 <- drug_event_df_custom_names |> pvutils::da(df_colnames = list(
+    report_id = "RepId",
+    drug = "Drug",
+    event = "Event",
+    group_by = NULL
+  ))
 
 
   custom_colnames <- colnames(da_1)[1:2]
 
   expect_equal(custom_colnames, c("Drug", "Event"))
 })
-
