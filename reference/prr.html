@@ -123,10 +123,12 @@ fraction is added rather than subtracted, with negligible practical implications
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">pvutils</span><span class="fu">::</span><span class="fu">prr</span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>n_drug <span class="op">=</span> <span class="fl">10</span>,</span></span>
-<span class="r-in"><span>n_event_prr <span class="op">=</span> <span class="fl">20</span>,</span></span>
-<span class="r-in"><span>n_tot_prr <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">pvutils</span><span class="fu">::</span><span class="fu">prr</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  obs <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>  n_drug <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  n_event_prr <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>  n_tot_prr <span class="op">=</span> <span class="fl">10000</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   prr2.5   prr prr97.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>

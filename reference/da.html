@@ -82,7 +82,7 @@ See below for further details.</p></dd>
 passed in <code>df</code>`i.e. point <code>da</code> to the column with the report_ids
 (<code>report_id</code>), the drug names (<code>drug</code>), the adverse event names
 (<code>event</code>) and optionally which subgroups to calculate disproportionality
-across through <code>group_by</code>. See the examples.</p></dd>
+across through <code>group_by</code>. See the vignette for examples.</p></dd>
 
 
 <dt>da_estimators</dt>
@@ -133,39 +133,43 @@ corresponds to a drug-event pair.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">### Run a disproportionality analysis</span></span></span>
 <span class="r-in"><span><span class="va">da_1</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span><span class="fu">da</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">da</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Run a disproportionality analysis on a data frame with your own column names</span></span></span>
 <span class="r-in"><span><span class="co"># Create the list with colnames for the data</span></span></span>
 <span class="r-in"><span><span class="va">your_own_colnames</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>report_id <span class="op">=</span> <span class="st">"repId"</span>,</span></span>
-<span class="r-in"><span>     drug <span class="op">=</span> <span class="st">"drug"</span>,</span></span>
-<span class="r-in"><span>     event <span class="op">=</span> <span class="st">"event"</span>,</span></span>
-<span class="r-in"><span>     group_by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    report_id <span class="op">=</span> <span class="st">"repId"</span>,</span></span>
+<span class="r-in"><span>    drug <span class="op">=</span> <span class="st">"drug"</span>,</span></span>
+<span class="r-in"><span>    event <span class="op">=</span> <span class="st">"event"</span>,</span></span>
+<span class="r-in"><span>    group_by <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Rename the report_id variable and run again</span></span></span>
 <span class="r-in"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>repId <span class="op">=</span> <span class="va">report_id</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span><span class="fu">da</span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="va">your_own_colnames</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>repId <span class="op">=</span> <span class="va">report_id</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">da</span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="va">your_own_colnames</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Run a disproportionality across two subgroups</span></span></span>
 <span class="r-in"><span><span class="co"># Create two groups (even/uneven report_ids) in drug_event_df</span></span></span>
-<span class="r-in"><span><span class="va">drug_event_df_with_grouping</span>  <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"group"</span> <span class="op">=</span> <span class="va">report_id</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">drug_event_df_with_grouping</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"group"</span> <span class="op">=</span> <span class="va">report_id</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Set the colname for the group_by-parameter to "group"</span></span></span>
 <span class="r-in"><span><span class="va">your_own_colnames</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>report_id <span class="op">=</span> <span class="st">"report_id"</span>,</span></span>
-<span class="r-in"><span>          drug <span class="op">=</span> <span class="st">"drug"</span>,</span></span>
-<span class="r-in"><span>          event <span class="op">=</span> <span class="st">"event"</span>,</span></span>
-<span class="r-in"><span>          group_by <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    report_id <span class="op">=</span> <span class="st">"report_id"</span>,</span></span>
+<span class="r-in"><span>    drug <span class="op">=</span> <span class="st">"drug"</span>,</span></span>
+<span class="r-in"><span>    event <span class="op">=</span> <span class="st">"event"</span>,</span></span>
+<span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"group"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Execute da across the subgroups</span></span></span>
 <span class="r-in"><span><span class="va">da_2</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="va">drug_event_df_with_grouping</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span><span class="fu">da</span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="va">your_own_colnames</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">drug_event_df_with_grouping</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">da</span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="va">your_own_colnames</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
