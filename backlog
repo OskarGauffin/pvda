@@ -6,7 +6,7 @@
 # Do QC on the ROR; PRR; IC values, in point and bounds
 # Update vignette
 # commit to CRAN
-# Should not be a "df" object when running?
+# Should not be a "df" object when running? Combine with setDT.
 
 ### Long term, want to, not for now
 #setDT instead of as.data.frame ?

@@ -59,10 +59,12 @@ fraction is added rather than subtracted, with negligible practical implications
 }
 \examples{
 
-pvutils::prr(obs = 5,
-n_drug = 10,
-n_event_prr = 20,
-n_tot_prr = 10000)
+pvutils::prr(
+  obs = 5,
+  n_drug = 10,
+  n_event_prr = 20,
+  n_tot_prr = 10000
+)
 
 # Note that input parameters can be vectors (of equal length, no recycling)
 pvutils::prr(

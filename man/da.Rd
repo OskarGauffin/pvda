@@ -24,7 +24,7 @@ See below for further details.}
 passed in \code{df}`i.e. point \code{da} to the column with the report_ids
 (\code{report_id}), the drug names (\code{drug}), the adverse event names
 (\code{event}) and optionally which subgroups to calculate disproportionality
-across through \code{group_by}. See the examples.}
+across through \code{group_by}. See the vignette for examples.}
 
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults
@@ -61,39 +61,43 @@ Reporting Odds Ratio (ROR).
 \examples{
 ### Run a disproportionality analysis
 da_1 <-
-drug_event_df |>
-da()
+  drug_event_df |>
+  da()
 
 ### Run a disproportionality analysis on a data frame with your own column names
 # Create the list with colnames for the data
 your_own_colnames <-
-list(report_id = "repId",
-     drug = "drug",
-     event = "event",
-     group_by = NULL)
+  list(
+    report_id = "repId",
+    drug = "drug",
+    event = "event",
+    group_by = NULL
+  )
 
 # Rename the report_id variable and run again
 drug_event_df |>
-dplyr::rename(repId = report_id) |>
-da(df_colnames = your_own_colnames)
+  dplyr::rename(repId = report_id) |>
+  da(df_colnames = your_own_colnames)
 
 ### Run a disproportionality across two subgroups
 # Create two groups (even/uneven report_ids) in drug_event_df
-drug_event_df_with_grouping  <-
-drug_event_df |>
-dplyr::mutate("group" = report_id \%\% 2)
+drug_event_df_with_grouping <-
+  drug_event_df |>
+  dplyr::mutate("group" = report_id \%\% 2)
 
 # Set the colname for the group_by-parameter to "group"
 your_own_colnames <-
-     list(report_id = "report_id",
-          drug = "drug",
-          event = "event",
-          group_by = "group")
+  list(
+    report_id = "report_id",
+    drug = "drug",
+    event = "event",
+    group_by = "group"
+  )
 
 # Execute da across the subgroups
 da_2 <-
-drug_event_df_with_grouping |>
-da(df_colnames = your_own_colnames)
+  drug_event_df_with_grouping |>
+  da(df_colnames = your_own_colnames)
 }
 \seealso{
 \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}

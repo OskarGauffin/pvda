@@ -19,7 +19,7 @@ See below for further details.}
 passed in \code{df}`i.e. point \code{da} to the column with the report_ids
 (\code{report_id}), the drug names (\code{drug}), the adverse event names
 (\code{event}) and optionally which subgroups to calculate disproportionality
-across through \code{group_by}. See the examples.}
+across through \code{group_by}. See the vignette for examples.}
 
 \item{expected_count_estimators}{A character vector containing the desired
 expected count estimators. Defaults to the implemented options, i.e.

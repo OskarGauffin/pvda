@@ -87,6 +87,7 @@ da <- function(df = NULL,
   # ic uses expected counts from rrr
   expected_count_estimators <- gsub("ic", "rrr", da_estimators)
 
+  NULL -> obs -> conf_level -> exp_rrr -> exp_prr -> exp_ror
   assign(df_colnames$report_id, NULL)
   assign(df_colnames$drug, NULL)
   assign(df_colnames$event, NULL)
@@ -94,10 +95,14 @@ da <- function(df = NULL,
   if (is.null(df_colnames$group_by)) {
     # No subgrouping provided:
     output <- df |>
-      pvutils::add_expected_counts(df_colnames, expected_count_estimators = expected_count_estimators) |>
+      pvutils::add_expected_counts(
+        df_colnames,
+        expected_count_estimators
+      ) |>
       pvutils::add_disproportionality(
+        df_colnames = df_colnames,
         da_estimators = da_estimators,
-        conf_lvl = conf_lvl,
+        conf_lvl = conf_level,
         rule_of_N = rule_of_N,
         number_of_digits = number_of_digits
       )
@@ -105,19 +110,39 @@ da <- function(df = NULL,
     if (!df_colnames$group_by %in% colnames(df)) {
       stop("Passed grouping column name '", df_colnames$group_by, "' not found in passed df.")
     }
+
+    drug <- rlang::sym(df_colnames$drug)
+    event <- rlang::sym(df_colnames$event)
+    group_by <- rlang::sym(df_colnames$group_by)
+
+
     # When subgroups are provided:
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
-                 df_colnames = df_colnames,
-                 group_by = df_colnames$group_by,
-                 expected_count_estimators = expected_count_estimators,
-                 da_estimators = da_estimators,
-                 conf_lvl = conf_lvl,
-                 rule_of_N = rule_of_N,
-                 number_of_digits = number_of_digits
+        df_colnames = df_colnames,
+        group_by = df_colnames$group_by,
+        expected_count_estimators = expected_count_estimators,
+        da_estimators = da_estimators,
+        conf_lvl = conf_lvl,
+        rule_of_N = rule_of_N,
+        number_of_digits = number_of_digits
       ) |>
-      purrr::list_rbind()
+      purrr::list_rbind() |>
+      dplyr::arrange(!!drug, !!event, !!group_by) |>
+      dplyr::select(
+        !!drug,
+        !!event,
+        !!group_by,
+        obs,
+        exp_rrr,
+        dplyr::starts_with("ic"),
+        exp_prr,
+        dplyr::starts_with("prr"),
+        exp_ror,
+        dplyr::starts_with("ror"),
+        everything()
+      )
   }
 
   write_to_excel(output, excel_path)
@@ -165,13 +190,13 @@ grouped_da <- function(df = NULL,
       expected_count_estimators = expected_count_estimators
     ) |>
     pvutils::add_disproportionality(
+      df_colnames,
       da_estimators = da_estimators,
       conf_lvl = conf_lvl,
       rule_of_N = rule_of_N,
       number_of_digits = number_of_digits
     ) |>
-    dplyr::bind_cols(!!group_by := current_group) |>
-    dplyr::select(!!drug, !!event, !!group_by, everything())
+    dplyr::bind_cols(!!group_by := current_group)
 }
 
 # 1.1 add_expected_counts ----
@@ -184,7 +209,7 @@ grouped_da <- function(df = NULL,
 #' passed in \code{df}`i.e. point \code{da} to the column with the report_ids
 #' (\code{report_id}), the drug names (\code{drug}), the adverse event names
 #' (\code{event}) and optionally which subgroups to calculate disproportionality
-#' across through \code{group_by}. See the examples.
+#' across through \code{group_by}. See the vignette for examples.
 #' @param expected_count_estimators A character vector containing the desired
 #' expected count estimators. Defaults to the implemented options, i.e.
 #' c("rrr", "prr", "ror").
@@ -258,7 +283,6 @@ add_expected_counts <- function(df = NULL,
 
   count_df <-
     count_dt |>
-    dplyr::arrange(desc_obs_order) |>
     tibble::as_tibble()
 
   return(count_df)
@@ -268,6 +292,7 @@ add_expected_counts <- function(df = NULL,
 #' @title Add disproportionality estimates to data frame
 #' with expected counts
 #' @inheritParams ror
+#' @inheritParams add_expected_counts
 #' @param df Intended use is on the output tibble from \code{add_expected_counts}.
 #' @param da_estimators Character vector specifying which disproportionality
 #' estimators to use, in case you don't need all implemented options. Defaults
@@ -282,10 +307,13 @@ add_expected_counts <- function(df = NULL,
 #' estimates.
 #' @export
 add_disproportionality <- function(df = NULL,
+                                   df_colnames = NULL,
                                    da_estimators = c("ic", "prr", "ror"),
                                    rule_of_N = 3,
                                    number_of_digits = 2,
                                    conf_lvl = 0.95) {
+  NULL -> obs -> exp_rrr -> exp_prr -> exp_ror
+
   if (!all(da_estimators %in% c("ic", "prr", "ror"))) {
     stop("Passed parameter 'da_estimators' must consist of 'ic', 'prr' or 'ror'")
   }
@@ -324,9 +352,27 @@ add_disproportionality <- function(df = NULL,
   }
 
   # Do some clean up
-    da_df <-
-      da_df |>
-      apply_rule_of_N(da_estimators, rule_of_N) |>
-      round_columns_with_many_decimals(da_estimators, number_of_digits)
+  drug <- rlang::sym(df_colnames$drug)
+  event <- rlang::sym(df_colnames$event)
+
+  da_df <-
+    da_df |>
+    apply_rule_of_N(da_estimators, rule_of_N) |>
+    round_columns_with_many_decimals(da_estimators, number_of_digits) |>
+    dplyr::arrange(!!drug, !!event) |>
+    dplyr::select(
+      !!drug,
+      !!event,
+      obs,
+      exp_rrr,
+      dplyr::starts_with("ic"),
+      exp_prr,
+      dplyr::starts_with("prr"),
+      exp_ror,
+      dplyr::starts_with("ror"),
+      everything()
+    )
+
+  # Need this later: !!rlang::sym(df_colnames$group_by)
 }
-  # See lower_level_disprop_analysis.R for further details ----
+# See lower_level_disprop_analysis.R for further details ----
