@@ -434,6 +434,7 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 #' @param quantile_prob A list with two parameters, lower and upper. Default: list(lower = 0.025, upper = 0.975)
 #' @param da_name A string, such as "ic", "prr" or "ror". Default: NULL
 #' @return A list with two symbols, to be inserted in the dtplyr-chain
+#' @export
 da_colnames <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
                         da_name = NULL) {
   ic_lower_name <- paste0(da_name, 100 * quantile_prob$lower)
@@ -513,6 +514,7 @@ ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
 #' on small observed counts combined with infinitesimal expected counts.
 #' @importFrom stringr str_subset
 #' @importFrom dplyr mutate across starts_with cur_column
+#' @export
 apply_rule_of_N <- function(da_df = NULL,
                             da_estimators = c("ic", "prr", "ror"),
                             rule_of_N = NULL) {
@@ -535,9 +537,7 @@ apply_rule_of_N <- function(da_df = NULL,
 
   return(da_df)
 }
-# 2.7 round_columns_with_many_decimals
-
-
+# 2.7 round_columns_with_many_decimals ----
 #' @title Rounds columns in da_df with many decimals
 #' @description Internal function containing a mutate + across
 #' @param da_df See add_disproportionality
@@ -545,6 +545,7 @@ apply_rule_of_N <- function(da_df = NULL,
 #' @param number_of_digits See add_disproportionality
 #' @return A df with rounded columns
 #' @importFrom dplyr mutate across starts_with
+#' @export
 round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL, number_of_digits = NULL) {
   if (!is.null(number_of_digits)) {
     da_df <-
@@ -556,5 +557,68 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
   return(da_df)
 }
 
+# 2.8 sort_by_lower_da_limit
+#' @title Sort a disproportionality analysis by the lower da conf. or cred. limit
+#' @description Sorts the output by the mean lower limit of a passed da estimator
+#' @param df See add_disproportionality
+#' @param df_colnames See add_disproportionality
+#' @param conf_lvl See add_disproportionality
+#' @param sort_by See add_disproportionality
+#' @param da_estimators See add_disproportionality
+#' @return The df object, sorted.
+#' @export
+#' @importFrom checkmate qassert
+#' @importFrom purrr pluck
+#' @importFrom dplyr group_by summarise left_join arrange select
+#' @importFrom rlang sym
+
+sort_by_lower_da_limit <- function(df = NULL,
+                                   df_colnames = NULL,
+                                   conf_lvl = NULL,
+                                   sort_by = NULL,
+                                   da_estimators = NULL){
+
+  NULL -> desc -> mean_da
+
+  checkmate::qassert(sort_by, "S1")
+  if(!sort_by %in% da_estimators){
+    stop("The da estimator you've passed as sort_by must be included in da_estimators,
+             currently ", paste0(da_estimators, ", "))
+  }
+
+  sort_by_colname <- conf_lvl |>
+    pvutils::conf_lvl_to_quantile_prob() |>
+    pvutils::da_colnames(da_name = sort_by) |>
+    purrr::pluck("lower")
+
+  # Take the mean lower quantile for the chosen da and sort by it.
+  drug <- rlang::sym(df_colnames$drug)
+  event <- rlang::sym(df_colnames$event)
+
+  sorted_df <- df |>
+    dplyr::group_by(!!drug, !!event) |>
+    dplyr::summarise(mean_da = mean(!!rlang::sym(sort_by_colname), na.rm=T))
+
+  df <-
+    df |>
+    dplyr::left_join(sorted_df, by = c(df_colnames$drug, df_colnames$event))
+
+  if(is.null(df_colnames$group_by)){
+    df <-
+      df |>
+      dplyr::arrange(desc(mean_da))
+  } else {
+    group_by <- rlang::sym(df_colnames$group_by)
+    df <-
+      df |>
+      dplyr::arrange(desc(mean_da), !!group_by)
+  }
+
+  df <-
+    df |>
+    dplyr::select(-mean_da)
+
+  return(df)
+}
 
 #-----------------------------------

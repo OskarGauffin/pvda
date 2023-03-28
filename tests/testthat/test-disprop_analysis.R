@@ -62,6 +62,10 @@ test_that("The whole disproportionality function chain runs without NA output ex
     dplyr::select(-dplyr::starts_with("ror")) |>
     dplyr::select(-dplyr::starts_with("prr"))
 
+
+  # df <- pvutils::drug_event_df |>
+  #   pvutils::da()
+
   expect_equal(FALSE, any(is.na(output)))
 })
 

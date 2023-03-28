@@ -77,17 +77,19 @@ da <- function(df = NULL,
                  group_by = NULL
                ),
                da_estimators = c("ic", "prr", "ror"),
+               sort_by = "ror",
                rule_of_N = 3,
                conf_lvl = 0.95,
                number_of_digits = 2,
                excel_path = NULL) {
+
   checkmate::qassert(df_colnames$group_by, c("S1", "0"))
   checkmate::qassert(excel_path, c("S1", "0"))
 
   # ic uses expected counts from rrr
   expected_count_estimators <- gsub("ic", "rrr", da_estimators)
 
-  NULL -> obs -> conf_level -> exp_rrr -> exp_prr -> exp_ror
+  NULL -> obs -> exp_rrr -> exp_prr -> exp_ror
   assign(df_colnames$report_id, NULL)
   assign(df_colnames$drug, NULL)
   assign(df_colnames$event, NULL)
@@ -102,10 +104,15 @@ da <- function(df = NULL,
       pvutils::add_disproportionality(
         df_colnames = df_colnames,
         da_estimators = da_estimators,
-        conf_lvl = conf_level,
+        sort_by = sort_by,
+        conf_lvl = conf_lvl,
         rule_of_N = rule_of_N,
         number_of_digits = number_of_digits
-      )
+      ) |>
+      sort_by_lower_da_limit(df_colnames = df_colnames,
+                             conf_lvl = conf_lvl,
+                             sort_by = sort_by,
+                             da_estimators = da_estimators)
   } else {
     if (!df_colnames$group_by %in% colnames(df)) {
       stop("Passed grouping column name '", df_colnames$group_by, "' not found in passed df.")
@@ -120,16 +127,16 @@ da <- function(df = NULL,
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
-        df_colnames = df_colnames,
-        group_by = df_colnames$group_by,
-        expected_count_estimators = expected_count_estimators,
-        da_estimators = da_estimators,
-        conf_lvl = conf_lvl,
-        rule_of_N = rule_of_N,
-        number_of_digits = number_of_digits
+                 df_colnames = df_colnames,
+                 group_by = df_colnames$group_by,
+                 expected_count_estimators = expected_count_estimators,
+                 da_estimators = da_estimators,
+                 sort_by = sort_by,
+                 conf_lvl = conf_lvl,
+                 rule_of_N = rule_of_N,
+                 number_of_digits = number_of_digits
       ) |>
       purrr::list_rbind() |>
-      dplyr::arrange(!!drug, !!event, !!group_by) |>
       dplyr::select(
         !!drug,
         !!event,
@@ -157,6 +164,7 @@ da <- function(df = NULL,
 #' @param group_by For convenience, the df_colnames$group_by is passed as a separate parameter
 #' @param expected_count_estimators See the da function
 #' @param da_estimators See the da function
+#' @param sort_by See the da function
 #' @param conf_lvl See the da function
 #' @param rule_of_N See the da function
 #' @param number_of_digits See the da function
@@ -169,6 +177,7 @@ grouped_da <- function(df = NULL,
                        group_by = NULL,
                        expected_count_estimators = NULL,
                        da_estimators = NULL,
+                       sort_by = NULL,
                        conf_lvl = NULL,
                        rule_of_N = NULL,
                        number_of_digits = NULL) {
@@ -192,11 +201,16 @@ grouped_da <- function(df = NULL,
     pvutils::add_disproportionality(
       df_colnames,
       da_estimators = da_estimators,
+      sort_by = sort_by,
       conf_lvl = conf_lvl,
       rule_of_N = rule_of_N,
       number_of_digits = number_of_digits
     ) |>
-    dplyr::bind_cols(!!group_by := current_group)
+    dplyr::bind_cols(!!group_by := current_group) |>
+    sort_by_lower_da_limit(df_colnames = df_colnames,
+                           conf_lvl = conf_lvl,
+                           sort_by = sort_by,
+                           da_estimators = da_estimators)
 }
 
 # 1.1 add_expected_counts ----
@@ -297,6 +311,11 @@ add_expected_counts <- function(df = NULL,
 #' @param da_estimators Character vector specifying which disproportionality
 #' estimators to use, in case you don't need all implemented options. Defaults
 #' to c("ic", "prr", "ror").
+#' @param sort_by The output is sorted in descending order of the lower bound of
+#'  the confidence/credibility interval for a da estimator, for each drug-event
+#'  combination. If drug-event-combination has several groups, the mean is taken
+#'  (ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
+#'  the default is "ror".
 #' @param rule_of_N Numeric value. Sets estimates for ROR and PRR to NA when observed
 #' counts are strictly less than the passed value of \code{rule_of_N}. Default value
 #' is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
@@ -309,6 +328,7 @@ add_expected_counts <- function(df = NULL,
 add_disproportionality <- function(df = NULL,
                                    df_colnames = NULL,
                                    da_estimators = c("ic", "prr", "ror"),
+                                   sort_by = "ror",
                                    rule_of_N = 3,
                                    number_of_digits = 2,
                                    conf_lvl = 0.95) {
@@ -325,7 +345,9 @@ add_disproportionality <- function(df = NULL,
   da_df <- df
 
   if ("ic" %in% da_estimators) {
-    ic_df <- pvutils::ic(da_df$obs, da_df$exp_rrr)
+    ic_df <- pvutils::ic(da_df$obs,
+                         da_df$exp_rrr,
+                         conf_lvl = conf_lvl)
     da_df <- da_df |> dplyr::bind_cols(ic_df)
   }
 
@@ -334,7 +356,8 @@ add_disproportionality <- function(df = NULL,
       obs = da_df$obs,
       n_drug = da_df$n_drug,
       n_event_prr = da_df$n_event_prr,
-      n_tot_prr = da_df$n_tot_prr
+      n_tot_prr = da_df$n_tot_prr,
+      conf_lvl = conf_lvl
     )
 
     da_df <- da_df |> dplyr::bind_cols(prr_df)
@@ -345,7 +368,8 @@ add_disproportionality <- function(df = NULL,
       a = da_df$obs,
       b = da_df$b,
       c = da_df$c,
-      d = da_df$d
+      d = da_df$d,
+      conf_lvl = conf_lvl
     )
 
     da_df <- da_df |> dplyr::bind_cols(ror_df)
@@ -359,7 +383,6 @@ add_disproportionality <- function(df = NULL,
     da_df |>
     apply_rule_of_N(da_estimators, rule_of_N) |>
     round_columns_with_many_decimals(da_estimators, number_of_digits) |>
-    dplyr::arrange(!!drug, !!event) |>
     dplyr::select(
       !!drug,
       !!event,
@@ -370,9 +393,7 @@ add_disproportionality <- function(df = NULL,
       dplyr::starts_with("prr"),
       exp_ror,
       dplyr::starts_with("ror"),
-      everything()
-    )
+      everything())
 
-  # Need this later: !!rlang::sym(df_colnames$group_by)
 }
 # See lower_level_disprop_analysis.R for further details ----

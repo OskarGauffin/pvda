@@ -9,6 +9,7 @@ da(
   df_colnames = list(report_id = "report_id", drug = "drug", event = "event", group_by =
     NULL),
   da_estimators = c("ic", "prr", "ror"),
+  sort_by = "ror",
   rule_of_N = 3,
   conf_lvl = 0.95,
   number_of_digits = 2,
@@ -29,6 +30,12 @@ across through \code{group_by}. See the vignette for examples.}
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").}
+
+\item{sort_by}{The output is sorted in descending order of the lower bound of
+the confidence/credibility interval for a da estimator, for each drug-event
+combination. If drug-event-combination has several groups, the mean is taken
+(ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
+the default is "ror".}
 
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of \code{rule_of_N}. Default value

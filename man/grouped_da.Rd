@@ -10,6 +10,7 @@ grouped_da(
   group_by = NULL,
   expected_count_estimators = NULL,
   da_estimators = NULL,
+  sort_by = NULL,
   conf_lvl = NULL,
   rule_of_N = NULL,
   number_of_digits = NULL
@@ -25,6 +26,8 @@ grouped_da(
 \item{expected_count_estimators}{See the da function}
 
 \item{da_estimators}{See the da function}
+
+\item{sort_by}{See the da function}
 
 \item{conf_lvl}{See the da function}
 
