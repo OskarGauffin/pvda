@@ -62,7 +62,7 @@ Reporting Odds Ratio (ROR).</p>
 <span>  df_colnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>report_id <span class="op">=</span> <span class="st">"report_id"</span>, drug <span class="op">=</span> <span class="st">"drug"</span>, event <span class="op">=</span> <span class="st">"event"</span>, group_by <span class="op">=</span></span>
 <span>    <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>  da_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ic"</span>, <span class="st">"prr"</span>, <span class="st">"ror"</span><span class="op">)</span>,</span>
-<span>  sort_by <span class="op">=</span> <span class="st">"ror"</span>,</span>
+<span>  sort_by <span class="op">=</span> <span class="st">"ic"</span>,</span>
 <span>  rule_of_N <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  conf_lvl <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  number_of_digits <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -97,7 +97,7 @@ to c("ic", "prr", "ror").</p></dd>
 the confidence/credibility interval for a da estimator, for each drug-event
 combination. If drug-event-combination has several groups, the mean is taken
 (ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-the default is "ror".</p></dd>
+the default is "ic".</p></dd>
 
 
 <dt>rule_of_N</dt>
