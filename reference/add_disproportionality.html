@@ -58,6 +58,7 @@ with expected counts</p>
 <span>  df <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  df_colnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  da_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ic"</span>, <span class="st">"prr"</span>, <span class="st">"ror"</span><span class="op">)</span>,</span>
+<span>  sort_by <span class="op">=</span> <span class="st">"ror"</span>,</span>
 <span>  rule_of_N <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  number_of_digits <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  conf_lvl <span class="op">=</span> <span class="fl">0.95</span></span>
@@ -82,6 +83,14 @@ across through <code>group_by</code>. See the vignette for examples.</p></dd>
 <dd><p>Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").</p></dd>
+
+
+<dt>sort_by</dt>
+<dd><p>The output is sorted in descending order of the lower bound of
+the confidence/credibility interval for a da estimator, for each drug-event
+combination. If drug-event-combination has several groups, the mean is taken
+(ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
+the default is "ror".</p></dd>
 
 
 <dt>rule_of_N</dt>
