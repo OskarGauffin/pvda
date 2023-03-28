@@ -72,17 +72,19 @@ test_that("The whole disproportionality function chain runs without NA output ex
 test_that("The grouping functionality runs", {
   drug_event_df_with_grouping <- pvutils::drug_event_df |>
     dplyr::mutate("group" = report_id %% 2)
-  da_1 <- drug_event_df_with_grouping |> pvutils::da(df_colnames = list(
+  da_1 <- drug_event_df_with_grouping |>
+    pvutils::da(df_colnames = list(
     report_id = "report_id",
     drug = "drug",
     event = "event",
     group_by = "group"
-  ))
+  ),
+  number_of_digits  = 5)
   # View(da_1)
 
   first_row_ic_group_0 <- as.numeric(da_1[1, ]$ic)
   manual_calc_ic_first_row_group_0 <- as.numeric(log2((da_1[1, "obs"] + 0.5) / (da_1[1, "exp_rrr"] + 0.5)))
-  manual_calc_ic_first_row_group_0 <- round(manual_calc_ic_first_row_group_0, 2)
+  manual_calc_ic_first_row_group_0 <- round(manual_calc_ic_first_row_group_0, 5)
 
   expect_equal(first_row_ic_group_0, manual_calc_ic_first_row_group_0)
 })
@@ -101,4 +103,29 @@ test_that("Custom column names can be passed through the df_colnames list", {
   custom_colnames <- colnames(da_1)[1:2]
 
   expect_equal(custom_colnames, c("Drug", "Event"))
+})
+
+test_that("Sorting works as expected", {
+
+# Repeated from test above on grouping
+ drug_event_df_with_grouping <- pvutils::drug_event_df |>
+  dplyr::mutate("group" = report_id %% 2)
+  da_1 <- drug_event_df_with_grouping |>
+    pvutils::da(df_colnames = list(
+      report_id = "report_id",
+      drug = "drug",
+      event = "event",
+      group_by = "group"
+    ),
+    number_of_digits  = 5)
+
+  nr_of_rows_per_dec <- da_1 |> dplyr::count(drug, event)
+
+  da_1_decs_with_two <- da_1 |>
+    left_join(nr_of_rows_per_dec, by=c("drug", "event")) |>
+    dplyr::filter(n == 2)
+  # The groups are ordered as expected
+  group_order_status <- da_1_decs_with_two |> pull(group) |> (\(x){all(x == 0:1)})()
+
+  expect_equal(group_order_status, TRUE)
 })

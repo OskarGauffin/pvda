@@ -77,7 +77,7 @@ da <- function(df = NULL,
                  group_by = NULL
                ),
                da_estimators = c("ic", "prr", "ror"),
-               sort_by = "ror",
+               sort_by = "ic",
                rule_of_N = 3,
                conf_lvl = 0.95,
                number_of_digits = 2,
@@ -149,7 +149,11 @@ da <- function(df = NULL,
         exp_ror,
         dplyr::starts_with("ror"),
         everything()
-      )
+      ) |>
+      sort_by_lower_da_limit(df_colnames = df_colnames,
+                             conf_lvl = conf_lvl,
+                             sort_by = sort_by,
+                             da_estimators = da_estimators)
   }
 
   write_to_excel(output, excel_path)
@@ -193,7 +197,8 @@ grouped_da <- function(df = NULL,
     dplyr::slice(1) |>
     dplyr::pull(!!group_by)
 
-  df |>
+  output <-
+    df |>
     pvutils::add_expected_counts(
       df_colnames = df_colnames,
       expected_count_estimators = expected_count_estimators
@@ -206,11 +211,9 @@ grouped_da <- function(df = NULL,
       rule_of_N = rule_of_N,
       number_of_digits = number_of_digits
     ) |>
-    dplyr::bind_cols(!!group_by := current_group) |>
-    sort_by_lower_da_limit(df_colnames = df_colnames,
-                           conf_lvl = conf_lvl,
-                           sort_by = sort_by,
-                           da_estimators = da_estimators)
+    dplyr::bind_cols(!!group_by := current_group)
+
+  return(output)
 }
 
 # 1.1 add_expected_counts ----
@@ -315,7 +318,7 @@ add_expected_counts <- function(df = NULL,
 #'  the confidence/credibility interval for a da estimator, for each drug-event
 #'  combination. If drug-event-combination has several groups, the mean is taken
 #'  (ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-#'  the default is "ror".
+#'  the default is "ic".
 #' @param rule_of_N Numeric value. Sets estimates for ROR and PRR to NA when observed
 #' counts are strictly less than the passed value of \code{rule_of_N}. Default value
 #' is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you

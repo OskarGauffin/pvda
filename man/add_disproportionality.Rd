@@ -32,7 +32,7 @@ to c("ic", "prr", "ror").}
 the confidence/credibility interval for a da estimator, for each drug-event
 combination. If drug-event-combination has several groups, the mean is taken
 (ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-the default is "ror".}
+the default is "ic".}
 
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of \code{rule_of_N}. Default value
