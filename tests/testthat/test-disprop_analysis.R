@@ -35,8 +35,11 @@ test_that("Function add_expected_count works", {
     event = "event"
   )
 
+  df_syms <- lapply(df_colnames, \(x){if(!is.null(x)){rlang::sym(x)}})
+
   produced_output <- pvutils::add_expected_counts(pvutils::drug_event_df,
     df_colnames,
+    df_syms = df_syms,
     expected_count_estimators = c("rrr", "prr", "ror")
   )
 
@@ -121,11 +124,23 @@ test_that("Sorting works as expected", {
 
   nr_of_rows_per_dec <- da_1 |> dplyr::count(drug, event)
 
-  da_1_decs_with_two <- da_1 |>
-    left_join(nr_of_rows_per_dec, by=c("drug", "event")) |>
-    dplyr::filter(n == 2)
-  # The groups are ordered as expected
-  group_order_status <- da_1_decs_with_two |> pull(group) |> (\(x){all(x == 0:1)})()
+  da_1 <-
+    da_1 |>
+    dplyr::left_join(nr_of_rows_per_dec, by=c("drug", "event"))
 
-  expect_equal(group_order_status, TRUE)
+  # Check that the groups are ordered
+  group_order_status <-
+    da_1|>
+    dplyr::filter(n == 2) |>
+    dplyr::pull(group) |>
+    (\(x){all(x == 0:1)})()
+
+  # Check desc order for single drug-event-comb
+  desc_order_status <-
+    da_1|>
+    dplyr::filter(n == 1) |>
+    dplyr::arrange(desc("ic2.5")) |>
+    dplyr::pull("ic2.5") |>
+    (\(x){all(x ==da_1 |>    dplyr::filter(n == 1) |> dplyr::pull(ic2.5))})()
+  expect_equal(c(desc_order_status, group_order_status), c(TRUE,TRUE))
 })

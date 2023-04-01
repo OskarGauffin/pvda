@@ -7,6 +7,7 @@
 sort_by_lower_da_limit(
   df = NULL,
   df_colnames = NULL,
+  df_syms = NULL,
   conf_lvl = NULL,
   sort_by = NULL,
   da_estimators = NULL
@@ -16,6 +17,8 @@ sort_by_lower_da_limit(
 \item{df}{See add_disproportionality}
 
 \item{df_colnames}{See add_disproportionality}
+
+\item{df_syms}{See add_disproportionality}
 
 \item{conf_lvl}{See add_disproportionality}
 

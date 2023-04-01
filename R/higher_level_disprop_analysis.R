@@ -7,10 +7,12 @@
 
 # 0.1 da ----
 #' @title Disproportionality Analysis
-#' @description \code{da} is used to execute a disproportionality analysis,
-#' potentially across subgroups (see parameter \code{group_by}), using the
-#' Information Component (IC), Proportional Reporting Rate (PRR) and/or the
-#' Reporting Odds Ratio (ROR).
+#' @description The function \code{da} executes disproportionality analyses,
+#' i.e. compares the proportion of reports with a specific adverse event for a drug,
+#' against corresponding event proportion among all other drugs in the passed data frame.
+#' See the vignette for a brief introduction to disproportionality analysis.
+#' Furthermore, \code{da} supports three estimators: Information Component (IC),
+#' Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).
 #' @inheritParams add_expected_counts
 #' @inheritParams add_disproportionality
 #' @inheritParams ror
@@ -19,7 +21,7 @@
 #'  The excel file will by default be named \code{da.xlsx}. To control the excel file name,
 #'  pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
 #'  do not want to export the output to an excel file, pass NULL (the default).
-#' @inheritParams add_expected_counts The df object
+#' @inheritSection add_expected_counts The df object
 #' @return \code{da} returns a data frame (invisibly) containing counts and
 #' estimates related to supported disproportionality estimators. Each row
 #' corresponds to a drug-event pair.
@@ -29,29 +31,8 @@
 #'   drug_event_df |>
 #'   da()
 #'
-#' ### Run a disproportionality analysis on a data frame with your own column names
-#' # Create the list with colnames for the data
-#' your_own_colnames <-
-#'   list(
-#'     report_id = "repId",
-#'     drug = "drug",
-#'     event = "event",
-#'     group_by = NULL
-#'   )
-#'
-#' # Rename the report_id variable and run again
-#' drug_event_df |>
-#'   dplyr::rename(repId = report_id) |>
-#'   da(df_colnames = your_own_colnames)
-#'
-#' ### Run a disproportionality across two subgroups
-#' # Create two groups (even/uneven report_ids) in drug_event_df
-#' drug_event_df_with_grouping <-
-#'   drug_event_df |>
-#'   dplyr::mutate("group" = report_id %% 2)
-#'
-#' # Set the colname for the group_by-parameter to "group"
-#' your_own_colnames <-
+#' ### Run a disproportionality across subgroups, and "camelCase" column names
+#' list_of_colnames <-
 #'   list(
 #'     report_id = "report_id",
 #'     drug = "drug",
@@ -59,12 +40,24 @@
 #'     group_by = "group"
 #'   )
 #'
-#' # Execute da across the subgroups
+#' # Execute da across subgroups
 #' da_2 <-
-#'   drug_event_df_with_grouping |>
-#'   da(df_colnames = your_own_colnames)
-#' @seealso
-#'  \code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
+#'   drug_event_df |>
+#'   da(df_colnames = list_of_colnames)
+#'
+#' # If e.g. the column with reportIDs had a different name than the default,
+#' # you can specify the right column name as follows:
+#'
+#' renamed_df <-
+#' drug_event_df |>
+#' dplyr::rename(ReportID = report_id)
+#'
+#' list_of_colnames$report_id = "ReportID"
+#'
+#' da_3 <-
+#' renamed_df |>
+#' da(df_colnames = list_of_colnames)
+#'
 #' @export
 #' @importFrom checkmate qassert
 #' @importFrom dplyr bind_cols select pull slice
@@ -78,13 +71,14 @@ da <- function(df = NULL,
                ),
                da_estimators = c("ic", "prr", "ror"),
                sort_by = "ic",
+               number_of_digits = 2,
                rule_of_N = 3,
                conf_lvl = 0.95,
-               number_of_digits = 2,
                excel_path = NULL) {
 
   checkmate::qassert(df_colnames$group_by, c("S1", "0"))
   checkmate::qassert(excel_path, c("S1", "0"))
+  df_syms <- lapply(df_colnames, \(x){if(!is.null(x)){rlang::sym(x)}})
 
   # ic uses expected counts from rrr
   expected_count_estimators <- gsub("ic", "rrr", da_estimators)
@@ -98,11 +92,12 @@ da <- function(df = NULL,
     # No subgrouping provided:
     output <- df |>
       pvutils::add_expected_counts(
-        df_colnames,
-        expected_count_estimators
+        df_colnames = df_colnames,
+        df_syms = df_syms,
+        expected_count_estimators = expected_count_estimators
       ) |>
       pvutils::add_disproportionality(
-        df_colnames = df_colnames,
+        df_syms = df_syms,
         da_estimators = da_estimators,
         sort_by = sort_by,
         conf_lvl = conf_lvl,
@@ -110,6 +105,7 @@ da <- function(df = NULL,
         number_of_digits = number_of_digits
       ) |>
       sort_by_lower_da_limit(df_colnames = df_colnames,
+                             df_syms = df_syms,
                              conf_lvl = conf_lvl,
                              sort_by = sort_by,
                              da_estimators = da_estimators)
@@ -128,6 +124,7 @@ da <- function(df = NULL,
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
                  df_colnames = df_colnames,
+                 df_syms = df_syms,
                  group_by = df_colnames$group_by,
                  expected_count_estimators = expected_count_estimators,
                  da_estimators = da_estimators,
@@ -151,6 +148,7 @@ da <- function(df = NULL,
         everything()
       ) |>
       sort_by_lower_da_limit(df_colnames = df_colnames,
+                             df_syms = df_syms,
                              conf_lvl = conf_lvl,
                              sort_by = sort_by,
                              da_estimators = da_estimators)
@@ -165,6 +163,7 @@ da <- function(df = NULL,
 #' @description A package internal wrapper for executing da across subgroups
 #' @param df See the da function
 #' @param df_colnames See the da function
+#' @param df_syms A list built from df_colnames through conversion to symbols.
 #' @param group_by For convenience, the df_colnames$group_by is passed as a separate parameter
 #' @param expected_count_estimators See the da function
 #' @param da_estimators See the da function
@@ -178,6 +177,7 @@ da <- function(df = NULL,
 #' @importFrom dplyr slice pull bind_cols select
 grouped_da <- function(df = NULL,
                        df_colnames = NULL,
+                       df_syms = NULL,
                        group_by = NULL,
                        expected_count_estimators = NULL,
                        da_estimators = NULL,
@@ -201,10 +201,11 @@ grouped_da <- function(df = NULL,
     df |>
     pvutils::add_expected_counts(
       df_colnames = df_colnames,
+      df_syms = df_syms,
       expected_count_estimators = expected_count_estimators
     ) |>
     pvutils::add_disproportionality(
-      df_colnames,
+      df_syms = df_syms,
       da_estimators = da_estimators,
       sort_by = sort_by,
       conf_lvl = conf_lvl,
@@ -221,15 +222,15 @@ grouped_da <- function(df = NULL,
 #' @description Produces various counts used in disproportionality analysis.
 #' @param df An object possible to convert to a data table, e.g.
 #' a tibble or data.frame, containing patient level reported drug-event-pairs.
-#' See below for further details.
-#' @param df_colnames Provide a list with the column names of the variables to use
-#' passed in \code{df}`i.e. point \code{da} to the column with the report_ids
-#' (\code{report_id}), the drug names (\code{drug}), the adverse event names
-#' (\code{event}) and optionally which subgroups to calculate disproportionality
-#' across through \code{group_by}. See the vignette for examples.
+#' See header 'The df object' below for further details.
+#' @param df_colnames A list of column names to use in \code{df}. That is,
+#' point \code{da} to the 'report id'-column (\code{report_id}), the
+#' 'drug name'-column (\code{drug}), the 'adverse event'-column (\code{event})
+#' and optionally a grouping column \code{group_by} to calculate disproportionality
+#' across. See the vignette for further details.
+#' @param df_syms A list built from df_colnames through conversion to symbols.
 #' @param expected_count_estimators A character vector containing the desired
-#' expected count estimators. Defaults to the implemented options, i.e.
-#' c("rrr", "prr", "ror").
+#' expected count estimators. Defaults to c("rrr", "prr", "ror").
 #'
 #' @section The df object:
 #'  The passed \code{df} should be (convertible to) a data table and at least contain three
@@ -239,7 +240,8 @@ grouped_da <- function(df = NULL,
 #'  contained drug X for event Y and event Z, two rows would be added, with the
 #'  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
 #'  numeric or character. Columns \code{drug} and \code{event} must be of type character.
-#'  You can use other names for your columns, as long as you specify them in df_colnames.
+#'  You can use a \code{df} with column names of your choosing, as long as you
+#'  connect role and name in the \code{df_colnames}-parameter.
 #'
 #' @return A tibble containing the various counts.
 #' @importFrom dplyr arrange count distinct everything group_by mutate n_distinct
@@ -248,6 +250,7 @@ grouped_da <- function(df = NULL,
 #' @export
 add_expected_counts <- function(df = NULL,
                                 df_colnames = NULL,
+                                df_syms = NULL,
                                 expected_count_estimators = c("rrr", "prr", "ror")) {
   # dtplyr/data.table complains if we don't put obs to NULL. Similar requirements
   # in lower level functions (count_expected_rrr, count_expected_prr,
@@ -257,12 +260,12 @@ add_expected_counts <- function(df = NULL,
   checkmate::qassert(df[[df_colnames$drug]], "S+")
   checkmate::qassert(df[[df_colnames$event]], "S+")
 
-  df_colnames_wo_group_vec <-
+  obligatory_df_colnames <-
     df |>
-    dplyr::select(-df_colnames$group_by) |>
+    dplyr::select(df_colnames$report_id, df_colnames$drug, df_colnames$event) |>
     colnames()
 
-  if (!any(utils::hasName(df, df_colnames_wo_group_vec))) {
+  if (!any(utils::hasName(df, obligatory_df_colnames))) {
     stop("At least one of column names 'report_id', 'drug' and 'event' is not
          found. Please check the passed df object.")
   }
@@ -279,7 +282,7 @@ add_expected_counts <- function(df = NULL,
 
   #  Begin with the RRR counts, as they're the computationally most feasible,
   #  and useful for calculating PRR and ROR.
-  count_dt <- count_expected_rrr(df_colnames, df)
+  count_dt <- count_expected_rrr(df, df_colnames, df_syms)
 
   # Calc PRR counts if requested
   if (any(c("ror", "prr") %in% expected_count_estimators)) {
@@ -329,7 +332,7 @@ add_expected_counts <- function(df = NULL,
 #' estimates.
 #' @export
 add_disproportionality <- function(df = NULL,
-                                   df_colnames = NULL,
+                                   df_syms = NULL,
                                    da_estimators = c("ic", "prr", "ror"),
                                    sort_by = "ror",
                                    rule_of_N = 3,
@@ -345,50 +348,51 @@ add_disproportionality <- function(df = NULL,
   # can pass this on without further checks
   checkmate::qassert(number_of_digits, c("N1[0,]", "0"))
 
-  da_df <- df
+  df <- df
 
   if ("ic" %in% da_estimators) {
-    ic_df <- pvutils::ic(da_df$obs,
-                         da_df$exp_rrr,
+    ic_df <- pvutils::ic(obs = df$obs,
+                         exp = df$exp_rrr,
                          conf_lvl = conf_lvl)
-    da_df <- da_df |> dplyr::bind_cols(ic_df)
+    df <-
+      df |>
+      dplyr::bind_cols(ic_df)
   }
 
   if ("prr" %in% da_estimators) {
     prr_df <- pvutils::prr(
-      obs = da_df$obs,
-      n_drug = da_df$n_drug,
-      n_event_prr = da_df$n_event_prr,
-      n_tot_prr = da_df$n_tot_prr,
+      obs = df$obs,
+      n_drug = df$n_drug,
+      n_event_prr = df$n_event_prr,
+      n_tot_prr = df$n_tot_prr,
       conf_lvl = conf_lvl
     )
 
-    da_df <- da_df |> dplyr::bind_cols(prr_df)
+    df <-
+      df |>
+      dplyr::bind_cols(prr_df)
   }
 
   if ("ror" %in% da_estimators) {
     ror_df <- pvutils::ror(
-      a = da_df$obs,
-      b = da_df$b,
-      c = da_df$c,
-      d = da_df$d,
+      a = df$obs,
+      b = df$b,
+      c = df$c,
+      d = df$d,
       conf_lvl = conf_lvl
     )
 
-    da_df <- da_df |> dplyr::bind_cols(ror_df)
+    df <- df |> dplyr::bind_cols(ror_df)
   }
 
   # Do some clean up
-  drug <- rlang::sym(df_colnames$drug)
-  event <- rlang::sym(df_colnames$event)
-
-  da_df <-
-    da_df |>
+  df <-
+    df |>
     apply_rule_of_N(da_estimators, rule_of_N) |>
     round_columns_with_many_decimals(da_estimators, number_of_digits) |>
     dplyr::select(
-      !!drug,
-      !!event,
+      !!df_syms$drug,
+      !!df_syms$event,
       obs,
       exp_rrr,
       dplyr::starts_with("ic"),

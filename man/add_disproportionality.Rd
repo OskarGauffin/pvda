@@ -7,7 +7,7 @@ with expected counts}
 \usage{
 add_disproportionality(
   df = NULL,
-  df_colnames = NULL,
+  df_syms = NULL,
   da_estimators = c("ic", "prr", "ror"),
   sort_by = "ror",
   rule_of_N = 3,
@@ -18,11 +18,7 @@ add_disproportionality(
 \arguments{
 \item{df}{Intended use is on the output tibble from \code{add_expected_counts}.}
 
-\item{df_colnames}{Provide a list with the column names of the variables to use
-passed in \code{df}`i.e. point \code{da} to the column with the report_ids
-(\code{report_id}), the drug names (\code{drug}), the adverse event names
-(\code{event}) and optionally which subgroups to calculate disproportionality
-across through \code{group_by}. See the vignette for examples.}
+\item{df_syms}{A list built from df_colnames through conversion to symbols.}
 
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults

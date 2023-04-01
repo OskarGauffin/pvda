@@ -4,43 +4,35 @@
 # Collapse All with "Alt + O"
 # And expand All with "Shift + Alt + O"
 # ---------------------------------------------------------------------------- #
-### Called from add_expected_counts
+### Called from add_expected_counts ----
 #  1.1 count_expected_rrr ----
 #' @title Count Expected for Relative Reporting Rate
 #' @description Internal function to provide expected counts related to the RRR
 #' @param df See documentation for add_expected_counts
-#' @param df_colnames Some description to be added
+#' @param df_colnames See documentation for da
+#' @param df_syms A list built from df_colnames through conversion to symbols.
 #' @return A data frame with columns for obs, n_drug,
 #' n_event, n_tot and (RRR) expected
-#' @seealso
-#'  \code{\link[dtplyr]{lazy_dt}}
-#'  \code{\link[dplyr]{distinct}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{n_distinct}}, \code{\link[dplyr]{group_by}}, \code{\link[dplyr]{count}}, \code{\link[dplyr]{rename}}, \code{\link[dplyr]{select}}
 #' @importFrom dtplyr lazy_dt
 #' @importFrom dplyr distinct mutate n_distinct group_by ungroup count rename select
-count_expected_rrr <- function(df_colnames, df) {
+count_expected_rrr <- function(df, df_colnames, df_syms) {
   NULL -> desc -> ends_with -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot
   assign(df_colnames$report_id, NULL)
   assign(df_colnames$event, NULL)
   assign(df_colnames$drug, NULL)
 
-  report_id <- rlang::sym(df_colnames$report_id)
-  drug <- rlang::sym(df_colnames$drug)
-  event <- rlang::sym(df_colnames$event)
-
-  #  Note that although dplyr from v 1.1.0 supports .by-grouping
-  #  this does not seem to be the case for dtplyr (which is used here)
   count_dt <- dtplyr::lazy_dt(df, immutable = FALSE) |>
     dplyr::distinct() |>
-    dplyr::mutate(n_tot = dplyr::n_distinct(!!report_id)) |>
-    dplyr::group_by(!!drug) |>
-    dplyr::mutate(n_drug = dplyr::n_distinct(!!report_id)) |>
-    dplyr::group_by(!!drug) |>
-    dplyr::group_by(!!event) |>
-    dplyr::mutate(n_event = dplyr::n_distinct(!!report_id)) |>
+    dplyr::mutate(n_tot = dplyr::n_distinct(!!df_syms$report_id)) |>
+    dplyr::group_by(!!df_syms$drug) |>
+    dplyr::mutate(n_drug = dplyr::n_distinct(!!df_syms$report_id)) |>
+    dplyr::group_by(!!df_syms$drug) |>
+    dplyr::group_by(!!df_syms$event) |>
+    dplyr::mutate(n_event = dplyr::n_distinct(!!df_syms$report_id)) |>
     dplyr::ungroup() |>
     dplyr::count(
-      !!drug,
-      !!event,
+      !!df_syms$drug,
+      !!df_syms$event,
       n_tot,
       n_drug,
       n_event
@@ -51,8 +43,8 @@ count_expected_rrr <- function(df_colnames, df) {
     dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
       as.numeric(n_tot)) |>
     dplyr::select(
-      !!drug,
-      !!event,
+      !!df_syms$drug,
+      !!df_syms$event,
       obs,
       n_drug,
       n_event,
@@ -69,9 +61,6 @@ count_expected_rrr <- function(df_colnames, df) {
 #' @param count_dt A data table, output from count_expected_rrr
 #' @return A data table with added columns for n_event_prr
 #' n_tot_prr and expected_prr
-#' @seealso
-#'  \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
-#'  \code{\link[tidyselect]{everything}}
 #'  @export
 #' @importFrom dplyr mutate select
 #' @importFrom tidyselect everything
@@ -125,7 +114,7 @@ count_expected_ror <- function(count_dt) {
 
 
 #-----------------------------------
-### Called from add_disproportionality
+### Called from add_disproportionality ----
 # 1.1 ic ----
 #' @title Information component
 #'
@@ -203,7 +192,7 @@ ic <- function(obs = NULL,
   }
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
-  ic_colnames <- da_colnames(quantile_prob, da_name = "ic")
+  ic_colnames <- colnames_da(quantile_prob, da_name = "ic")
 
   output <- tibble::tibble(
     !!ic_colnames$lower := ci_for_ic(obs, exp, quantile_prob$lower, shrinkage),
@@ -306,7 +295,7 @@ prr <- function(obs,
   n_tot_prr <- as.numeric(n_tot_prr)
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
-  prr_colnames <- da_colnames(quantile_prob, "prr")
+  prr_colnames <- colnames_da(quantile_prob, "prr")
 
   output <- tibble::tibble(
     !!prr_colnames$lower := ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$lower),
@@ -388,7 +377,7 @@ ror <- function(a = NULL,
   }
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
-  ror_colnames <- da_colnames(quantile_prob, "ror")
+  ror_colnames <- colnames_da(quantile_prob, "ror")
 
   # Integer overflow on vaers-sized data sets if these are not converted to double
   a <- as.numeric(a)
@@ -426,7 +415,7 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 }
 
 
-# 2.2 da_colnames -----
+# 2.2 colnames_da -----
 
 #' @title An internal function creating colnames for da confidence/credibility bounds
 #' @description Given the output from quantile_prob, and a da_name string,
@@ -435,7 +424,7 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 #' @param da_name A string, such as "ic", "prr" or "ror". Default: NULL
 #' @return A list with two symbols, to be inserted in the dtplyr-chain
 #' @export
-da_colnames <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
+colnames_da <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
                         da_name = NULL) {
   ic_lower_name <- paste0(da_name, 100 * quantile_prob$lower)
   ic_upper_name <- paste0(da_name, 100 * quantile_prob$upper)
@@ -557,11 +546,12 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
   return(da_df)
 }
 
-# 2.8 sort_by_lower_da_limit
+# 2.8 sort_by_lower_da_limit ----
 #' @title Sort a disproportionality analysis by the lower da conf. or cred. limit
 #' @description Sorts the output by the mean lower limit of a passed da estimator
 #' @param df See add_disproportionality
 #' @param df_colnames See add_disproportionality
+#' @param df_syms See add_disproportionality
 #' @param conf_lvl See add_disproportionality
 #' @param sort_by See add_disproportionality
 #' @param da_estimators See add_disproportionality
@@ -574,6 +564,7 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
 
 sort_by_lower_da_limit <- function(df = NULL,
                                    df_colnames = NULL,
+                                   df_syms = NULL,
                                    conf_lvl = NULL,
                                    sort_by = NULL,
                                    da_estimators = NULL){
@@ -588,15 +579,12 @@ sort_by_lower_da_limit <- function(df = NULL,
 
   sort_by_colname <- conf_lvl |>
     pvutils::conf_lvl_to_quantile_prob() |>
-    pvutils::da_colnames(da_name = sort_by) |>
+    pvutils::colnames_da(da_name = sort_by) |>
     purrr::pluck("lower")
 
   # Take the mean lower quantile for the chosen da and sort by it.
-  drug <- rlang::sym(df_colnames$drug)
-  event <- rlang::sym(df_colnames$event)
-
   sorted_df <- df |>
-    dplyr::group_by(!!drug, !!event) |>
+    dplyr::group_by(!!df_syms$drug, !!df_syms$event) |>
     dplyr::summarise(mean_da = mean(!!rlang::sym(sort_by_colname), na.rm=T))
 
   df <-
@@ -608,10 +596,9 @@ sort_by_lower_da_limit <- function(df = NULL,
       df |>
       dplyr::arrange(desc(mean_da))
   } else {
-    group_by <- rlang::sym(df_colnames$group_by)
     df <-
       df |>
-      dplyr::arrange(desc(mean_da), !!group_by)
+      dplyr::arrange(desc(mean_da), !!df_syms$group_by)
   }
 
   df <-
@@ -620,5 +607,4 @@ sort_by_lower_da_limit <- function(df = NULL,
 
   return(df)
 }
-
 #-----------------------------------

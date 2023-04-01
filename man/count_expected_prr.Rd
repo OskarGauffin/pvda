@@ -12,12 +12,8 @@ count_expected_prr(count_dt)
 \value{
 A data table with added columns for n_event_prr
 n_tot_prr and expected_prr
+ @export
 }
 \description{
 Internal function to provide expected counts related to the PRR
-}
-\seealso{
-\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{select}}
- \code{\link[tidyselect]{everything}}
- @export
 }

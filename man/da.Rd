@@ -10,22 +10,22 @@ da(
     NULL),
   da_estimators = c("ic", "prr", "ror"),
   sort_by = "ic",
+  number_of_digits = 2,
   rule_of_N = 3,
   conf_lvl = 0.95,
-  number_of_digits = 2,
   excel_path = NULL
 )
 }
 \arguments{
 \item{df}{An object possible to convert to a data table, e.g.
 a tibble or data.frame, containing patient level reported drug-event-pairs.
-See below for further details.}
+See header 'The df object' below for further details.}
 
-\item{df_colnames}{Provide a list with the column names of the variables to use
-passed in \code{df}`i.e. point \code{da} to the column with the report_ids
-(\code{report_id}), the drug names (\code{drug}), the adverse event names
-(\code{event}) and optionally which subgroups to calculate disproportionality
-across through \code{group_by}. See the vignette for examples.}
+\item{df_colnames}{A list of column names to use in \code{df}. That is,
+point \code{da} to the 'report id'-column (\code{report_id}), the
+'drug name'-column (\code{drug}), the 'adverse event'-column (\code{event})
+and optionally a grouping column \code{group_by} to calculate disproportionality
+across. See the vignette for further details.}
 
 \item{da_estimators}{Character vector specifying which disproportionality
 estimators to use, in case you don't need all implemented options. Defaults
@@ -37,6 +37,9 @@ combination. If drug-event-combination has several groups, the mean is taken
 (ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
 the default is "ic".}
 
+\item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
+an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
+
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of \code{rule_of_N}. Default value
 is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
@@ -44,9 +47,6 @@ don't want to apply any such rule.}
 
 \item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
-
-\item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
-an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
 \item{excel_path}{To write the output of \code{da} to an excel file, provide a path
 to a folder e.g. to write to your current working directory, pass \code{getwd()}.
@@ -60,40 +60,34 @@ estimates related to supported disproportionality estimators. Each row
 corresponds to a drug-event pair.
 }
 \description{
-\code{da} is used to execute a disproportionality analysis,
-potentially across subgroups (see parameter \code{group_by}), using the
-Information Component (IC), Proportional Reporting Rate (PRR) and/or the
-Reporting Odds Ratio (ROR).
+The function \code{da} executes disproportionality analyses,
+i.e. compares the proportion of reports with a specific adverse event for a drug,
+against corresponding event proportion among all other drugs in the passed data frame.
+See the vignette for a brief introduction to disproportionality analysis.
+Furthermore, \code{da} supports three estimators: Information Component (IC),
+Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).
 }
+\section{The df object}{
+
+ The passed \code{df} should be (convertible to) a data table and at least contain three
+ columns: \code{report_id}, \code{drug} and \code{event}. The data table should contain one row
+ per reported drug-event-combination, i.e. receiving a single additional report
+ for drug X and event Y would add one row to the table. If the single report
+ contained drug X for event Y and event Z, two rows would be added, with the
+ same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
+ numeric or character. Columns \code{drug} and \code{event} must be of type character.
+ You can use a \code{df} with column names of your choosing, as long as you
+ connect role and name in the \code{df_colnames}-parameter.
+}
+
 \examples{
 ### Run a disproportionality analysis
 da_1 <-
   drug_event_df |>
   da()
 
-### Run a disproportionality analysis on a data frame with your own column names
-# Create the list with colnames for the data
-your_own_colnames <-
-  list(
-    report_id = "repId",
-    drug = "drug",
-    event = "event",
-    group_by = NULL
-  )
-
-# Rename the report_id variable and run again
-drug_event_df |>
-  dplyr::rename(repId = report_id) |>
-  da(df_colnames = your_own_colnames)
-
-### Run a disproportionality across two subgroups
-# Create two groups (even/uneven report_ids) in drug_event_df
-drug_event_df_with_grouping <-
-  drug_event_df |>
-  dplyr::mutate("group" = report_id \%\% 2)
-
-# Set the colname for the group_by-parameter to "group"
-your_own_colnames <-
+### Run a disproportionality across subgroups, and "camelCase" column names
+list_of_colnames <-
   list(
     report_id = "report_id",
     drug = "drug",
@@ -101,11 +95,22 @@ your_own_colnames <-
     group_by = "group"
   )
 
-# Execute da across the subgroups
+# Execute da across subgroups
 da_2 <-
-  drug_event_df_with_grouping |>
-  da(df_colnames = your_own_colnames)
-}
-\seealso{
-\code{\link[pvutils]{add_expected_counts}}, \code{\link[pvutils]{add_disproportionality}}
+  drug_event_df |>
+  da(df_colnames = list_of_colnames)
+
+# If e.g. the column with reportIDs had a different name than the default,
+# you can specify the right column name as follows:
+
+renamed_df <-
+drug_event_df |>
+dplyr::rename(ReportID = report_id)
+
+list_of_colnames$report_id = "ReportID"
+
+da_3 <-
+renamed_df |>
+da(df_colnames = list_of_colnames)
+
 }
