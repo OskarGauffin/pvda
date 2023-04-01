@@ -51,6 +51,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">grouped_da</span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  df_colnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  df_syms <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  expected_count_estimators <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  da_estimators <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -69,6 +70,10 @@
 
 <dt>df_colnames</dt>
 <dd><p>See the da function</p></dd>
+
+
+<dt>df_syms</dt>
+<dd><p>A list built from df_colnames through conversion to symbols.</p></dd>
 
 
 <dt>group_by</dt>

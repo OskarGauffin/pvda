@@ -51,6 +51,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_expected_counts</span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  df_colnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  df_syms <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  expected_count_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rrr"</span>, <span class="st">"prr"</span>, <span class="st">"ror"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -60,21 +61,24 @@
     <dl><dt>df</dt>
 <dd><p>An object possible to convert to a data table, e.g.
 a tibble or data.frame, containing patient level reported drug-event-pairs.
-See below for further details.</p></dd>
+See header 'The df object' below for further details.</p></dd>
 
 
 <dt>df_colnames</dt>
-<dd><p>Provide a list with the column names of the variables to use
-passed in <code>df</code>`i.e. point <code>da</code> to the column with the report_ids
-(<code>report_id</code>), the drug names (<code>drug</code>), the adverse event names
-(<code>event</code>) and optionally which subgroups to calculate disproportionality
-across through <code>group_by</code>. See the vignette for examples.</p></dd>
+<dd><p>A list of column names to use in <code>df</code>. That is,
+point <code>da</code> to the 'report id'-column (<code>report_id</code>), the
+'drug name'-column (<code>drug</code>), the 'adverse event'-column (<code>event</code>)
+and optionally a grouping column <code>group_by</code> to calculate disproportionality
+across. See the vignette for further details.</p></dd>
+
+
+<dt>df_syms</dt>
+<dd><p>A list built from df_colnames through conversion to symbols.</p></dd>
 
 
 <dt>expected_count_estimators</dt>
 <dd><p>A character vector containing the desired
-expected count estimators. Defaults to the implemented options, i.e.
-c("rrr", "prr", "ror").</p></dd>
+expected count estimators. Defaults to c("rrr", "prr", "ror").</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -94,7 +98,8 @@ c("rrr", "prr", "ror").</p></dd>
  contained drug X for event Y and event Z, two rows would be added, with the
  same <code>report_id</code> and <code>drug</code> on both rows. Column <code>report_id</code> must be of type
  numeric or character. Columns <code>drug</code> and <code>event</code> must be of type character.
- You can use other names for your columns, as long as you specify them in df_colnames.</p>
+ You can use a <code>df</code> with column names of your choosing, as long as you
+ connect role and name in the <code>df_colnames</code>-parameter.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

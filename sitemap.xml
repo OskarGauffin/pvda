@@ -40,6 +40,9 @@
     <loc>https://oskargauffin.github.io/pvutils/reference/ci_for_ror.html</loc>
   </url>
   <url>
+    <loc>https://oskargauffin.github.io/pvutils/reference/colnames_da.html</loc>
+  </url>
+  <url>
     <loc>https://oskargauffin.github.io/pvutils/reference/conf_lvl_to_quantile_prob.html</loc>
   </url>
   <url>
@@ -53,9 +56,6 @@
   </url>
   <url>
     <loc>https://oskargauffin.github.io/pvutils/reference/da.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/da_colnames.html</loc>
   </url>
   <url>
     <loc>https://oskargauffin.github.io/pvutils/reference/drug_event_df.html</loc>
