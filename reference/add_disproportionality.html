@@ -58,9 +58,7 @@ with expected counts</p>
 <span>  df <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  df_syms <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  da_estimators <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ic"</span>, <span class="st">"prr"</span>, <span class="st">"ror"</span><span class="op">)</span>,</span>
-<span>  sort_by <span class="op">=</span> <span class="st">"ror"</span>,</span>
 <span>  rule_of_N <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  number_of_digits <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  conf_lvl <span class="op">=</span> <span class="fl">0.95</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -81,24 +79,11 @@ estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").</p></dd>
 
 
-<dt>sort_by</dt>
-<dd><p>The output is sorted in descending order of the lower bound of
-the confidence/credibility interval for a da estimator, for each drug-event
-combination. If drug-event-combination has several groups, the mean is taken
-(ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-the default is "ic".</p></dd>
-
-
 <dt>rule_of_N</dt>
 <dd><p>Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of <code>rule_of_N</code>. Default value
 is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
 don't want to apply any such rule.</p></dd>
-
-
-<dt>number_of_digits</dt>
-<dd><p>Numeric value. Set the number of digits to show in output by passing
-an integer. Default value is 2 digits. Set to NULL to avoid rounding.</p></dd>
 
 
 <dt>conf_lvl</dt>

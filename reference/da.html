@@ -101,14 +101,13 @@ to c("ic", "prr", "ror").</p></dd>
 <dt>sort_by</dt>
 <dd><p>The output is sorted in descending order of the lower bound of
 the confidence/credibility interval for a da estimator, for each drug-event
-combination. If drug-event-combination has several groups, the mean is taken
-(ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-the default is "ic".</p></dd>
+combination. If a grouping variable is passed, the sample average is taken
+across each drug-event-combination (ignoring NAs). Any of the passed strings
+in "da_estimators" is accepted, the default is "ic".</p></dd>
 
 
 <dt>number_of_digits</dt>
-<dd><p>Numeric value. Set the number of digits to show in output by passing
-an integer. Default value is 2 digits. Set to NULL to avoid rounding.</p></dd>
+<dd><p>Round decimal columns to specified precision, default is two decimals.</p></dd>
 
 
 <dt>rule_of_N</dt>
