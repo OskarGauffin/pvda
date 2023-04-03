@@ -8,7 +8,6 @@ grouped_da(
   df = NULL,
   df_colnames = NULL,
   df_syms = NULL,
-  group_by = NULL,
   expected_count_estimators = NULL,
   da_estimators = NULL,
   sort_by = NULL,
@@ -23,8 +22,6 @@ grouped_da(
 \item{df_colnames}{See the da function}
 
 \item{df_syms}{A list built from df_colnames through conversion to symbols.}
-
-\item{group_by}{For convenience, the df_colnames$group_by is passed as a separate parameter}
 
 \item{expected_count_estimators}{See the da function}
 

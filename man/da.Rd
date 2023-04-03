@@ -33,12 +33,11 @@ to c("ic", "prr", "ror").}
 
 \item{sort_by}{The output is sorted in descending order of the lower bound of
 the confidence/credibility interval for a da estimator, for each drug-event
-combination. If drug-event-combination has several groups, the mean is taken
-(ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-the default is "ic".}
+combination. If a grouping variable is passed, the sample average is taken
+across each drug-event-combination (ignoring NAs). Any of the passed strings
+in "da_estimators" is accepted, the default is "ic".}
 
-\item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
-an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
+\item{number_of_digits}{Round decimal columns to specified precision, default is two decimals.}
 
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of \code{rule_of_N}. Default value

@@ -555,6 +555,8 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
 #' @param conf_lvl See add_disproportionality
 #' @param sort_by See add_disproportionality
 #' @param da_estimators See add_disproportionality
+#' @param number_of_digits Numeric value. Set the number of digits to show in output by passing
+#' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
 #' @return The df object, sorted.
 #' @export
 #' @importFrom checkmate qassert
@@ -562,14 +564,20 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
 #' @importFrom dplyr group_by summarise left_join arrange select
 #' @importFrom rlang sym
 
-sort_by_lower_da_limit <- function(df = NULL,
+round_and_sort_by_lower_da_limit <- function(df = NULL,
                                    df_colnames = NULL,
                                    df_syms = NULL,
                                    conf_lvl = NULL,
                                    sort_by = NULL,
-                                   da_estimators = NULL){
+                                   da_estimators = NULL,
+                                   number_of_digits = 2){
 
   NULL -> desc -> mean_da
+
+  # The round, using number_of_digits below, rounds decimals in digits, so we
+  # can pass this on without further checks
+  checkmate::qassert(number_of_digits, c("N1[0,]", "0"))
+
 
   checkmate::qassert(sort_by, "S1")
   if(!sort_by %in% da_estimators){
@@ -604,6 +612,10 @@ sort_by_lower_da_limit <- function(df = NULL,
   df <-
     df |>
     dplyr::select(-mean_da)
+
+  df <-
+    df |>
+    round_columns_with_many_decimals(da_estimators, number_of_digits)
 
   return(df)
 }

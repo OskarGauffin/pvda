@@ -1,14 +1,13 @@
 # TODO
 
-## Get rid of group-by argument in grouped_da
-# Put rounding and sorting in it's own fcn in the end of da and grouped_da
+# A summary function for a da-object
 # Overall QC check on ic, prr, ror docs
 # Do QC on the ROR; PRR; IC values, in point and bounds
 # Update vignette
 # commit to CRAN
-# Should not be a "df" object when running? Combine with setDT.
 
 ### Long term, want to, not for now
+# Should not be a "df" object when running? Combine with setDT.
 #  Updates in dtplyr should make it possible to bake in the group by in the
 #  mutate.
 #setDT instead of as.data.frame ?

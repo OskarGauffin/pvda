@@ -16,11 +16,17 @@
 #' @inheritParams add_expected_counts
 #' @inheritParams add_disproportionality
 #' @inheritParams ror
+#' @param number_of_digits Round decimal columns to specified precision, default is two decimals.
 #' @param excel_path To write the output of \code{da} to an excel file, provide a path
 #' to a folder e.g. to write to your current working directory, pass \code{getwd()}.
 #'  The excel file will by default be named \code{da.xlsx}. To control the excel file name,
 #'  pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
 #'  do not want to export the output to an excel file, pass NULL (the default).
+#' @param sort_by The output is sorted in descending order of the lower bound of
+#'  the confidence/credibility interval for a da estimator, for each drug-event
+#'  combination. If a grouping variable is passed, the sample average is taken
+#'  across each drug-event-combination (ignoring NAs). Any of the passed strings
+#'  in "da_estimators" is accepted, the default is "ic".
 #' @inheritSection add_expected_counts The df object
 #' @return \code{da} returns a data frame (invisibly) containing counts and
 #' estimates related to supported disproportionality estimators. Each row
@@ -99,16 +105,15 @@ da <- function(df = NULL,
       pvutils::add_disproportionality(
         df_syms = df_syms,
         da_estimators = da_estimators,
-        sort_by = sort_by,
         conf_lvl = conf_lvl,
-        rule_of_N = rule_of_N,
-        number_of_digits = number_of_digits
+        rule_of_N = rule_of_N
       ) |>
-      sort_by_lower_da_limit(df_colnames = df_colnames,
+      round_and_sort_by_lower_da_limit(df_colnames = df_colnames,
                              df_syms = df_syms,
                              conf_lvl = conf_lvl,
                              sort_by = sort_by,
-                             da_estimators = da_estimators)
+                             da_estimators = da_estimators,
+                             number_of_digits = number_of_digits)
   } else {
     if (!df_colnames$group_by %in% colnames(df)) {
       stop("Passed grouping column name '", df_colnames$group_by, "' not found in passed df.")
@@ -125,10 +130,8 @@ da <- function(df = NULL,
       purrr::map(grouped_da,
                  df_colnames = df_colnames,
                  df_syms = df_syms,
-                 group_by = df_colnames$group_by,
                  expected_count_estimators = expected_count_estimators,
                  da_estimators = da_estimators,
-                 sort_by = sort_by,
                  conf_lvl = conf_lvl,
                  rule_of_N = rule_of_N,
                  number_of_digits = number_of_digits
@@ -147,14 +150,16 @@ da <- function(df = NULL,
         dplyr::starts_with("ror"),
         everything()
       ) |>
-      sort_by_lower_da_limit(df_colnames = df_colnames,
+      round_and_sort_by_lower_da_limit(df_colnames = df_colnames,
                              df_syms = df_syms,
                              conf_lvl = conf_lvl,
                              sort_by = sort_by,
-                             da_estimators = da_estimators)
+                             da_estimators = da_estimators,
+                             number_of_digits = number_of_digits)
   }
 
   write_to_excel(output, excel_path)
+  class(output) = c("da", "tbl_df", "tbl", "data.frame")
 
   return(invisible(output))
 }
@@ -164,7 +169,6 @@ da <- function(df = NULL,
 #' @param df See the da function
 #' @param df_colnames See the da function
 #' @param df_syms A list built from df_colnames through conversion to symbols.
-#' @param group_by For convenience, the df_colnames$group_by is passed as a separate parameter
 #' @param expected_count_estimators See the da function
 #' @param da_estimators See the da function
 #' @param sort_by See the da function
@@ -178,7 +182,6 @@ da <- function(df = NULL,
 grouped_da <- function(df = NULL,
                        df_colnames = NULL,
                        df_syms = NULL,
-                       group_by = NULL,
                        expected_count_estimators = NULL,
                        da_estimators = NULL,
                        sort_by = NULL,
@@ -207,14 +210,117 @@ grouped_da <- function(df = NULL,
     pvutils::add_disproportionality(
       df_syms = df_syms,
       da_estimators = da_estimators,
-      sort_by = sort_by,
       conf_lvl = conf_lvl,
-      rule_of_N = rule_of_N,
-      number_of_digits = number_of_digits
+      rule_of_N = rule_of_N
     ) |>
     dplyr::bind_cols(!!group_by := current_group)
 
   return(output)
+}
+
+# 0.1.2 summary.da ----
+
+#' @title Summary function for disproportionality objects
+#' @description Provides summary counts of SDRs and shows the top five DECs
+#' @param object The object outputted from \code{da}. Extended from the tibble object.
+#' @param ... For passing additional parameters to extended classes.
+#' @return Nothing
+#' @export
+#' @importFrom stringr str_subset regex str_which str_replace
+#' @importFrom tidyr separate_wider_delim unite
+#' @importFrom dplyr group_by summarise pull mutate count distinct slice_head across all_of select
+#' @importFrom rlang sym
+#' @importFrom tibble tibble
+#' @importFrom cli col_blue col_grey
+#' @importFrom stats setNames
+
+summary.da <- function(object, ...){
+
+  NULL -> drug -> event -> da_estimator -> exp_ror -> exp_prr ->
+    conf_lvl_digits -> lower_bound_da
+
+  da_estimators = c("ic", "prr", "ror")
+
+  # Get the names of the column with lower bounds
+    lower_bound_df <-
+    object |>
+    colnames() |>
+    sort() |>
+    stringr::str_subset(paste0(paste0(da_estimators, "[:digit:]"), collapse="|")) |>
+    as.data.frame() |>
+    setNames("col") |>
+    tidyr::separate_wider_delim(cols=col, delim = stringr::regex("(?<=[a-zA-Z])\\s*(?=[0-9])"),
+                                names = c("da_estimator", "conf_lvl_digits")) |>
+    dplyr::group_by(da_estimator) |>
+    dplyr::summarise(min = min(conf_lvl_digits))
+
+    conf_lvl <- lower_bound_df |>
+      dplyr::pull(min) |>
+      as.numeric() |>
+      (\(x){x[1]*2/100})()
+
+    lower_bound_col_names_wo_exp <-
+    lower_bound_df |>
+    tidyr::unite(col=lower_bound_da, da_estimator, min, sep="") |>
+    dplyr::pull()
+
+    # Take exp on the ic bound gives the same threshold value for all estimators
+    ic_index <- stringr::str_which(lower_bound_col_names_wo_exp, "ic")
+    ic_col <- lower_bound_col_names_wo_exp[ic_index]
+    ic_col_sym <- rlang::sym(ic_col)
+    ic_exp_col <- paste0("exp(", lower_bound_col_names_wo_exp[ic_index], ")", collapse="")
+    ic_exp_sym <- rlang::sym(ic_exp_col)
+    lower_bound_col_names <-
+      lower_bound_col_names_wo_exp |> stringr::str_replace(ic_col, ic_exp_col)
+
+    da_summary_counts <-
+    object |>
+    dplyr::mutate(!!ic_exp_sym := exp(!!ic_col_sym)) |>
+    dplyr::summarise(across(all_of(lower_bound_col_names), \(x){
+      sum(1 < x, na.rm = TRUE)
+    }))
+
+    output <- tibble::tibble(colnames(da_summary_counts),da_summary_counts[1,] |>
+      as.character()) |>
+      setNames(c("da", "N")) |>
+      dplyr::mutate(da = paste0(da, " ")) |>
+      setNames(c("0 <   ", "N"))
+
+    N_DECs <-
+      object |>
+      dplyr::count() |>
+      as.numeric()
+
+    # Check if a grouping variable has been passed
+    # ("are any drug-event-combinations occurring more than once?")
+    drug <- rlang::sym(colnames(object)[1])
+    event <- rlang::sym(colnames(object)[2])
+    n_distinct_rows <- object |> dplyr::distinct(!!drug, !!event) |> dplyr::count()
+
+    end_of_print_df = 15
+    if(nrow(object) > n_distinct_rows){
+      #  extra_col_for_group_by = TRUE
+      end_of_print_df = end_of_print_df + 1
+    }
+
+    top_five_rows <-
+      object |>
+      dplyr::slice_head(n=5) |>
+      as.data.frame() |>
+      dplyr::mutate(dplyr::across(dplyr::all_of(lower_bound_col_names_wo_exp), \(x){paste0("       ", x)}))
+
+    top_five_rows <- top_five_rows[,1:end_of_print_df]
+    top_five_rows <- top_five_rows |> dplyr::select(-exp_prr, -exp_ror)
+
+    cat(cli::col_blue("Summary of Disproportionality Analysis \n\n"))
+    cat(cli::col_blue("Number of SDRs (out of total ", N_DECs, " DECs) \n"))
+    print(as.data.frame(output), row.names=FALSE)
+
+    cat("\n")
+    cat(cli::col_blue("Top 5 DECs \n"))
+    print(top_five_rows, row.names = FALSE)
+    cat("\n")
+    cat(cli::col_grey("(sorted according to passed argument sort_by)"))
 }
 
 # 1.1 add_expected_counts ----
@@ -317,26 +423,17 @@ add_expected_counts <- function(df = NULL,
 #' @param da_estimators Character vector specifying which disproportionality
 #' estimators to use, in case you don't need all implemented options. Defaults
 #' to c("ic", "prr", "ror").
-#' @param sort_by The output is sorted in descending order of the lower bound of
-#'  the confidence/credibility interval for a da estimator, for each drug-event
-#'  combination. If drug-event-combination has several groups, the mean is taken
-#'  (ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-#'  the default is "ic".
 #' @param rule_of_N Numeric value. Sets estimates for ROR and PRR to NA when observed
 #' counts are strictly less than the passed value of \code{rule_of_N}. Default value
 #' is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
 #' don't want to apply any such rule.
-#' @param number_of_digits Numeric value. Set the number of digits to show in output by passing
-#' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
 #' @return The passed data frame with disproportionality point and interval
 #' estimates.
 #' @export
 add_disproportionality <- function(df = NULL,
                                    df_syms = NULL,
                                    da_estimators = c("ic", "prr", "ror"),
-                                   sort_by = "ror",
                                    rule_of_N = 3,
-                                   number_of_digits = 2,
                                    conf_lvl = 0.95) {
   NULL -> obs -> exp_rrr -> exp_prr -> exp_ror
 
@@ -344,9 +441,6 @@ add_disproportionality <- function(df = NULL,
     stop("Passed parameter 'da_estimators' must consist of 'ic', 'prr' or 'ror'")
   }
   checkmate::qassert(rule_of_N, c("N1[0,]", "0"))
-  # The round, using number_of_digits below, rounds decimals in digits, so we
-  # can pass this on without further checks
-  checkmate::qassert(number_of_digits, c("N1[0,]", "0"))
 
   df <- df
 
@@ -389,7 +483,6 @@ add_disproportionality <- function(df = NULL,
   df <-
     df |>
     apply_rule_of_N(da_estimators, rule_of_N) |>
-    round_columns_with_many_decimals(da_estimators, number_of_digits) |>
     dplyr::select(
       !!df_syms$drug,
       !!df_syms$event,

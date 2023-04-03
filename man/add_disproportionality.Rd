@@ -9,9 +9,7 @@ add_disproportionality(
   df = NULL,
   df_syms = NULL,
   da_estimators = c("ic", "prr", "ror"),
-  sort_by = "ror",
   rule_of_N = 3,
-  number_of_digits = 2,
   conf_lvl = 0.95
 )
 }
@@ -24,19 +22,10 @@ add_disproportionality(
 estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").}
 
-\item{sort_by}{The output is sorted in descending order of the lower bound of
-the confidence/credibility interval for a da estimator, for each drug-event
-combination. If drug-event-combination has several groups, the mean is taken
-(ignoring NAs). Any of the passed strings in "da_estimators"is accepted,
-the default is "ic".}
-
 \item{rule_of_N}{Numeric value. Sets estimates for ROR and PRR to NA when observed
 counts are strictly less than the passed value of \code{rule_of_N}. Default value
 is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
 don't want to apply any such rule.}
-
-\item{number_of_digits}{Numeric value. Set the number of digits to show in output by passing
-an integer. Default value is 2 digits. Set to NULL to avoid rounding.}
 
 \item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
