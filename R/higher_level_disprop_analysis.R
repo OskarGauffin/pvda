@@ -240,10 +240,12 @@ summary.da <- function(object, ...){
     conf_lvl_digits -> lower_bound_da
 
   da_estimators = c("ic", "prr", "ror")
+  N_da_estimators = length(da_estimators)
 
   # Get the names of the column with lower bounds
-    lower_bound_df <-
-    object |>
+  lower_bound_df_from_da <- function(df){
+
+    df |>
     colnames() |>
     sort() |>
     stringr::str_subset(paste0(paste0(da_estimators, "[:digit:]"), collapse="|")) |>
@@ -253,12 +255,18 @@ summary.da <- function(object, ...){
                                 names = c("da_estimator", "conf_lvl_digits")) |>
     dplyr::group_by(da_estimator) |>
     dplyr::summarise(min = min(conf_lvl_digits))
+  }
 
+  # Extract the lower bound column names, split into two cols
+  lower_bound_df <- lower_bound_df_from_da(object)
+
+  # Extract the conf_lvl
     conf_lvl <- lower_bound_df |>
       dplyr::pull(min) |>
       as.numeric() |>
       (\(x){x[1]*2/100})()
 
+  # Put the lower bound colnames back together
     lower_bound_col_names_wo_exp <-
     lower_bound_df |>
     tidyr::unite(col=lower_bound_da, da_estimator, min, sep="") |>
@@ -268,38 +276,46 @@ summary.da <- function(object, ...){
     ic_index <- stringr::str_which(lower_bound_col_names_wo_exp, "ic")
     ic_col <- lower_bound_col_names_wo_exp[ic_index]
     ic_col_sym <- rlang::sym(ic_col)
-    ic_exp_col <- paste0("exp(", lower_bound_col_names_wo_exp[ic_index], ")", collapse="")
+    ic_exp_col <- paste0("2^(", lower_bound_col_names_wo_exp[ic_index], ")", collapse="")
     ic_exp_sym <- rlang::sym(ic_exp_col)
+
+    # Transform lower_ic_bound to O/E-scale, count DECs exceeding threshold = 1
     lower_bound_col_names <-
-      lower_bound_col_names_wo_exp |> stringr::str_replace(ic_col, ic_exp_col)
+      lower_bound_col_names_wo_exp |>
+      stringr::str_replace(ic_col, ic_exp_col)
 
     da_summary_counts <-
     object |>
-    dplyr::mutate(!!ic_exp_sym := exp(!!ic_col_sym)) |>
+    dplyr::mutate(!!ic_exp_sym := 2^(!!ic_col_sym)) |>
     dplyr::summarise(across(all_of(lower_bound_col_names), \(x){
       sum(1 < x, na.rm = TRUE)
     }))
 
+    # Put together count table
     output <- tibble::tibble(colnames(da_summary_counts),da_summary_counts[1,] |>
       as.character()) |>
       setNames(c("da", "N")) |>
       dplyr::mutate(da = paste0(da, " ")) |>
       setNames(c("0 <   ", "N"))
 
+    summary_df <- output
+
+    # Count total N of DECs in object
     N_DECs <-
       object |>
       dplyr::count() |>
       as.numeric()
 
+    # We just print drug, event, exp_rrr and da estimates from obj
     # Check if a grouping variable has been passed
     # ("are any drug-event-combinations occurring more than once?")
     drug <- rlang::sym(colnames(object)[1])
     event <- rlang::sym(colnames(object)[2])
     n_distinct_rows <- object |> dplyr::distinct(!!drug, !!event) |> dplyr::count()
 
-    end_of_print_df = 15
+    end_of_print_df = 3 + 4*N_da_estimators
     if(nrow(object) > n_distinct_rows){
-      #  extra_col_for_group_by = TRUE
+      #  extra col if group_by was passed
       end_of_print_df = end_of_print_df + 1
     }
 
@@ -321,6 +337,8 @@ summary.da <- function(object, ...){
     print(top_five_rows, row.names = FALSE)
     cat("\n")
     cat(cli::col_grey("(sorted according to passed argument sort_by)"))
+
+    return(invisible(summary_df))
 }
 
 # 1.1 add_expected_counts ----

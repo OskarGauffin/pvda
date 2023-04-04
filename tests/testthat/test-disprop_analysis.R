@@ -144,3 +144,15 @@ test_that("Sorting works as expected", {
     (\(x){all(x ==da_1 |>    dplyr::filter(n == 1) |> dplyr::pull(ic2.5))})()
   expect_equal(c(desc_order_status, group_order_status), c(TRUE,TRUE))
 })
+
+test_that("Summary table contains a prr2.5 by default", {
+
+  invisible(capture.output(summary_output <- summary(pvutils::drug_event_df |> pvutils::da())))
+
+  has_prr2.5<- as.character(summary_output[,1]) |> stringr::str_detect("prr2.5")
+
+  expect_equal(has_prr2.5, TRUE)
+
+})
+
+# summary_output <- summary(pvutils::drug_event_df |> pvutils::da())
