@@ -1,6 +1,6 @@
 # TODO
 
-# A summary function for a da-object
+# The inheritparams is a bit of a mess right now
 # Overall QC check on ic, prr, ror docs
 # Do QC on the ROR; PRR; IC values, in point and bounds
 # Update vignette

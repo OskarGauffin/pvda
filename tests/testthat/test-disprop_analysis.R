@@ -1,4 +1,4 @@
-test_that("Function ic works", {
+test_that("1-3. Function ic works", {
   test_df <- ic(1, 1)
 
   expected_output <- tibble::tribble(
@@ -12,8 +12,7 @@ test_that("Function ic works", {
   expect_equal(test_df[, 2], expected_output[, 2])
   expect_equal(test_df[, 3], expected_output[, 3])
 })
-
-test_that("Function ror works", {
+test_that("4. Function ror works", {
   test_df <- ror(1:2, 2:3, 3:4, 4:5)
 
   expected_output <- tibble::tribble(
@@ -26,9 +25,7 @@ test_that("Function ror works", {
   expect_equal(test_df[, 2], expected_output[, 2])
   # expect_equal(test_df[, 3], expected_output[, 3])
 })
-
-
-test_that("Function add_expected_count works", {
+test_that("5-10. Function add_expected_count works", {
   df_colnames <- list(
     report_id = "report_id",
     drug = "drug",
@@ -58,23 +55,20 @@ test_that("Function add_expected_count works", {
   expect_equal(first_row$n_event_prr, first_row$c)
   expect_equal(first_row$n_tot_prr, diff(as.numeric(first_row[, c("n_drug", "n_tot")])))
 })
-
-test_that("The whole disproportionality function chain runs without NA output except in PRR and ROR", {
+test_that("11. The whole disproportionality function chain runs without NA output except in PRR and ROR", {
   output <- pvutils::drug_event_df |>
     pvutils::da() |>
+    purrr::pluck("da_df") |>
     dplyr::select(-dplyr::starts_with("ror")) |>
     dplyr::select(-dplyr::starts_with("prr"))
 
 
-  # df <- pvutils::drug_event_df |>
-  #   pvutils::da()
-
   expect_equal(FALSE, any(is.na(output)))
 })
-
-test_that("The grouping functionality runs", {
+test_that("12. The grouping functionality runs", {
   drug_event_df_with_grouping <- pvutils::drug_event_df |>
     dplyr::mutate("group" = report_id %% 2)
+
   da_1 <- drug_event_df_with_grouping |>
     pvutils::da(df_colnames = list(
     report_id = "report_id",
@@ -82,8 +76,7 @@ test_that("The grouping functionality runs", {
     event = "event",
     group_by = "group"
   ),
-  number_of_digits  = 5)
-  # View(da_1)
+  number_of_digits  = 5) |> purrr::pluck("da_df")
 
   first_row_ic_group_0 <- as.numeric(da_1[1, ]$ic)
   manual_calc_ic_first_row_group_0 <- as.numeric(log2((da_1[1, "obs"] + 0.5) / (da_1[1, "exp_rrr"] + 0.5)))
@@ -91,8 +84,7 @@ test_that("The grouping functionality runs", {
 
   expect_equal(first_row_ic_group_0, manual_calc_ic_first_row_group_0)
 })
-
-test_that("Custom column names can be passed through the df_colnames list", {
+test_that("13. Custom column names can be passed through the df_colnames list", {
   drug_event_df_custom_names <- pvutils::drug_event_df |>
     dplyr::rename(RepId = report_id, Drug = drug, Event = event)
   da_1 <- drug_event_df_custom_names |> pvutils::da(df_colnames = list(
@@ -100,27 +92,25 @@ test_that("Custom column names can be passed through the df_colnames list", {
     drug = "Drug",
     event = "Event",
     group_by = NULL
-  ))
-
+  )) |>
+    purrr::pluck("da_df")
 
   custom_colnames <- colnames(da_1)[1:2]
 
   expect_equal(custom_colnames, c("Drug", "Event"))
 })
-
-test_that("Sorting works as expected", {
+test_that("14. Sorting works as expected", {
 
 # Repeated from test above on grouping
- drug_event_df_with_grouping <- pvutils::drug_event_df |>
-  dplyr::mutate("group" = report_id %% 2)
-  da_1 <- drug_event_df_with_grouping |>
+  da_1 <- drug_event_df |>
     pvutils::da(df_colnames = list(
       report_id = "report_id",
       drug = "drug",
       event = "event",
       group_by = "group"
     ),
-    number_of_digits  = 5)
+    number_of_digits  = 5) |>
+    purrr::pluck("da_df")
 
   nr_of_rows_per_dec <- da_1 |> dplyr::count(drug, event)
 
@@ -144,15 +134,17 @@ test_that("Sorting works as expected", {
     (\(x){all(x ==da_1 |>    dplyr::filter(n == 1) |> dplyr::pull(ic2.5))})()
   expect_equal(c(desc_order_status, group_order_status), c(TRUE,TRUE))
 })
+test_that("15. Summary table contains a prr2.5 by default", {
 
-test_that("Summary table contains a prr2.5 by default", {
-
-  invisible(capture.output(summary_output <- summary(pvutils::drug_event_df |> pvutils::da())))
-
+  suppressMessages(invisible(capture.output(summary_output <- summary.da(pvutils::drug_event_df |> pvutils::da()))))
   has_prr2.5<- as.character(summary_output[,1]) |> stringr::str_detect("prr2.5")
 
   expect_equal(has_prr2.5, TRUE)
 
 })
+test_that("16. print function runs as expected", {
 
-# summary_output <- summary(pvutils::drug_event_df |> pvutils::da())
+  invisible(printed <- capture.output(print(pvutils::drug_event_df |> pvutils::da())))
+  expect_equal(nchar(printed[1]), 22L)
+
+})

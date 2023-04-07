@@ -24,6 +24,7 @@ Imports:
     data.table (>= 1.14.6),
     dplyr (>= 1.0.10),
     dtplyr (>= 1.2.2),
+    glue   (>= 1.6.2),
     purrr (>= 0.3.5),
     Rdpack (>= 2.4),
     rlang (>= 1.0.6),
