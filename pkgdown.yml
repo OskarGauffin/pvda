@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Disproportionality_analysis: Disproportionality_analysis.html
-last_built: 2023-04-07T22:46Z
+last_built: 2023-08-28T11:29Z
 urls:
   reference: https://oskargauffin.github.io/pvutils/reference
   article: https://oskargauffin.github.io/pvutils/articles
