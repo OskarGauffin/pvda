@@ -20,7 +20,7 @@ VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 Imports: 
     checkmate (>= 2.1.0),
-    cli (>= 3.6.1),
+    cli (>= 3.4.1),
     data.table (>= 1.14.6),
     dplyr (>= 1.0.10),
     dtplyr (>= 1.2.2),

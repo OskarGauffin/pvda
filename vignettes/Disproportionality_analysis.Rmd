@@ -10,16 +10,16 @@ editor_options:
 ---
 
 During the life cycle of a medicinal product, knowledge of the safety profile 
-continues to accumulate beyond market introduction. Spontaneous reporting of
-adverse events through means of individual case safety reports remains an 
-important part of this safety monitoring.
+continues to accumulate post market introduction. Adverse event reports 
+collected through spontaneous reporting plays an instrumental part of the 
+saturation of the safety profile.
 
-Given a large set of reports covering a multitude of drugs and adverse events, 
+Given a large set of reports covering a large set of drugs and adverse events, 
 disproportionality analysis is a data driven framework to identify 
 drug-event-combinations of potential interest for further qualitative 
-manual case-by-case assessment. The pvutils package provides three estimators, 
-the proportional reporting rate (PRR), the reporting odds ratio (ROR) and the 
-information component (IC). 
+manual case-by-case assessment. The pvutils package provides three 
+disproportionality estimators: the proportional reporting rate (PRR), the 
+reporting odds ratio (ROR) and the information component (IC). 
 
 ## Disproportionality analysis for a specific drug-event combination
 A first use-case for these functions is to provide a way to calculate 
