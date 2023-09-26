@@ -24,7 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality_analysis</a>
+    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality analysis using pvutils</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -98,6 +98,7 @@ expected count estimators. Defaults to c("rrr", "prr", "ror").</p></dd>
  contained drug X for event Y and event Z, two rows would be added, with the
  same <code>report_id</code> and <code>drug</code> on both rows. Column <code>report_id</code> must be of type
  numeric or character. Columns <code>drug</code> and <code>event</code> must be of type character.
+ If column <code>group_by</code> is provided, it can be either numeric or character.
  You can use a <code>df</code> with column names of your choosing, as long as you
  connect role and name in the <code>df_colnames</code>-parameter.</p>
     </div>

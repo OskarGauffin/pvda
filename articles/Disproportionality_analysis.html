@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="pvutils">
-<title>Disproportionality_analysis • pvutils</title>
+<title>Disproportionality analysis using pvutils • pvutils</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Disproportionality_analysis">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Disproportionality analysis using pvutils">
 <meta property="og:description" content="pvutils">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -41,7 +41,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality_analysis</a>
+    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality analysis using pvutils</a>
   </div>
 </li>
       </ul>
@@ -61,7 +61,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Disproportionality_analysis</h1>
+      <img src="" class="logo" alt=""><h1>Disproportionality analysis using pvutils</h1>
             
       
       
@@ -71,80 +71,101 @@
     
     
 <p>During the life cycle of a medicinal product, knowledge of the safety
-profile continues to accumulate post market introduction. Adverse event
-reports collected through spontaneous reporting plays an instrumental
-part of the saturation of the safety profile.</p>
-<p>Given a large set of reports covering a large set of drugs and
-adverse events, disproportionality analysis is a data driven framework
-to identify drug-event-combinations of potential interest for further
-qualitative manual case-by-case assessment. The pvutils package provides
-three disproportionality estimators: the proportional reporting rate
-(PRR), the reporting odds ratio (ROR) and the information component
-(IC).</p>
-<div class="section level3">
-<h3 id="disproportionality-analysis-for-a-specific-drug-event-combination">Disproportionality analysis for a specific drug-event
-combination<a class="anchor" aria-label="anchor" href="#disproportionality-analysis-for-a-specific-drug-event-combination"></a>
-</h3>
-<p>A first use-case for these functions is to provide a way to calculate
-confidence or credibility intervals for a specific
-drug-event-combination, where you already know the number of observed
-reports, and other required counts such as the database total count,
-number of reports with the exposure and number of reports with the
-event.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://oskargauffin.github.io/pvutils/">pvutils</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Under development. Report issues at https://github.com/OskarGauffin/pvutils</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/prr.html">prr</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">10</span>, n_drug <span class="op">=</span> <span class="fl">1000</span>, n_event_prr <span class="op">=</span> <span class="fl">200</span>, n_tot_prr <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
-<span><span class="co">##   prr2.5    prr prr97.5</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>  0.266 0.000<span style="text-decoration: underline;">2</span>   0.940</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ror.html">ror</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">10</span>, b <span class="op">=</span> <span class="fl">20</span>, c <span class="op">=</span> <span class="fl">200</span>, d <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
-<span><span class="co">##   ror2.5   ror ror97.5</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>   11.6    25    54.1</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ic.html">ic</a></span><span class="op">(</span>obs <span class="op">=</span> <span class="fl">10</span>, exp <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
-<span><span class="co">##     ic2.5    ic ic97.5</span></span>
-<span><span class="co">##     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> -<span style="color: #BB0000;">0.097</span><span style="color: #BB0000; text-decoration: underline;">3</span> 0.933   1.69</span></span></code></pre>
-<p>For further details on the specific input parameters, consult the
-documentation of each function.</p>
-</div>
+profile continues to accumulate beyond market introduction. Adverse
+event reports collected through spontaneous reporting systems plays an
+instrumental part in the development of the safety profile.</p>
+<p>In the setting of adverse event report databases covering a set of
+drugs and events beyond what can be feasibly monitored through manual
+work, disproportionality analysis is often used to highlight
+drug-event-combinations of potential interest for manual case-by-case
+assessment.</p>
+<p>The <code>pvutils</code> package provides three disproportionality
+estimators: the proportional reporting rate (PRR), the reporting odds
+ratio (ROR) and the information component (IC). It uses report level
+data to output disproportionality estimates for each
+drug-event-combination, possibly stratified by some grouping variable of
+interest, e.g.  age group and/or sex.</p>
 <div class="section level3">
 <h3 id="disproportionality-analysis-from-report-level-data">Disproportionality analysis from report-level data<a class="anchor" aria-label="anchor" href="#disproportionality-analysis-from-report-level-data"></a>
 </h3>
-<p>If the aim is to screen a wide range of drug-event pairs from
-report-level data using disproportionality analysis, this is handled
-through the function .</p>
-<p>The package contains a simulated data set ‘drug_event_df’. For
-simplicity, drugs are named Drug_A - Drug_Z, and events are named
-Event_1 - Event_1000. Further details on the proportions of each drug
-and event are described in the data object (execute ). We pass the data
-to a function that calculates expected counts, and then to a function
-which adds columns contaning disproportionality.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># drug_event_df |&gt;</span></span>
-<span><span class="co">#   add_expected_counts() |&gt;</span></span>
-<span><span class="co">#   add_disproportionality()</span></span></code></pre></div>
-<p>We will now step through these steps in detail.</p>
+<p>The workhorse of this package is the function <code>da</code>. The
+<code>da</code>-function takes patient level data in a data frame as
+input (here <code>drug_event_df</code>) and produces estimates and
+summary counts as demonstrated below.</p>
+<p>The <code>drug_event_df</code> is a simulated data set with drugs
+named Drug_A - Drug_Z and events Event_1 - Event_1000. Further details
+about the simulation are documented in the data object (execute
+<code>?df_drug_event</code>).</p>
+<div class="section level4">
+<h4 id="passing-the-right-input-columns">Passing the right input columns<a class="anchor" aria-label="anchor" href="#passing-the-right-input-columns"></a>
+</h4>
+<p>The da-function examines the input data set for column names
+contained in the passed parameter list <code>df_colnames</code>. The
+default column names are “report_id”, “drug” and “event”, which is what
+<code>drug_event_df</code> uses. If we rename the report-id column in
+“drug_event_df” we need to specify the new name in the call to da, as
+shown below:</p>
+</div>
+<div class="section level4">
+<h4 id="summary-and-print-functions">Summary and print functions<a class="anchor" aria-label="anchor" href="#summary-and-print-functions"></a>
+</h4>
+<p>The output of <code>da</code> is an object of class <code>da</code>,
+with associated print and summary functions, demonstrated below.</p>
+<pre><code><span><span class="co">## <span style="color: #0000BB;">Summary of Disproportionality Analysis </span></span></span>
+<span><span class="co"><span style="color: #0000BB;">## </span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #0000BB;">Number of SDRs</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">##   Name            `Stat sign`</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> ic2.5                     5</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> prr2.5                    6</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> ror2.5                    6</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> Total DEC count        <span style="text-decoration: underline;">1</span>306</span></span></code></pre>
+<pre><code><span><span class="co">## </span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #0000BB;">Top DECs</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,306 × 23</span></span></span></code></pre>
+<pre><code><span><span class="co">##    drug   event      obs <span style="color: #0000BB;">exp_prr ic2.5    ic ror97.5</span> <span style="color: #00BB00;">exp_prr prr2.5   prr ror97.5</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">    </span><span style="color: #949494; font-style: italic;">&lt;int&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Drug_Z Event_1     88   55.6   0.34  0.66   0.94   49.8    1.5   1.77    2.09</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Drug_Z Event_2     75   52.4   0.17  0.51   0.82   48.4    1.28  1.55    1.87</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Drug_V Event_2     80   56.9   0.15  0.49   0.79   52.4    1.27  1.53    1.84</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Drug_V Event_1     82   60.4   0.11  0.44   0.73   56.1    1.22  1.46    1.75</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Drug_U Event_2     79   58.3   0.1   0.44   0.74   54.1    1.21  1.46    1.76</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Drug_U Event_1     74   61.8  -0.09  0.26   0.57   59.4    1.03  1.25    1.51</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Drug_C Event_71     3    1.75 -1.41  0.64   1.83    1.23   0.49  2.44   12   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Drug_I Event_54     3    1.81 -1.45  0.6    1.79    1.55   0.51  1.94    7.43</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Drug_A Event_39     9   12.2  -1.51 -0.42   0.37   13.8    0.31  0.65    1.37</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Drug_R Event_30     3    1.97 -1.55  0.5    1.7     1.92   0.5   1.57    4.89</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1,296 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;"># Printing x[['da_df']]</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;">(Drug-event-combinations sorted according to lower bound of ic)</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,306 × 23</span></span></span></code></pre>
+<pre><code><span><span class="co">##   drug   event     obs <span style="color: #0000BB;">exp_prr ic2.5    ic ror97.5</span> <span style="color: #00BB00;">exp_prr prr2.5   prr ror97.5</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;int&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #BCBCBC;">1</span> Drug_Z Event_1    88    55.6  0.34  0.66   0.94    49.8   1.5   1.77    2.09</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> Drug_Z Event_2    75    52.4  0.17  0.51   0.82    48.4   1.28  1.55    1.87</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> Drug_V Event_2    80    56.9  0.15  0.49   0.79    52.4   1.27  1.53    1.84</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1,303 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;"># Printing x[['da_df']]</span></span></span></code></pre>
+</div>
 <div class="section level4">
 <h4 id="passing-a-correctly-structured-input-data">Passing a correctly structured input data<a class="anchor" aria-label="anchor" href="#passing-a-correctly-structured-input-data"></a>
 </h4>
-<p>It is important that the report-level data is structured correctly.
-Every line in the passed data frame corresponds to a drug-event pair
-from a report.</p>
-<p>In the drug_event_df-example data, the first three rows of
-drug_event_df are from the same report, with report_id = 1. The first
-row reports a Drug_D and an adverse event named Event_5.The next three
-rows are from another report, where for instance drug B has been
-reported for two different events, event 15 and event 33.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">]</span></span></code></pre></div>
+<p>The input data is expected to be in report-level format: every line
+in the data frame corresponds to a drug-event pair listed in a specific
+case report.</p>
+<p>As an example: In the <code>drug_event_df</code> data, the first
+three rows are from the same report, with report_id = 1. The first row
+reports a Drug_D and an adverse event named Event_5.The next three rows
+are from another report, where for instance drug B has been reported for
+two different events, event 15 and event 33. (We can ignore the
+group-column for now.)</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
 <span><span class="co">##   report_id drug   event    group</span></span>
 <span><span class="co">##       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -154,66 +175,220 @@ reported for two different events, event 15 and event 33.</p>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span>         1 Drug_I Event_9      1</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span>         2 Drug_B Event_2      0</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span>         2 Drug_G Event_13     0</span></span></code></pre>
-<p>For completeness, note that if the same drug-event pair occurs
-several times in one report, these drug-event pair contributes to counts
-only once. That is, an observed count of five means that there were five
-different reports containing the drug-event-pair, not e.g. that a single
-report contained the same drug-event pair five times.</p>
 </div>
 <div class="section level4">
-<h4 id="counting-the-expected">Counting the expected<a class="anchor" aria-label="anchor" href="#counting-the-expected"></a>
+<h4 id="extracting-the-results-beyond-summary-and-print">Extracting the results beyond summary and print<a class="anchor" aria-label="anchor" href="#extracting-the-results-beyond-summary-and-print"></a>
 </h4>
-<p>The details of PRR, RRR and IC are documented within each function,
-but overall one can note that all expected counts are derived from the
-same contingency table (including marginal sums) of those who did and
-did not have the drug, and the adverse event respectively.</p>
-<p>The -function has a single parameter, that can be used to turn off
-calculation of expected counts for specific estimators. Note that IC by
-tradition uses expected counts referred to as the Relative Reporting
-Rate (RRR).</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># drug_event_df |&gt;</span></span>
-<span><span class="co">#   add_expected_counts(expected_count_estimators = c("prr", "ror", "rrr")) |&gt;</span></span>
-<span><span class="co">#   head(1)</span></span></code></pre></div>
+<p>The output object of <code>da</code> is essentially a list containing
+two objects, the results as a dataframe (<code>da_df</code>) and the
+input parameters (<code>input_params</code>).At some point you might
+want to extract the results or the input parameters list, here we
+demonstrate some alternatives:</p>
+<pre><code><span><span class="co">## [1] "da_df"        "input_params"</span></span></code></pre>
 </div>
 <div class="section level4">
-<h4 id="adding-the-disproportionality-estimators">Adding the disproportionality estimators<a class="anchor" aria-label="anchor" href="#adding-the-disproportionality-estimators"></a>
+<h4 id="are-drug-event-pairs-occurrings-several-times-in-one-report-counted">Are drug-event pairs occurrings several times in one report
+counted?<a class="anchor" aria-label="anchor" href="#are-drug-event-pairs-occurrings-several-times-in-one-report-counted"></a>
 </h4>
-<p>The function has a parameter, which by default includes IC, PRR and
-ROR. If not all of those are wanted, just pass the desired estimators
-instead.</p>
-<p>The function has two parameters. One is the , by default set to 3,
-which is sometimes referred to as “rule of three”. This sets ROR and
-PRR-values to NA if the observed count is less than the specified N. For
-completeness, note that the default shrinkage in the IC acts as a built
-in ‘rule of 3’, i.e. the shrinkage of +0.5 prevents the lower bound to
-exceed 0 at the default significance level of 95%.</p>
-<p>The second parameter controls the rounding of non-count values in the
-output, including all expected counts, uncertainty bounds and point
-estimates. By default 2 digits are kept.</p>
-<p>In short, the add_disproportionality is a wrapper around ror, prr and
-ic. For further details around those estimators, see the documentation
-of corresponding function.</p>
+<p>If the same drug-event pair occurs several times in one single
+report, these contributes to the summary counts only once. That is, an
+observed count of five means that there were five different reports
+containing the drug-event-pair (at least once). A single report
+containing the same drug-event pair five times due to repeated events or
+data quality issues is only counted once. This is demonstrated below,
+where we duplicate the first row of drug_event_df and still get results
+with an observed count of 1.</p>
+<pre><code><span><span class="co">## [1] 1</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="in-detail-how-is-the-expected-count-calculated">In detail, how is the “expected count” calculated?<a class="anchor" aria-label="anchor" href="#in-detail-how-is-the-expected-count-calculated"></a>
+</h4>
+<p>Detailed formulas for PRR, RRR and IC are documented within each
+function ( “?prr”, “?rrr”, “?ic”), but overall one can note that all
+expected counts are derived from the same contingency table of those who
+were and were not exposed to the drug, and did and did not experience
+the adverse event. The sample used for the contingency table is the data
+frame passed to the da function. Also note documentation on the grouping
+parameter.</p>
+</div>
+<div class="section level4">
+<h4 id="where-is-exp_ic-in-the-output-and-what-is-exp_prr">Where is exp_ic in the output, and what is exp_prr?<a class="anchor" aria-label="anchor" href="#where-is-exp_ic-in-the-output-and-what-is-exp_prr"></a>
+</h4>
+<p>A common question regards the output column names. In the example
+below, ic is preceded by <code>exp_prr</code>. This is as the IC uses
+the same expected count as the Relative Reporting Rate (RRR), which
+might be more well known to a pharmacovigilance audience than an
+<code>exp_ic</code>.</p>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,306 × 7</span></span></span>
+<span><span class="co">##   drug   event     obs exp_rrr ic2.5    ic ic97.5</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> Drug_Z Event_1    88    55.6  0.34  0.66   0.94</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1,305 more rows</span></span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
-<h2 id="subgroup-analysis">Subgroup analysis<a class="anchor" aria-label="anchor" href="#subgroup-analysis"></a>
+<h2 id="additional-input-parameters-of-the-da-function">Additional input parameters of the <code>da</code> function<a class="anchor" aria-label="anchor" href="#additional-input-parameters-of-the-da-function"></a>
 </h2>
-<p>As the disproportionality builds the comparator from the passed data,
-any subgroup analysis of e.g. specific age groups is achieved by
-filtering out the group of interest, and then passing it to
-<code>da</code>.</p>
+<p>Apart from the input data, function <code>da</code> has several
+parameters which you can read about in <code><a href="../reference/da.html">?da</a></code>. However, we
+give some helpful additional details here.</p>
+<div class="section level3">
+<h3 id="rule-of-n">Rule of N<a class="anchor" aria-label="anchor" href="#rule-of-n"></a>
+</h3>
+<p>One parameter is <code>rule_of_N</code>, with a parameter by default
+set to 3. This is sometimes referred to as “rule of three” in
+disproportionality settings. This sets ROR and PRR-values to
+<code>NA</code> if the observed count is less than the specified
+<code>N</code>, as shown in the example below. That is, we require at
+least three reports to highlight a drug-event-combination in
+disproportionality analysis. The <code>rule_of_N</code> parameter does
+not affect any IC output, as the default shrinkage of the IC acts as a
+built-in ‘rule of 3’, (i.e. the shrinkage of +0.5 prevents the lower
+bound from exceeding 0 at the default confidence level of 95%).</p>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 23</span></span></span>
+<span><span class="co">##   drug   event     obs exp_rrr ic2.5    ic ic97.5 exp_prr prr2.5   prr prr97.5</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> Drug_P Event_2     1    23.6 -<span style="color: #BB0000;">7.8</span>  -<span style="color: #BB0000;">4.01</span>  -<span style="color: #BB0000;">2.37</span>    25.2     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> Drug_V Event_5     1    24.3 -<span style="color: #BB0000;">7.84</span> -<span style="color: #BB0000;">4.05</span>  -<span style="color: #BB0000;">2.41</span>    28.8     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> Drug_U Event_5     1    24.9 -<span style="color: #BB0000;">7.88</span> -<span style="color: #BB0000;">4.08</span>  -<span style="color: #BB0000;">2.44</span>    29.7     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="controlling-the-number-of-digits">Controlling the number of digits<a class="anchor" aria-label="anchor" href="#controlling-the-number-of-digits"></a>
+</h3>
+<p>Another parameter in <code>da</code>, <code>number_of_digits</code>
+controls the rounding of non-count values in the output, including all
+expected counts, uncertainty bounds and point estimates. Note that the
+printing defaults of dplyr are not overridden in <code>pvutils</code>,
+and less digits than expected may be printed. However, the additional
+digits are available and printed if the data frame is extracted and
+printed as a data frame, as demonstrated below:</p>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,306 × 23</span></span></span></code></pre>
+<pre><code><span><span class="co">##   drug   event     obs <span style="color: #0000BB;">exp_prr ic2.5    ic ror97.5</span> <span style="color: #00BB00;">exp_prr prr2.5   prr ror97.5</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;int&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #BCBCBC;">1</span> Drug_Z Event_1    88    55.6  0.34  0.66   0.94    49.8   1.5   1.77    2.09</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> Drug_Z Event_2    75    52.4  0.17  0.51   0.82    48.4   1.28  1.55    1.87</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> Drug_V Event_2    80    56.9  0.15  0.49   0.79    52.4   1.27  1.53    1.84</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1,303 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #555555;"># Printing x[['da_df']]</span></span></span></code></pre>
+<pre><code><span><span class="co">##     drug   event obs exp_rrr       ic2.5        ic    ic97.5  exp_prr   prr2.5</span></span>
+<span><span class="co">## 1 Drug_Z Event_1  88  55.568  0.34117708 0.6584998 0.9439959 49.79976 1.497466</span></span>
+<span><span class="co">## 2 Drug_Z Event_2  75  52.397  0.16814416 0.5132907 0.8211134 48.37691 1.284508</span></span>
+<span><span class="co">## 3 Drug_V Event_2  80  56.908  0.15411869 0.4877370 0.7863564 52.37799 1.268839</span></span>
+<span><span class="co">## 4 Drug_V Event_1  82  60.352  0.10977495 0.4390894 0.7342560 56.10526 1.221254</span></span>
+<span><span class="co">## 5 Drug_U Event_2  79  58.296  0.09940360 0.4352369 0.7356297 54.11538 1.209221</span></span>
+<span><span class="co">## 6 Drug_U Event_1  74  61.824 -0.09014351 0.2574526 0.5672222 59.36538 1.027078</span></span>
+<span><span class="co">##        prr  prr97.5  exp_ror   ror2.5      ror  ror97.5 n_drug n_event n_tot</span></span>
+<span><span class="co">## 1 1.767077 2.085230 31.00176 2.032430 2.838549 3.964397    151     368  1000</span></span>
+<span><span class="co">## 2 1.550326 1.871153 35.82669 1.504251 2.093411 2.913325    151     347  1000</span></span>
+<span><span class="co">## 3 1.527359 1.838551 39.41652 1.476139 2.029606 2.790591    164     347  1000</span></span>
+<span><span class="co">## 4 1.461538 1.749099 42.64000 1.401405 1.923077 2.638941    164     368  1000</span></span>
+<span><span class="co">## 5 1.459844 1.762410 42.29078 1.363073 1.868019 2.560021    168     347  1000</span></span>
+<span><span class="co">## 6 1.246518 1.512841 51.36803 1.052193 1.440585 1.972341    168     368  1000</span></span>
+<span><span class="co">##   n_event_prr n_tot_prr  b   c   d</span></span>
+<span><span class="co">## 1         280       849 63 280 569</span></span>
+<span><span class="co">## 2         272       849 76 272 577</span></span>
+<span><span class="co">## 3         267       836 84 267 569</span></span>
+<span><span class="co">## 4         286       836 82 286 550</span></span>
+<span><span class="co">## 5         268       832 89 268 564</span></span>
+<span><span class="co">## 6         294       832 94 294 538</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="grouping-variable-andor-subgroup-analysis">Grouping variable and/or Subgroup analysis<a class="anchor" aria-label="anchor" href="#grouping-variable-andor-subgroup-analysis"></a>
+</h3>
+<p>As the disproportionality uses the passed data as the comparator,
+simple subgroup analyses of e.g. one or two specific age groups can be
+achieved by filtering out the group of interest, and then repeatedly
+passing it to <code>da</code>.</p>
+<p>If a more extensive grouping is required, one can use the
+<code>group_by</code> parameter of <code>da</code> which accepts
+character or numeric input, and executes a call to <code>da</code> for
+each level of the grouping variable and returns the results in a single
+data frame. The grouping could for instance be age groups, sex,
+countries, regions or a combination thereof but needs to be passed as a
+single variable.</p>
+<p>Our example data <code>drug_event_df</code> contain two groups, in
+the column named “group”. We can pass “group” as the
+<code>group_by</code> parameter in <code>df_colnames</code> as
+below.</p>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
+<span><span class="co">##   report_id drug   event    group</span></span>
+<span><span class="co">##       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>         1 Drug_A Event_23     1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>         1 Drug_D Event_6      1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span>         1 Drug_E Event_8      1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span>         1 Drug_I Event_9      1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span>         2 Drug_B Event_2      0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span>         2 Drug_G Event_13     0</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,808 × 24</span></span></span>
+<span><span class="co">##    drug   event   group   obs exp_rrr ic2.5    ic ic97.5 exp_prr prr2.5   prr</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Drug_Z Event_1     0    45    26.5  0.3   0.75   1.14    23.4   1.54  1.92</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Drug_Z Event_1     1    43    29.1  0.09  0.56   0.96    26.5   1.28  1.63</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Drug_Z Event_2     0    33    24.6 -<span style="color: #BB0000;">0.12</span>  0.42   0.87    23.2   1.07  1.42</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Drug_Z Event_2     1    42    27.8  0.12  0.59   0.99    25.1   1.3   1.67</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Drug_V Event_2     0    34    26.0 -<span style="color: #BB0000;">0.14</span>  0.38   0.82    24.6   1.04  1.38</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Drug_V Event_2     1    46    31.0  0.12  0.56   0.95    27.8   1.3   1.66</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Drug_V Event_1     0    40    28.0  0.03  0.51   0.92    25.8   1.21  1.55</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Drug_V Event_1     1    42    32.4 -<span style="color: #BB0000;">0.1</span>   0.37   0.77    30.3   1.07  1.38</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Drug_U Event_2     0    42    31.5 -<span style="color: #BB0000;">0.06</span>  0.41   0.81    29.1   1.11  1.44</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Drug_U Event_2     1    37    26.8 -<span style="color: #BB0000;">0.04</span>  0.46   0.89    24.9   1.14  1.49</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1,798 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 13 more variables: prr97.5 &lt;dbl&gt;, exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ror97.5 &lt;dbl&gt;, n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span></span></code></pre>
+<p>In the output we note the third column is “group”, i.e. the column
+name we passed. We also note that the drug-event-pairs are kept
+together, e.g. first and second row contains the same
+drug-event-combination, “Drug_Z” and “Event_1”. This is to simplify
+comparisons within a drug-event-pair across different groups, e.g. if
+the same pattern is seen across both males and females. The ordering of
+the drug-events in the output is made by averaging the selected
+disproportionality estimate (which you can control by the parameter
+<code>sort_by</code>), i.e. the top two rows, or the top
+drug-event-combination, has the highest average “ic2.5”.</p>
+</div>
+<div class="section level3">
+<h3 id="can-i-use-pvutils-to-get-ic-prr-or-ror-when-i-already-have-the-summary-counts">Can I use pvutils to get IC, PRR or ROR, when I already have the
+summary counts?<a class="anchor" aria-label="anchor" href="#can-i-use-pvutils-to-get-ic-prr-or-ror-when-i-already-have-the-summary-counts"></a>
+</h3>
+<p>Yes, you can calculate point estimates with confidence or credibility
+intervals for specific drug-event-combination if you already have the
+number of observed reports, and other required counts such as the
+database total count, number of reports with the exposure and number of
+reports with the event. This can be helpful for instance to quality
+check results, e.g. from papers or other software.</p>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">##   prr2.5   prr prr97.5</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>  0.266   0.5   0.940</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">##   ror2.5   ror ror97.5</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>   11.6    25    54.1</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">##     ic2.5    ic ic97.5</span></span>
+<span><span class="co">##     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> -<span style="color: #BB0000;">0.097</span><span style="color: #BB0000; text-decoration: underline;">3</span> 0.933   1.69</span></span></code></pre>
+<p>For further details on the specific input parameters, consult the
+documentation of each function.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="execution-speed">Execution speed<a class="anchor" aria-label="anchor" href="#execution-speed"></a>
+<h2 id="how-fast-is-pvutils">How fast is pvutils?<a class="anchor" aria-label="anchor" href="#how-fast-is-pvutils"></a>
 </h2>
-<p>The data.table-package (through dtplyr) is used for fast execution. A
-test of the execution speed was made using the <code>vaers</code> R
-package, available on <a href="https://gitlab.com/iembry/vaers.git" class="external-link">gitlab</a>. The
+<p>The data.table-package (through “dtplyr”) is used for performant
+execution. A test of the execution speed was made using the
+<code>vaers</code> R package, available on <a href="https://gitlab.com/iembry/vaers.git" class="external-link">gitlab</a>. The
 <code>vaers</code> package contains data from VAERS from years 1990 -
 2018, resulting in 4 146 778 rows to be processed by <code>da</code> in
-<code>pvutils</code>. Execution on a regular laptop took less than 7
-seconds.</p>
+<code>pvutils</code>. Execution time on a laptop with an Intel i7 CPU of
+2.7GHz and 16 GB RAM was less than 10 seconds.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
