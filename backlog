@@ -1,18 +1,19 @@
 # TODO
 
-# Need a summary function for the grouped output
-# The inheritparams is a bit of a mess right now
-# Overall QC check on ic, prr, ror docs
-# Do QC on the ROR; PRR; IC values, in point and bounds
 # Update vignette DONE
+# Overall QC check on ic, prr, ror docs IC DONE ROR DONE
+# The inheritparams is a bit of a mess right now
+# Need a summary function for the grouped output
+
+# Do QC on the ROR; PRR; IC values, in point and bounds
+# Set up pkgdown site
 # commit to CRAN
 
 ### Long term, want to, not for now
 # Should not be a "df" object when running? Combine with setDT.
 #  Updates in dtplyr should make it possible to bake in the group by in the
 #  mutate.
-#setDT instead of as.data.frame ?
-# Set up pkgdown site
+# setDT instead of as.data.frame ?
 # Add wrappers to quantreg on median TTO with xy-bootstrap CIs
 # Temporal disproportionality for a specific set of drug-event-pairs
 # Add possibility to compare two backgrounds

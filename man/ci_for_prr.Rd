@@ -4,13 +4,19 @@
 \alias{ci_for_prr}
 \title{Confidence intervals for Proportional Reporting Rate}
 \usage{
-ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs)
+ci_for_prr(
+  obs = NULL,
+  n_drug = NULL,
+  n_event_prr = NULL,
+  n_tot_prr = NULL,
+  conf_lvl_probs = 0.95
+)
 }
 \arguments{
 \item{obs}{Number of reports for the specific drug and event (i.e. the
 observed count).}
 
-\item{n_drug}{Number of reports with the drug, without the event}
+\item{n_drug}{Number of reports with the drug of interest.}
 
 \item{n_event_prr}{Number of reports with the event in the background.}
 

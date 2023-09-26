@@ -215,7 +215,7 @@ ic <- function(obs = NULL,
 #'
 #' @param obs Number of reports for the specific drug and event (i.e. the
 #' observed count).
-#' @param n_drug Number of reports with the drug, without the event
+#' @param n_drug Number of reports with the drug of interest.
 #' @param n_event_prr Number of reports with the event in the background.
 #' @param n_tot_prr Number of reports in the background.
 #' @inheritParams conf_lvl_to_quantile_prob
@@ -235,15 +235,20 @@ ic <- function(obs = NULL,
 #' the number of reports with the drug, the event, the drug and event, and
 #' in the whole database respectively.
 #'
-#' A confidence interval is derived in Gravel (2009), using the delta method:
+#' A confidence interval is derived in Gravel (2009) using the delta method:
 #' \deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 #'
 #' and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
-#' \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
-#' \frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]}
+#' \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Q_{\alpha/2} \times \hat{s}),
+#' \frac{\hat{O}}{\hat{E}} \times \exp(\Q_{1-\alpha/2} \times \hat{s})]}
 #'
-#' Another version of this standard deviation is sometimes used where the last
-#' fraction is added rather than subtracted, with negligible practical implications.
+#' where \eqn{\Q_{\alpha}} denotes the quantile function of a
+#' standard Normal distribution at significance level \eqn{\alpha}.
+#'
+#' Note: For historical reasons, another version of this standard deviation is sometimes used
+#' where the last fraction under the square root is added rather than subtracted,
+#' with negligible practical implications in large databases. This function uses the version
+#' declared above, i.e. with subtraction.
 #'
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #' Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.
@@ -493,7 +498,7 @@ ci_for_prr <- function(obs = NULL,
 #' @export
 ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(conf_lvl_probs) *
-    sqrt(1 / a + 1 / b + 1 / c + 1 / d))
+    sqrt(1 / a + 1 / b + 1 / c - 1 / d))
 }
 
 # 2.6 apply_rule_of_N ----

@@ -4,13 +4,19 @@
 \alias{prr}
 \title{Proportional Reporting Rate}
 \usage{
-prr(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl = 0.95)
+prr(
+  obs = NULL,
+  n_drug = NULL,
+  n_event_prr = NULL,
+  n_tot_prr = NULL,
+  conf_lvl = 0.95
+)
 }
 \arguments{
 \item{obs}{Number of reports for the specific drug and event (i.e. the
 observed count).}
 
-\item{n_drug}{Number of reports with the drug, without the event}
+\item{n_drug}{Number of reports with the drug of interest.}
 
 \item{n_event_prr}{Number of reports with the event in the background.}
 
@@ -47,15 +53,19 @@ where \eqn{\hat{N}_{drug}}, \eqn{\hat{N}_{event}}, \eqn{\hat{O}} and \eqn{\hat{N
 the number of reports with the drug, the event, the drug and event, and
 in the whole database respectively.
 
-A confidence interval is derived in Gravel (2009), using the delta method:
+A confidence interval is derived in Gravel (2009) using the delta method:
 \deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 
 and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
 \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
 \frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]}
 
-Another version of this standard deviation is sometimes used where the last
-fraction is added rather than subtracted, with negligible practical implications.
+where \eqn{\Phi_{\alpha}} denotes the cumulative distribution function of the
+Standard Normal distribution at significance level \eqn{\alpha}.
+For historical reasons, another version of this standard deviation is sometimes used
+where the last fraction under the square root is added rather than subtracted,
+with negligible practical implications in large databases. This function uses the version
+written above.s
 }
 \examples{
 
