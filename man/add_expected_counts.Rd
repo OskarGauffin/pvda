@@ -42,6 +42,7 @@ Produces various counts used in disproportionality analysis.
  contained drug X for event Y and event Z, two rows would be added, with the
  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
  numeric or character. Columns \code{drug} and \code{event} must be of type character.
+ If column \code{group_by} is provided, it can be either numeric or character.
  You can use a \code{df} with column names of your choosing, as long as you
  connect role and name in the \code{df_colnames}-parameter.
 }

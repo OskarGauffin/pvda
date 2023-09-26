@@ -1,35 +1,238 @@
 ---
-title: "Disproportionality_analysis"
+title: "Disproportionality analysis using pvutils"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Disproportionality_analysis}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{my-vignette}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   chunk_output_type: console
 ---
 
+```{r, include=FALSE}
+library(pvutils)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
 During the life cycle of a medicinal product, knowledge of the safety profile 
-continues to accumulate post market introduction. Adverse event reports 
-collected through spontaneous reporting plays an instrumental part of the 
-saturation of the safety profile.
+continues to accumulate beyond market introduction. Adverse event reports 
+collected through spontaneous reporting systems plays an instrumental part in 
+the development of the safety profile.
 
-Given a large set of reports covering a large set of drugs and adverse events, 
-disproportionality analysis is a data driven framework to identify 
-drug-event-combinations of potential interest for further qualitative 
-manual case-by-case assessment. The pvutils package provides three 
-disproportionality estimators: the proportional reporting rate (PRR), the 
-reporting odds ratio (ROR) and the information component (IC). 
+In the setting of adverse event report databases covering a set of drugs 
+and events beyond what can be feasibly monitored through manual work, 
+disproportionality analysis is often used to highlight drug-event-combinations 
+of potential interest for manual case-by-case assessment. 
 
-## Disproportionality analysis for a specific drug-event combination
-A first use-case for these functions is to provide a way to calculate 
-confidence or credibility intervals for a specific drug-event-combination, where
-you already know the number of observed reports, and other required counts such as
-the database total count, number of reports with the exposure and number of
-reports with the event.
+The `pvutils` package provides three disproportionality estimators: 
+the proportional reporting rate (PRR), the reporting odds ratio (ROR) 
+and the information component (IC). It uses report level data to
+output disproportionality estimates for each drug-event-combination, 
+possibly stratified by some grouping variable of interest, e.g. 
+age group and/or sex. 
+
+## Disproportionality analysis from report-level data
+The workhorse of this package is the function `da`. The `da`-function takes 
+patient level data in a data frame as input (here `drug_event_df`) and produces 
+estimates and summary counts as demonstrated below.
 
 ```{r}
-library(pvutils)
+da_1 <- 
+  drug_event_df |>
+  da()
+```
+
+The `drug_event_df` is a simulated data set with drugs named Drug_A - Drug_Z 
+and events Event_1 - Event_1000. Further details about the simulation are 
+documented in the data object (execute `?df_drug_event`).
+
+### Passing the right input columns
+
+The da-function examines the input data set for column names contained in
+the passed parameter list `df_colnames`. The default column names are "report_id", 
+"drug" and "event", which is what `drug_event_df` uses. If we rename the 
+report-id column in "drug_event_df" we need to specify the new name in the 
+call to da, as shown below:
+
+```{r}
+da_1 <-
+  drug_event_df |> 
+  dplyr::rename(reportID = report_id) |> 
+  da(df_colnames = list(report_id = "reportID"))
+```
+
+### Summary and print functions
+
+The output of `da` is an object of class `da`, with associated print and summary functions, 
+demonstrated below.
+
+```{r}
+summary(da_1)
+print(da_1, n=3)
+```
+
+### Passing a correctly structured input data
+The input data is expected to be in report-level format: every line in the data 
+frame corresponds to a drug-event pair listed in a specific case report.
+
+As an example: In the `drug_event_df` data, the first three rows are 
+from the same report, with report_id = 1. The first row reports a Drug_D and 
+an adverse event named Event_5.The next three rows are from another report, 
+where for instance drug B has been reported for two different events, event 15 
+and event 33. (We can ignore the group-column for now.)
+
+```{r}
+drug_event_df[1:6, ]
+```
+
+### Extracting the results beyond summary and print
+The output object of `da` is essentially a list containing
+two objects, the results as a dataframe (`da_df`) and the input 
+parameters (`input_params`).At some point you might want to extract
+the results or the input parameters list, here we demonstrate some alternatives: 
+
+```{r}
+names(da_1)
+
+# da_1$da_df
+# da_1[['da_df']]
+# da_1 |> pluck("da_df")
+
+```
+
+### Are drug-event pairs occurrings several times in one report counted?
+If the same drug-event pair occurs several times in one single report, these contributes 
+to the summary counts only once. That is, an observed count of five means that there were 
+five different reports containing the drug-event-pair (at least once). A single report 
+containing the same drug-event pair five times due to repeated events or data quality issues 
+is only counted once. This is demonstrated below, where we duplicate the first row of 
+drug_event_df and still get results with an observed count of 1.
+
+```{r}
+first_row <- drug_event_df[1,]
+
+first_row |> 
+  dplyr::bind_rows(first_row) |> 
+  da() |> 
+  purrr::pluck("da_df") |> 
+  dplyr::pull(obs)
+
+```
+
+### In detail, how is the "expected count" calculated?
+Detailed formulas for PRR, RRR and IC are documented within each function (
+"?prr", "?rrr", "?ic"), but overall one can note that all expected counts are 
+derived from the same contingency table of those who were and were not exposed 
+to the drug, and did and did not experience the adverse event. The sample
+used for the contingency table is the data frame passed to the da function.
+Also note documentation on the grouping parameter.
+
+### Where is exp_ic in the output, and what is exp_prr?
+A common question regards the output column names. In the example below, 
+ic is preceded by `exp_prr`. This is as the IC uses the same expected 
+count as the Relative Reporting Rate (RRR), which might be more well known
+to a pharmacovigilance audience than an `exp_ic`.
+
+```{r}
+drug_event_df |> 
+  da() |> 
+  purrr::pluck("da_df") |> 
+  dplyr::select(drug:ic97.5) |> 
+  print(n=1)
+```
+
+# Additional input parameters of the `da` function 
+Apart from the input data, function `da` has several parameters which you can read about in `?da`. However, 
+we give some helpful additional details here.
+
+## Rule of N
+One parameter is `rule_of_N`, with a 
+parameter by default set to 3. This is sometimes referred to as "rule of three" in 
+disproportionality settings. This sets ROR and PRR-values to `NA` if the observed count
+is less than the specified `N`, as shown in the example below. That is, we require at least
+three reports to highlight a drug-event-combination in disproportionality analysis.
+The `rule_of_N` parameter does not affect any IC output, as the default shrinkage of the 
+IC acts as a built-in 'rule of 3', (i.e. the shrinkage of +0.5 prevents the lower bound 
+from exceeding 0 at the default confidence level of 95\%).
+
+```{r}
+drug_event_df |> 
+  da() |> 
+  purrr::pluck("da_df") |>  
+  tail(n=3)
+```
+
+## Controlling the number of digits
+Another parameter in `da`, `number_of_digits` controls the rounding of non-count values in the output, 
+including all expected counts, uncertainty bounds and point estimates. Note that the printing defaults
+of dplyr are not overridden in `pvutils`, and less digits than expected may be printed. 
+However, the additional digits are available and printed if the data frame is
+extracted and printed as a data frame, as demonstrated below:
+
+```{r}
+#| echo=FALSE
+
+output <- 
+  drug_event_df |>
+  da()
+
+print(output, n=3)
+
+output <- drug_event_df |>
+  da(
+    rule_of_N = 3,
+    number_of_digits = 10
+  )
+
+head(as.data.frame(output$da_df))
+```
+
+## Grouping variable and/or Subgroup analysis
+As the disproportionality uses the passed data as the comparator, 
+simple subgroup analyses of e.g. one or two specific age groups can 
+be achieved by filtering out the group of interest, and then 
+repeatedly passing it to `da`.  
+
+If a more extensive grouping is required, one can use the 
+`group_by` parameter of `da` which accepts character or numeric input, 
+and executes a call to `da` for each level of the grouping variable and 
+returns the results in a single data frame. The grouping could for instance 
+be age groups, sex, countries, regions or a combination thereof but needs 
+to be passed as a single variable. 
+
+Our example data `drug_event_df` contain two groups, in the column named 
+"group". We can pass "group" as the `group_by` parameter in `df_colnames` 
+as below.
+
+```{r}
+drug_event_df |> 
+  head()
+
+da_grouped <- 
+  drug_event_df |> 
+  da(df_colnames = list(group_by="group")) 
+
+print(da_grouped$da_df)
+
+```
+
+In the output we note the third column is "group", i.e. the column name we passed.
+We also note that the drug-event-pairs are kept together, e.g. first and second row
+contains the same drug-event-combination, "Drug_Z" and "Event_1". This is to 
+simplify comparisons within a drug-event-pair across different groups, e.g. if
+the same pattern is seen across both males and females. The ordering of 
+the drug-events in the output is made by averaging the selected disproportionality 
+estimate (which you can control by the parameter `sort_by`), i.e. the top two rows,
+or the top drug-event-combination, has the highest average "ic2.5". 
+
+## Can I use pvutils to get IC, PRR or ROR, when I already have the summary counts? 
+Yes, you can calculate point estimates with confidence or credibility intervals 
+for specific drug-event-combination if you already have the number of observed 
+reports, and other required counts such as the database total count, number of reports 
+with the exposure and number of reports with the event. This can be helpful
+for instance to quality check results, e.g. from papers or other software.
+
+```{r}
 prr(obs = 10, n_drug = 1000, n_event_prr = 200, n_tot_prr = 10000)
 ror(a = 10, b = 20, c = 200, d = 10000)
 ic(obs = 10, exp = 5)
@@ -38,105 +241,15 @@ ic(obs = 10, exp = 5)
 For further details on the specific input parameters, consult the documentation 
 of each function. 
 
-## Disproportionality analysis from report-level data
-If the aim is to screen a wide range of drug-event pairs from report-level data 
-using disproportionality analysis, this is handled through the function \code{da}.
-
-The \code{pvutils} package contains a simulated data set 'drug_event_df'. For 
-simplicity, drugs are named Drug_A - Drug_Z, and events are 
-named Event_1 - Event_1000. Further details on the proportions of each drug and
-event are described in the data object (execute \code{?df_drug_event}). We pass the 
-data to a function that calculates expected counts, and then to a function which adds columns contaning 
-disproportionality.
-
-```{r}
-# drug_event_df |>
-#   add_expected_counts() |>
-#   add_disproportionality()
-```
-
-We will now step through these steps in detail. 
-
-### Passing a correctly structured input data
-It is important that the report-level data is structured correctly. 
-Every line in the passed data frame corresponds to a drug-event pair
-from a report.
-
-In the drug_event_df-example data, the first three rows of drug_event_df are from the same report, with report_id = 1. The first row reports a Drug_D and an adverse event 
-named Event_5.The next three rows are from another report, where for instance 
-drug B has been reported for two different events, event 15 and event 33. 
-
-```{r}
-drug_event_df[1:6, ]
-```
-
-For completeness, note that if the same drug-event pair occurs several times in 
-one report, these drug-event pair contributes to counts only once. That is, 
-an observed count of five means that there were five different reports 
-containing the drug-event-pair, not e.g. that a single report contained the same 
-drug-event pair five times.
-
-### Counting the expected
-The details of PRR, RRR and IC are documented within each function, but overall one can note that all expected counts are derived 
-from the same contingency table (including marginal sums) of those who did and 
-did not have the drug, and the adverse event respectively.
-
-The \code{add_expected_counts}-function has a single parameter, 
-\code{expected_count_estimators} that can be used to turn off calculation of 
-expected counts for specific estimators. Note that IC by tradition uses 
-expected counts referred to as the Relative Reporting Rate (RRR).
-
-```{r}
-# drug_event_df |>
-#   add_expected_counts(expected_count_estimators = c("prr", "ror", "rrr")) |>
-#   head(1)
-```
-
-
-### Adding the disproportionality estimators
-The \code{add_disproportionality} function has a \code{da_estimator} parameter, which
-by default includes IC, PRR and ROR. If not all of those are wanted, just pass 
-the desired estimators instead.
-
-The \code{add_disproportionality} function has two parameters. One is the 
-\code{rule_of_N}, by default set to 3, which is sometimes referred to as 
-"rule of three". This sets ROR and PRR-values to NA if the observed count is 
-less than the specified N. For completeness, note that the default shrinkage 
-in the IC acts as a built in 'rule of 3', i.e. the shrinkage of +0.5 prevents 
-the lower bound to exceed 0 at the default significance level of 95\%.
-
-The second parameter \code{number_of_digits} controls the rounding of non-count values in the output, 
-including all expected counts, uncertainty bounds and point estimates. By default
-2 digits are kept. 
-
-```{r}
-#| echo=FALSE
-
-# drug_event_df |>
-#   add_expected_counts() |>
-#   add_disproportionality(
-#     rule_of_N = 3,
-#     number_of_digits = 2
-#   )
-```
-In short, the add_disproportionality is a wrapper around ror, prr and ic. For 
-further details around those estimators, see the documentation of corresponding
-function. 
-
-# Subgroup analysis
-As the disproportionality builds the comparator from the passed data, 
-any subgroup analysis of e.g. specific age groups is achieved by filtering out
-the group of interest, and then passing it to `da`.  
-
-# Execution speed 
-The data.table-package (through dtplyr) is used for fast execution. A test of 
-the execution speed was made using the `vaers` R package, available on [gitlab](https://gitlab.com/iembry/vaers.git). The `vaers` package contains 
+# How fast is pvutils?
+The data.table-package (through "dtplyr") is used for performant execution. 
+A test of the execution speed was made using the `vaers` R package, available on 
+[gitlab](https://gitlab.com/iembry/vaers.git). The `vaers` package contains 
 data from VAERS from years 1990 - 2018, resulting in 4 146 778 rows to
-be processed by `da` in `pvutils`. Execution on a regular laptop took less 
-than 7 seconds.
+be processed by `da` in `pvutils`. Execution time on a laptop with
+an Intel i7 CPU of 2.7GHz and 16 GB RAM was less than 10 seconds.
 
 ```{r, include=FALSE}
-
 # plot_udfs_as_graph <- function(package_name = "pvutils"){
 
 # library(pvutils)
@@ -212,10 +325,8 @@ than 7 seconds.
 
 
 ```{r, echo=FALSE, fig.height = 8, fig.width = 8}
-
 # suppressWarnings(DiagrammeR::render_graph(graph,
 #   layout = "tree",
 #   title = "Overview of package functions"
 # ))
 ```
-

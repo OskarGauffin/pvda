@@ -32,7 +32,11 @@ test_that("5-10. Function add_expected_count works", {
     event = "event"
   )
 
-  df_syms <- lapply(df_colnames, \(x){if(!is.null(x)){rlang::sym(x)}})
+  df_syms <- lapply(df_colnames, \(x){
+    if (!is.null(x)) {
+      rlang::sym(x)
+    }
+  })
 
   produced_output <- pvutils::add_expected_counts(pvutils::drug_event_df,
     df_colnames,
@@ -70,13 +74,16 @@ test_that("12. The grouping functionality runs", {
     dplyr::mutate("group" = report_id %% 2)
 
   da_1 <- drug_event_df_with_grouping |>
-    pvutils::da(df_colnames = list(
-    report_id = "report_id",
-    drug = "drug",
-    event = "event",
-    group_by = "group"
-  ),
-  number_of_digits  = 5) |> purrr::pluck("da_df")
+    pvutils::da(
+      df_colnames = list(
+        report_id = "report_id",
+        drug = "drug",
+        event = "event",
+        group_by = "group"
+      ),
+      number_of_digits = 5
+    ) |>
+    purrr::pluck("da_df")
 
   first_row_ic_group_0 <- as.numeric(da_1[1, ]$ic)
   manual_calc_ic_first_row_group_0 <- as.numeric(log2((da_1[1, "obs"] + 0.5) / (da_1[1, "exp_rrr"] + 0.5)))
@@ -87,12 +94,13 @@ test_that("12. The grouping functionality runs", {
 test_that("13. Custom column names can be passed through the df_colnames list", {
   drug_event_df_custom_names <- pvutils::drug_event_df |>
     dplyr::rename(RepId = report_id, Drug = drug, Event = event)
-  da_1 <- drug_event_df_custom_names |> pvutils::da(df_colnames = list(
-    report_id = "RepId",
-    drug = "Drug",
-    event = "Event",
-    group_by = NULL
-  )) |>
+  da_1 <- drug_event_df_custom_names |>
+    pvutils::da(df_colnames = list(
+      report_id = "RepId",
+      drug = "Drug",
+      event = "Event",
+      group_by = NULL
+    )) |>
     purrr::pluck("da_df")
 
   custom_colnames <- colnames(da_1)[1:2]
@@ -100,51 +108,54 @@ test_that("13. Custom column names can be passed through the df_colnames list", 
   expect_equal(custom_colnames, c("Drug", "Event"))
 })
 test_that("14. Sorting works as expected", {
-
-# Repeated from test above on grouping
+  # Repeated from test above on grouping
   da_1 <- drug_event_df |>
-    pvutils::da(df_colnames = list(
-      report_id = "report_id",
-      drug = "drug",
-      event = "event",
-      group_by = "group"
-    ),
-    number_of_digits  = 5) |>
+    pvutils::da(
+      df_colnames = list(
+        report_id = "report_id",
+        drug = "drug",
+        event = "event",
+        group_by = "group"
+      ),
+      number_of_digits = 5
+    ) |>
     purrr::pluck("da_df")
 
   nr_of_rows_per_dec <- da_1 |> dplyr::count(drug, event)
 
   da_1 <-
     da_1 |>
-    dplyr::left_join(nr_of_rows_per_dec, by=c("drug", "event"))
+    dplyr::left_join(nr_of_rows_per_dec, by = c("drug", "event"))
 
   # Check that the groups are ordered
   group_order_status <-
-    da_1|>
+    da_1 |>
     dplyr::filter(n == 2) |>
     dplyr::pull(group) |>
-    (\(x){all(x == 0:1)})()
+    (\(x){
+      all(x == 0:1)
+    })()
 
   # Check desc order for single drug-event-comb
   desc_order_status <-
-    da_1|>
+    da_1 |>
     dplyr::filter(n == 1) |>
     dplyr::arrange(desc("ic2.5")) |>
     dplyr::pull("ic2.5") |>
-    (\(x){all(x ==da_1 |>    dplyr::filter(n == 1) |> dplyr::pull(ic2.5))})()
-  expect_equal(c(desc_order_status, group_order_status), c(TRUE,TRUE))
+    (\(x){
+      all(x == da_1 |>
+        dplyr::filter(n == 1) |>
+        dplyr::pull(ic2.5))
+    })()
+  expect_equal(c(desc_order_status, group_order_status), c(TRUE, TRUE))
 })
 test_that("15. Summary table contains a prr2.5 by default", {
-
   suppressMessages(invisible(capture.output(summary_output <- summary.da(pvutils::drug_event_df |> pvutils::da()))))
-  has_prr2.5<- as.character(summary_output[,1]) |> stringr::str_detect("prr2.5")
+  has_prr2.5 <- as.character(summary_output[, 1]) |> stringr::str_detect("prr2.5")
 
   expect_equal(has_prr2.5, TRUE)
-
 })
-test_that("16. print function runs as expected", {
-
-  invisible(printed <- capture.output(print(pvutils::drug_event_df |> pvutils::da())))
-  expect_equal(nchar(printed[1]), 22L)
-
+test_that("16. print function runs and has the same number of characters in first row as it has before", {
+  suppressMessages(invisible(printed <- capture.output(print(pvutils::drug_event_df |> pvutils::da()))))
+  expect_equal(nchar(printed[2]), 80L)
 })

@@ -16,6 +16,7 @@ Suggests:
     testthat,
     writexl (>= 1.4.2)
 Config/testthat/edition: 3
+BuildVignettes: true
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 Imports: 

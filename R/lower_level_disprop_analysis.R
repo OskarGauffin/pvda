@@ -565,13 +565,12 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
 #' @importFrom rlang sym
 
 round_and_sort_by_lower_da_limit <- function(df = NULL,
-                                   df_colnames = NULL,
-                                   df_syms = NULL,
-                                   conf_lvl = NULL,
-                                   sort_by = NULL,
-                                   da_estimators = NULL,
-                                   number_of_digits = 2){
-
+                                             df_colnames = NULL,
+                                             df_syms = NULL,
+                                             conf_lvl = NULL,
+                                             sort_by = NULL,
+                                             da_estimators = NULL,
+                                             number_of_digits = 2) {
   NULL -> desc -> mean_da
 
   # The round, using number_of_digits below, rounds decimals in digits, so we
@@ -580,7 +579,7 @@ round_and_sort_by_lower_da_limit <- function(df = NULL,
 
 
   checkmate::qassert(sort_by, "S1")
-  if(!sort_by %in% da_estimators){
+  if (!sort_by %in% da_estimators) {
     stop("The da estimator you've passed as sort_by must be included in da_estimators,
              currently ", paste0(da_estimators, ", "))
   }
@@ -593,13 +592,13 @@ round_and_sort_by_lower_da_limit <- function(df = NULL,
   # Take the mean lower quantile for the chosen da and sort by it.
   sorted_df <- df |>
     dplyr::group_by(!!df_syms$drug, !!df_syms$event) |>
-    dplyr::summarise(mean_da = mean(!!rlang::sym(sort_by_colname), na.rm=T))
+    dplyr::summarise(mean_da = mean(!!rlang::sym(sort_by_colname), na.rm = T))
 
   df <-
     df |>
     dplyr::left_join(sorted_df, by = c(df_colnames$drug, df_colnames$event))
 
-  if(is.null(df_colnames$group_by)){
+  if (is.null(df_colnames$group_by)) {
     df <-
       df |>
       dplyr::arrange(desc(mean_da))

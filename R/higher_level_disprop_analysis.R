@@ -83,6 +83,7 @@ grouped_da <- function(df = NULL,
 #'  contained drug X for event Y and event Z, two rows would be added, with the
 #'  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
 #'  numeric or character. Columns \code{drug} and \code{event} must be of type character.
+#'  If column \code{group_by} is provided, it can be either numeric or character.
 #'  You can use a \code{df} with column names of your choosing, as long as you
 #'  connect role and name in the \code{df_colnames}-parameter.
 #'
@@ -182,9 +183,11 @@ add_disproportionality <- function(df = NULL,
   df <- df
 
   if ("ic" %in% da_estimators) {
-    ic_df <- pvutils::ic(obs = df$obs,
-                         exp = df$exp_rrr,
-                         conf_lvl = conf_lvl)
+    ic_df <- pvutils::ic(
+      obs = df$obs,
+      exp = df$exp_rrr,
+      conf_lvl = conf_lvl
+    )
     df <-
       df |>
       dplyr::bind_cols(ic_df)
@@ -230,7 +233,7 @@ add_disproportionality <- function(df = NULL,
       dplyr::starts_with("prr"),
       exp_ror,
       dplyr::starts_with("ror"),
-      everything())
-
+      everything()
+    )
 }
 # See lower_level_disprop_analysis.R for further details ----

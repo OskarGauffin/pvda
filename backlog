@@ -1,9 +1,10 @@
 # TODO
 
+# Need a summary function for the grouped output
 # The inheritparams is a bit of a mess right now
 # Overall QC check on ic, prr, ror docs
 # Do QC on the ROR; PRR; IC values, in point and bounds
-# Update vignette
+# Update vignette DONE
 # commit to CRAN
 
 ### Long term, want to, not for now

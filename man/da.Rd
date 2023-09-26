@@ -32,10 +32,9 @@ estimators to use, in case you don't need all implemented options. Defaults
 to c("ic", "prr", "ror").}
 
 \item{sort_by}{The output is sorted in descending order of the lower bound of
-the confidence/credibility interval for a da estimator, for each drug-event
-combination. If a grouping variable is passed, the sample average is taken
-across each drug-event-combination (ignoring NAs). Any of the passed strings
-in "da_estimators" is accepted, the default is "ic".}
+the confidence/credibility interval for a passed da estimator. Any of the passed strings
+in "da_estimators" is accepted, the default is "ic".
+If a grouping variable is passed, sorting is made by the sample average across each drug-event-combination (ignoring NAs).}
 
 \item{number_of_digits}{Round decimal columns to specified precision, default is two decimals.}
 
@@ -75,6 +74,7 @@ Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).
  contained drug X for event Y and event Z, two rows would be added, with the
  same \code{report_id} and \code{drug} on both rows. Column \code{report_id} must be of type
  numeric or character. Columns \code{drug} and \code{event} must be of type character.
+ If column \code{group_by} is provided, it can be either numeric or character.
  You can use a \code{df} with column names of your choosing, as long as you
  connect role and name in the \code{df_colnames}-parameter.
 }
@@ -86,11 +86,13 @@ da_1 <-
   da()
 
 ### Run a disproportionality across subgroups
-  list_of_colnames <-
-  list(report_id = "report_id",
+list_of_colnames <-
+  list(
+    report_id = "report_id",
     drug = "drug",
     event = "event",
-    group_by = "group")
+    group_by = "group"
+  )
 
 da_2 <-
   drug_event_df |>
@@ -100,13 +102,13 @@ da_2 <-
 # you can specify the column names in the df_colnames parameter list:
 
 renamed_df <-
-drug_event_df |>
-dplyr::rename(ReportID = report_id)
+  drug_event_df |>
+  dplyr::rename(ReportID = report_id)
 
-list_of_colnames$report_id = "ReportID"
+list_of_colnames$report_id <- "ReportID"
 
 da_3 <-
-renamed_df |>
-da(df_colnames = list_of_colnames)
+  renamed_df |>
+  da(df_colnames = list_of_colnames)
 
 }

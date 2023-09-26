@@ -1,7 +1,6 @@
 ## code to prepare `drug_event_df` dataset goes here
 
 simulate_dataset <- function(N = 1000) {
-
   # N = 1000
   set.seed(10)
   report_ids <- tibble::tibble("report_id" = 1:N)
@@ -29,15 +28,17 @@ simulate_dataset <- function(N = 1000) {
 drug_event_df <- simulate_dataset(N = 10^3) |> dplyr::arrange(report_id, drug, event)
 
 # Add some SDRs
-sdr_df <- data.frame("report_id"=sample(drug_event_df$report_id, size=500, replace=T),
-                     "drug" = sample(c("Drug_Z","Drug_U", "Drug_V"), size=500, replace=T),
-                     "event"=sample(c("Event_1", "Event_2"), size=500, replace=T))
+sdr_df <- data.frame(
+  "report_id" = sample(drug_event_df$report_id, size = 500, replace = T),
+  "drug" = sample(c("Drug_Z", "Drug_U", "Drug_V"), size = 500, replace = T),
+  "event" = sample(c("Event_1", "Event_2"), size = 500, replace = T)
+)
 
 drug_event_df <- drug_event_df |> dplyr::bind_rows(sdr_df)
 
 # summary.da(drug_event_df |> pvutils::da())
 
 # Add groups
-drug_event_df$group = drug_event_df$report_id %% 2
+drug_event_df$group <- drug_event_df$report_id %% 2
 
 usethis::use_data(drug_event_df, overwrite = TRUE)
