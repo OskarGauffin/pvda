@@ -270,10 +270,10 @@ ic <- function(obs = NULL,
 #' \insertRef{MscThesis}{pvutils}
 #' @export
 #'
-prr <- function(obs,
-                n_drug,
-                n_event_prr,
-                n_tot_prr,
+prr <- function(obs = NULL,
+                n_drug = NULL,
+                n_event_prr = NULL,
+                n_tot_prr = NULL,
                 conf_lvl = 0.95) {
   checkmate::qassert(c(obs, n_drug, n_event_prr, n_tot_prr), "N+[0,)")
 
@@ -299,7 +299,7 @@ prr <- function(obs,
 
   output <- tibble::tibble(
     !!prr_colnames$lower := ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$lower),
-    "prr" = obs / n_drug * (n_event_prr / n_tot_prr),
+    "prr" = obs / (n_drug * (n_event_prr / n_tot_prr)),
     !!prr_colnames$upper := ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$upper)
   )
   output
@@ -470,7 +470,11 @@ ci_for_ic <- function(obs,
 #' @seealso \code{\link{prr}}
 #' @inheritParams prr
 #' @export
-ci_for_prr <- function(obs, n_drug, n_event_prr, n_tot_prr, conf_lvl_probs) {
+ci_for_prr <- function(obs = NULL,
+                       n_drug = NULL,
+                       n_event_prr = NULL,
+                       n_tot_prr = NULL,
+                       conf_lvl_probs = 0.95) {
   s_hat <- sqrt(1 / obs - 1 / n_drug + 1 / n_event_prr - 1 / n_tot_prr)
   (obs) / (n_drug * n_event_prr / n_tot_prr) * exp(stats::qnorm(conf_lvl_probs) * s_hat)
 }
