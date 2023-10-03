@@ -70,13 +70,16 @@
 
     
     
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>During the life cycle of a medicinal product, knowledge of the safety
 profile continues to accumulate post market introduction. Adverse event
 reports collected through spontaneous reporting plays an instrumental
 part in this development.</p>
-<p>In the setting of adverse event report databases covering a set of
-drugs and events beyond what can be feasibly monitored through manual
-work, disproportionality analysis is often used to highlight
+<p>Adverse event report databases often cover a wide range of drugs and
+events, beyond what can be feasibly monitored through manual work.
+Disproportionality analysis is thus often used to highlight
 drug-event-combinations of potential interest for further qualitative
 manual case-by-case assessment.</p>
 <p>The <code>pvutils</code> package provides three disproportionality
@@ -85,9 +88,10 @@ ratio (ROR) and the information component (IC). It takes report level
 data as input, and outputs estimates for each drug-event-combination,
 possibly stratified by some variable of interest, e.g. age group and/or
 sex.</p>
-<div class="section level3">
-<h3 id="disproportionality-analysis-from-report-level-data">Disproportionality analysis from report-level data<a class="anchor" aria-label="anchor" href="#disproportionality-analysis-from-report-level-data"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="running-a-disproportionality-analysis">Running a disproportionality analysis<a class="anchor" aria-label="anchor" href="#running-a-disproportionality-analysis"></a>
+</h2>
 <p>The workhorse of this package is the function <code>da</code>. The
 <code>da</code>-function takes patient level data in a data frame as
 input (here <code>drug_event_df</code>) and produces estimates and
@@ -100,9 +104,9 @@ summary counts as demonstrated below.</p>
 named Drug_A - Drug_Z and events Event_1 - Event_1000. Further details
 about the simulation are documented in the data object (execute
 <code>?df_drug_event</code>).</p>
-<div class="section level4">
-<h4 id="specifying-the-column-names">Specifying the column names<a class="anchor" aria-label="anchor" href="#specifying-the-column-names"></a>
-</h4>
+<div class="section level3">
+<h3 id="specifying-the-column-names">Specifying the column names<a class="anchor" aria-label="anchor" href="#specifying-the-column-names"></a>
+</h3>
 <p>The da-function will examine the passed data set for column names
 contained in the passed parameter list “df_colnames”. The default column
 names are “report_id”, “drug” and “event”. If we rename the report-id
@@ -114,24 +118,28 @@ da, as shown below:</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>reportID <span class="op">=</span> <span class="va">report_id</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>report_id <span class="op">=</span> <span class="st">"reportID"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="summary-and-print-functions">Summary and print functions<a class="anchor" aria-label="anchor" href="#summary-and-print-functions"></a>
-</h4>
+<div class="section level3">
+<h3 id="summarizing-and-printing-results">Summarizing and printing results<a class="anchor" aria-label="anchor" href="#summarizing-and-printing-results"></a>
+</h3>
 <p>The ‘da_1’ object can then be passed to a summary and a print
 function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">da_1</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in print.da(object, ...): Your console window is too narrow to support</span></span>
+<span><span class="co">## coloured printouts, reverting to non-coloured output.</span></span></code></pre>
 <p><img src="summary_console_printout.png" style="width:110.0%"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">da_1</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in print.da(da_1, n = 3): Your console window is too narrow to support</span></span>
+<span><span class="co">## coloured printouts, reverting to non-coloured output.</span></span></code></pre>
 <p><img src="print_console_printout.png" style="width:110.0%"></p>
 <p>(Technical note: As printing of colors in the console is not easily
 reproduced within this vignette , we provide screenshots when
 applicable. )</p>
 </div>
-<div class="section level4">
-<h4 id="passing-a-correctly-structured-input-data">Passing a correctly structured input data<a class="anchor" aria-label="anchor" href="#passing-a-correctly-structured-input-data"></a>
-</h4>
+<div class="section level3">
+<h3 id="passing-a-correctly-structured-input-data">Passing a correctly structured input data<a class="anchor" aria-label="anchor" href="#passing-a-correctly-structured-input-data"></a>
+</h3>
 <p>The input data needs to be in a report-level format. every line in
 the data frame corresponds to a drug-event pair from a specific
 report.</p>
@@ -141,7 +149,7 @@ row reports a Drug_D and an adverse event named Event_5.The next three
 rows are from another report, where for instance drug B has been
 reported for two different events, event 15 and event 33. We can ignore
 the group-column for now.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
 <span><span class="co">##   report_id drug   event    group</span></span>
@@ -153,133 +161,37 @@ the group-column for now.</p>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span>         2 Drug_B Event_2      0</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span>         2 Drug_G Event_13     0</span></span></code></pre>
 </div>
-<div class="section level4">
-<h4 id="extracting-the-results">Extracting the results<a class="anchor" aria-label="anchor" href="#extracting-the-results"></a>
-</h4>
+<div class="section level3">
+<h3 id="extracting-the-results">Extracting the results<a class="anchor" aria-label="anchor" href="#extracting-the-results"></a>
+</h3>
 <p>For covenience, the output object of da is a list of class “da”
 containing two objects, the results (“da_df”) and the input parameters
 (“input_params”). At some point you might want to extract the results or
 the input parameters list, here we demonstrate some alternatives:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">da_1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "da_df"        "input_params"</span></span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Different ways of extracting the results data frame</span></span>
 <span><span class="co"># da_1$da_df</span></span>
 <span><span class="co"># da_1[['da_df']]</span></span>
 <span><span class="co"># da_1 |&gt; purrr::pluck("da_df")</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="how-are-drug-event-pairs-occurrings-several-times-in-one-report-counted">How are drug-event pairs occurrings several times in one report
-counted?<a class="anchor" aria-label="anchor" href="#how-are-drug-event-pairs-occurrings-several-times-in-one-report-counted"></a>
-</h4>
-<p>If the same drug-event pair occurs several times in one report, these
-contributes to counts only once. That is, an observed count of five
-means that there were five different reports containing the
-drug-event-pair (at least once). It cannot be due to a single report
-containing the same drug-event pair five times due to repeated events or
-data quality issues. This is demonstrated below, where we duplicate the
-first row of drug_event_df and still arrive at an observed count of
-1.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">first_row</span> <span class="op">&lt;-</span> <span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
-<span></span>
-<span><span class="va">first_row</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">first_row</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="st">"da_df"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 1</span></span></code></pre>
-</div>
-<div class="section level4">
-<h4 id="how-is-the-expected-calculated">How is the expected calculated?<a class="anchor" aria-label="anchor" href="#how-is-the-expected-calculated"></a>
-</h4>
-<p>Detailed formulas for PRR, RRR and IC are documented within each
-function ( “?prr”, “?rrr”, “?ic”), but overall one can note that all
-expected counts are derived from the same contingency table of those who
-were and were not exposed to the drug, and did and did not experience
-the adverse event. The sample used for the contingency table is the data
-frame passed to the da function. See also the grouping parameter.</p>
-</div>
-<div class="section level4">
-<h4 id="where-is-exp_ic-in-the-output-or-what-is-exp_prr">Where is exp_ic in the output, or what is exp_prr?<a class="anchor" aria-label="anchor" href="#where-is-exp_ic-in-the-output-or-what-is-exp_prr"></a>
-</h4>
-<p>A common question regards the output column names, ic is preceded by
-“exp_prr”. This is as the information component uses the same expected
-count as the Relative Reporting Rate (RRR), which is perhaps more well
-known in the pharmacovigilande community.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="rule-of-n">Rule of N<a class="anchor" aria-label="anchor" href="#rule-of-n"></a>
-</h2>
-<p>The function <code>da</code> calls a function
-<code>add_disproportionality</code> with two parameters of interest. One
-is the <code>rule_of_N</code>, by default set to 3, which is sometimes
-referred to as “rule of three”. This sets ROR and PRR-values to NA if
-the observed count is less than the specified N. For completeness, note
-that the default shrinkage in the IC acts as a built in ‘rule of 3’,
-(i.e. the shrinkage of +0.5 prevents the lower bound to exceed 0 at the
-default significance level of 95%).</p>
-</div>
-<div class="section level2">
-<h2 id="controlling-the-number-of-digits">Controlling the number of digits<a class="anchor" aria-label="anchor" href="#controlling-the-number-of-digits"></a>
-</h2>
-<p>Another parameter <code>number_of_digits</code> controls the rounding
-of non-count values in the output, including all expected counts,
-uncertainty bounds and point estimates. Note that the printing defaults
-of dplyr are not overridden in the package, and less digits than
-expected may be printed. However, the additional digits are available
-and printed if the data frame is converted to a data frame first, as
-demonstrated below:</p>
-<pre><code><span><span class="co">## Your console window is too narrow to support coloured prinouts, reverting to non-coloured output.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,306 × 23</span></span></span></code></pre>
-<pre><code><span><span class="co">##   drug   event     obs exp_rrr ic2.5    ic ic97.5 exp_prr prr2.5   prr prr97.5</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;int&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #BCBCBC;">1</span> Drug_Z Event_1    88    55.6  0.34  0.66   0.94    49.8   1.5   1.77    2.09</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> Drug_Z Event_2    75    52.4  0.17  0.51   0.82    48.4   1.28  1.55    1.87</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> Drug_V Event_2    80    56.9  0.15  0.49   0.79    52.4   1.27  1.53    1.84</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 1,303 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #555555;">(Drug-event-combinations sorted according to lower bound of ic) </span></span></span>
-<span><span class="co"><span style="color: #555555;">## # Printing x[['da_df']]</span></span></span></code></pre>
-<pre><code><span><span class="co">##     drug   event obs exp_rrr       ic2.5        ic    ic97.5  exp_prr   prr2.5</span></span>
-<span><span class="co">## 1 Drug_Z Event_1  88  55.568  0.34117708 0.6584998 0.9439959 49.79976 1.497466</span></span>
-<span><span class="co">## 2 Drug_Z Event_2  75  52.397  0.16814416 0.5132907 0.8211134 48.37691 1.284508</span></span>
-<span><span class="co">## 3 Drug_V Event_2  80  56.908  0.15411869 0.4877370 0.7863564 52.37799 1.268839</span></span>
-<span><span class="co">## 4 Drug_V Event_1  82  60.352  0.10977495 0.4390894 0.7342560 56.10526 1.221254</span></span>
-<span><span class="co">## 5 Drug_U Event_2  79  58.296  0.09940360 0.4352369 0.7356297 54.11538 1.209221</span></span>
-<span><span class="co">## 6 Drug_U Event_1  74  61.824 -0.09014351 0.2574526 0.5672222 59.36538 1.027078</span></span>
-<span><span class="co">##        prr  prr97.5  exp_ror   ror2.5      ror  ror97.5 n_drug n_event n_tot</span></span>
-<span><span class="co">## 1 1.767077 2.085230 31.00176 2.032430 2.838549 3.964397    151     368  1000</span></span>
-<span><span class="co">## 2 1.550326 1.871153 35.82669 1.504251 2.093411 2.913325    151     347  1000</span></span>
-<span><span class="co">## 3 1.527359 1.838551 39.41652 1.476139 2.029606 2.790591    164     347  1000</span></span>
-<span><span class="co">## 4 1.461538 1.749099 42.64000 1.401405 1.923077 2.638941    164     368  1000</span></span>
-<span><span class="co">## 5 1.459844 1.762410 42.29078 1.363073 1.868019 2.560021    168     347  1000</span></span>
-<span><span class="co">## 6 1.246518 1.512841 51.36803 1.052193 1.440585 1.972341    168     368  1000</span></span>
-<span><span class="co">##   n_event_prr n_tot_prr  b   c   d</span></span>
-<span><span class="co">## 1         280       849 63 280 569</span></span>
-<span><span class="co">## 2         272       849 76 272 577</span></span>
-<span><span class="co">## 3         267       836 84 267 569</span></span>
-<span><span class="co">## 4         286       836 82 286 550</span></span>
-<span><span class="co">## 5         268       832 89 268 564</span></span>
-<span><span class="co">## 6         294       832 94 294 538</span></span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="subgroup-analysis">Subgroup analysis<a class="anchor" aria-label="anchor" href="#subgroup-analysis"></a>
-</h2>
-<p>As the disproportionality builds the comparator from the passed data,
-any subgroup analysis of e.g. specific age groups can be achieved by
-filtering out the group of interest, and then passing it to
-<code>da</code>.</p>
-<p>If a exhaustive grouping is required, one can provide a grouping
-variable <code>group_by</code> to <code>da</code>, which will execute a
-call to da for each grouping and return the results in a single data
-frame. The grouping could for instance be age groups, sex, countries,
-regions or a combination thereof but needs to be passed as a single
-variable (character or numeric).</p>
+<div class="section level3">
+<h3 id="how-to-run-a-subgroup-analysis">How to run a subgroup analysis?<a class="anchor" aria-label="anchor" href="#how-to-run-a-subgroup-analysis"></a>
+</h3>
+<p>The <code>da</code> function builds a comparator from the passed
+data, e.g. for <code>prr</code> by excluding the drug of interest from
+the comparator, sometimes referred to as the background. This implies
+that any subgroup analysis of e.g. specific age groups can be achieved
+by creating a new data frame with the subgroup of interest, and then
+passing it to <code>da</code>.</p>
+<p>If a more exhaustive grouping is required, one can provide a grouping
+variable <code>group_by</code> to <code>da</code>. This executes a call
+to <code>da</code> for each grouping and return the results as a single
+data frame. The grouping could for instance be age groups, sex,
+countries, regions or a combination thereof, but needs to be passed as a
+single variable (character or numeric).</p>
 <p>The drug_event_df contains two groups, in the column named “group”.
 We can pass “group” as the <code>group_by</code> parameter in
 <code>df_colnames</code> as below.</p>
@@ -318,6 +230,90 @@ the same pattern is seen across both males and females. The ordering of
 the drug-events in the output is made by averaging the selected
 disproportionality estimate (parameter <code>sort_by</code>), i.e. the
 top two rows have the highest average “ic2.5”.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="frequently-asked-questions">Frequently Asked Questions<a class="anchor" aria-label="anchor" href="#frequently-asked-questions"></a>
+</h2>
+<div class="section level3">
+<h3 id="how-are-drug-event-pairs-occurrings-several-times-in-one-report-counted">How are drug-event pairs occurrings several times in one report
+counted?<a class="anchor" aria-label="anchor" href="#how-are-drug-event-pairs-occurrings-several-times-in-one-report-counted"></a>
+</h3>
+<p>If the same drug-event pair occurs several times in one report, these
+contributes to counts only once. That is, an observed count of five
+means that there were five different reports containing the
+drug-event-pair (at least once). It cannot be due to a single report
+containing the same drug-event pair five times due to repeated events or
+data quality issues. This is demonstrated below, where we duplicate the
+first row of drug_event_df and still arrive at an observed count of
+1.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">first_row</span> <span class="op">&lt;-</span> <span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="va">first_row</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">first_row</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">pluck</a></span><span class="op">(</span><span class="st">"da_df"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">obs</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 1</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="how-is-the-expected-calculated">How is the expected calculated?<a class="anchor" aria-label="anchor" href="#how-is-the-expected-calculated"></a>
+</h3>
+<p>Detailed formulas for PRR, RRR and IC are documented within each
+function ( “?prr”, “?rrr”, “?ic”), but overall one can note that all
+expected counts are derived from the same contingency table of those who
+were and were not exposed to the drug, and did and did not experience
+the adverse event. The sample used for the contingency table is the data
+frame passed to the da function. See also the grouping parameter.</p>
+</div>
+<div class="section level3">
+<h3 id="where-is-exp_ic-in-the-output-or-what-is-exp_prr">Where is exp_ic in the output, or what is exp_prr?<a class="anchor" aria-label="anchor" href="#where-is-exp_ic-in-the-output-or-what-is-exp_prr"></a>
+</h3>
+<p>A common question regards the output column names, ic is preceded by
+“exp_prr”. This is as the information component uses the same expected
+count as the Relative Reporting Rate (RRR), which is perhaps more well
+known in the pharmacovigilande community.</p>
+</div>
+<div class="section level3">
+<h3 id="rule-of-n">Rule of N<a class="anchor" aria-label="anchor" href="#rule-of-n"></a>
+</h3>
+<p>The function <code>da</code> calls a function
+<code>add_disproportionality</code> with two parameters of interest. One
+is the <code>rule_of_N</code>, by default set to 3, which is sometimes
+referred to as “rule of three”. This sets ROR and PRR-values to NA if
+the observed count is less than the specified N. For completeness, note
+that the default shrinkage in the IC acts as a built in ‘rule of 3’,
+(i.e. the shrinkage of +0.5 prevents the lower bound to exceed 0 at the
+default significance level of 95%).</p>
+</div>
+<div class="section level3">
+<h3 id="controlling-the-number-of-digits">Controlling the number of digits<a class="anchor" aria-label="anchor" href="#controlling-the-number-of-digits"></a>
+</h3>
+<p>The function <code>da</code> has a parameter
+<code>number_of_digits</code> controls the rounding of non-count values
+in the output, including all expected counts, uncertainty bounds and
+point estimates. Note that the printing defaults of dplyr are not
+overridden in the package, and less digits than expected may be printed.
+However, the additional digits are available and printed if the data
+frame is converted to a data frame first, as demonstrated below:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">output</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<p><img src="print_console_few_digits.png"></p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span></span>
+<span>    rule_of_N <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    number_of_digits <span class="op">=</span> <span class="fl">10</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">output</span><span class="op">$</span><span class="va">da_df</span><span class="op">)</span></span></code></pre></div>
+<p><img src="print_console_many_digits.png"></p>
+</div>
 <div class="section level3">
 <h3 id="can-i-use-pvutils-to-get-ic-prr-or-ror-when-i-already-have-the-summary-counts">Can I use pvutils to get IC, PRR or ROR, when I already have the
 summary counts?<a class="anchor" aria-label="anchor" href="#can-i-use-pvutils-to-get-ic-prr-or-ror-when-i-already-have-the-summary-counts"></a>
@@ -343,10 +339,9 @@ check results, e.g. from papers or other software.</p>
 <p>For further details on the specific input parameters, consult the
 documentation of each function.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="how-fast-is-pvutils">How fast is pvutils?<a class="anchor" aria-label="anchor" href="#how-fast-is-pvutils"></a>
-</h2>
+<div class="section level3">
+<h3 id="how-fast-is-pvutils">How fast is pvutils?<a class="anchor" aria-label="anchor" href="#how-fast-is-pvutils"></a>
+</h3>
 <p>The data.table-package (through “dtplyr”) is used for fast execution.
 A test of the execution speed was made using the <code>vaers</code> R
 package, available on <a href="https://gitlab.com/iembry/vaers.git" class="external-link">gitlab</a>. The
@@ -354,6 +349,7 @@ package, available on <a href="https://gitlab.com/iembry/vaers.git" class="exter
 2018, resulting in 4 146 778 rows to be processed by <code>da</code> in
 <code>pvutils</code>. Execution time on a regular laptop was less than
 10 seconds.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
