@@ -140,13 +140,13 @@ da <- function(df = NULL,
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
       purrr::map(grouped_da,
-        df_colnames = df_colnames,
-        df_syms = df_syms,
-        expected_count_estimators = expected_count_estimators,
-        da_estimators = da_estimators,
-        conf_lvl = conf_lvl,
-        rule_of_N = rule_of_N,
-        number_of_digits = number_of_digits
+                 df_colnames = df_colnames,
+                 df_syms = df_syms,
+                 expected_count_estimators = expected_count_estimators,
+                 da_estimators = da_estimators,
+                 conf_lvl = conf_lvl,
+                 rule_of_N = rule_of_N,
+                 number_of_digits = number_of_digits
       ) |>
       purrr::list_rbind() |>
       dplyr::select(
@@ -204,7 +204,7 @@ summary.da <- function(object, ...) {
   # object <- drug_event_df |> da()
 
   NULL -> drug -> event -> da_estimator -> exp_ror -> exp_prr ->
-  conf_lvl_digits -> lower_bound_da
+    conf_lvl_digits -> lower_bound_da
 
   input_params <- object$input_params
   conf_lvl <- input_params$conf_lvl
@@ -279,22 +279,11 @@ summary.da <- function(object, ...) {
   # top_five_rows <- top_five_rows[, 1:end_of_print_df]
   # top_five_rows <- top_five_rows |> dplyr::select(-exp_prr, -exp_ror)
 
-  message(cli::col_blue("Summary of Disproportionality Analysis \n"))
-  message(cli::col_blue("Number of SDRs"))
+  message(cli::col_blue("Summary of Disproportionality Analysis \nNumber of SDRs \n  "))
   print(output, row.names = FALSE)
 
-  message("\n")
-  message(cli::col_blue(paste0("Top DECs")))
+  message(c("\n", cli::col_blue(paste0("Top disproportionate DECs"))))
   print(object, ...)
-
-  # Print a helpful message about the sorting at the end
-  sorted_by_arg <- object$input_params$sort_by
-  sorted_by_message <- paste0(
-    "(Drug-event-combinations sorted according to lower bound of ",
-    sorted_by_arg, ")"
-  )
-
-  message(cli::col_grey(sorted_by_message))
 
   return(invisible(output))
 }
@@ -309,7 +298,10 @@ summary.da <- function(object, ...) {
 #' @examples
 #' da_1 <- drug_event_df |> da()
 #' print(da_1)
+#' @importFrom purrr flatten
+#' @importFrom stringr str_detect
 print.da <- function(x, n=10, ...) {
+  # x <- drug_event_df |> da()
   # Prevent pillar package from printing negative numbers in red
   old_option <- getOption("pillar.neg")
   options(pillar.neg = FALSE)
@@ -328,50 +320,73 @@ print.da <- function(x, n=10, ...) {
     column_group[[i]] <- colnames_da(quantile_prob_list, da_name = da_estimators[i])
   }
 
+  # This should only be done when the last column to colour is present, otherwise
+  # glue_data will throw an error.
   printed_by_default_tbl <- utils::capture.output(print(x$da_df, n = n, ...))
 
-  for (i in seq_along(column_group)) {
-    # i  = 1
-    x <- column_group[[i]]
-    col <- c("blue", "green", "magenta")[i]
+  column_names <- column_group |> purrr::flatten()
+  end_column_names <- column_names[c(2,4,6)] |> as.character()
 
-    start_colour_here <- suppressWarnings(stringr::fixed(paste0("exp_", exp_estimators)))
-    start_with_colour_inserted <- suppressWarnings(stringr::fixed(paste0("{", col, " {start_colour_here[i]}")))
+  all_end_column_names_present <-
+    all(stringr::str_detect(printed_by_default_tbl[[2]], end_column_names))
 
-    printed_by_default_tbl[2] <- stringr::str_replace(
-      printed_by_default_tbl[2],
-      start_colour_here[i],
-      start_with_colour_inserted
-    )
+  if(all_end_column_names_present){
 
-    printed_by_default_tbl[2] <- stringr::str_replace(
-      printed_by_default_tbl[2],
-      suppressWarnings(stringr::fixed(x$upper)),
-      stringr::fixed("{x$upper}}")
-    )
+    for (i in seq_along(column_group)) {
+      # i = 1
+      cg_i <- column_group[[i]]
+      col <- c("red", "green", "magenta")[i]
 
-    # The insertion of the color codes shifts the da estimator column header
-    #  slightly, so we adjust:
-    add_this_number_of_spaces <- c(0, rep(1, length(da_estimators) - 1))
+      start_colour_here <- suppressWarnings(stringr::fixed(paste0("exp_", exp_estimators)))
+      start_with_colour_inserted <- suppressWarnings(stringr::fixed(paste0("{", col, " {start_colour_here[i]}")))
 
-    printed_by_default_tbl[2] <- stringr::str_replace(
-      printed_by_default_tbl[2],
-      stringr::fixed(paste0(da_estimators[i], add_this_number_of_spaces[i], collapse = "")),
-      stringr::fixed(da_estimators[i])
-    )
+      printed_by_default_tbl[2] <- stringr::str_replace(
+        printed_by_default_tbl[2],
+        start_colour_here[i],
+        start_with_colour_inserted
+      )
+
+      printed_by_default_tbl[2] <- stringr::str_replace(
+        printed_by_default_tbl[2],
+        suppressWarnings(stringr::fixed(cg_i$upper)),
+        stringr::fixed("{cg_i$upper}}")
+      )
+
+      # The insertion of the color codes shifts the da estimator column header
+      #  slightly, so we adjust:
+      add_this_number_of_spaces <- c(0, rep(1, length(da_estimators) - 1))
+
+      printed_by_default_tbl[2] <- stringr::str_replace(
+        printed_by_default_tbl[2],
+        stringr::fixed(paste0(da_estimators[i], add_this_number_of_spaces[i], collapse = "")),
+        stringr::fixed(da_estimators[i])
+      )
+    }
+  } else {
+    message("Your console window is too narrow to support coloured prinouts, reverting to non-coloured output.")
   }
 
   # Second and last two rows should be in grey
   last_two_rows <- length(printed_by_default_tbl) - 1
 
+  # This needs to be in coarses pieces
 
   for (i in seq_along(printed_by_default_tbl)) {
+
+    # print(glue::glue_col(printed_by_default_tbl))
+
     if (!i %in% c(1, 3, last_two_rows:(last_two_rows + 1))) {
       print(glue::glue_col(printed_by_default_tbl[i]))
+
     } else {
       message(cli::col_grey(printed_by_default_tbl[i]))
     }
   }
 
-  message(cli::col_grey("# Printing x[['da_df']]"))
+  # Print a helpful message about the sorting at the end
+  sorted_by_arg <- x$input_params$sort_by
+  sorted_by_message <- paste0(
+    "(Drug-event-combinations sorted according to lower bound of ", sorted_by_arg, ")")
+
+  message(cli::col_grey(paste0(sorted_by_message, " \n", "# Printing x[['da_df']]")))
 }

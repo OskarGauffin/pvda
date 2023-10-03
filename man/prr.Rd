@@ -57,15 +57,16 @@ A confidence interval is derived in Gravel (2009) using the delta method:
 \deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 
 and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
-\deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{\alpha/2} \times \hat{s}),
-\frac{\hat{O}}{\hat{E}} \times \exp(\Phi_{1-\alpha/2} \times \hat{s})]}
+\deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Q_{\alpha/2} \times \hat{s}),
+\frac{\hat{O}}{\hat{E}} \times \exp(\Q_{1-\alpha/2} \times \hat{s})]}
 
-where \eqn{\Phi_{\alpha}} denotes the cumulative distribution function of the
-Standard Normal distribution at significance level \eqn{\alpha}.
-For historical reasons, another version of this standard deviation is sometimes used
+where \eqn{\Q_{\alpha}} denotes the quantile function of a
+standard Normal distribution at significance level \eqn{\alpha}.
+
+Note: For historical reasons, another version of this standard deviation is sometimes used
 where the last fraction under the square root is added rather than subtracted,
 with negligible practical implications in large databases. This function uses the version
-written above.s
+declared above, i.e. with subtraction.
 }
 \examples{
 
