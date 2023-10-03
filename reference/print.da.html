@@ -24,7 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality analysis using pvutils</a>
+    <a class="dropdown-item" href="../articles/Disproportionality_analysis.html">Disproportionality analysis</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -77,8 +77,9 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">da_1</span> <span class="op">&lt;-</span> <span class="va">drug_event_df</span> <span class="op">|&gt;</span> <span class="fu"><a href="da.html">da</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">da_1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Your console window is too narrow to support coloured prinouts, reverting to non-coloured output.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,306 × 23</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    drug   event      obs <span style="color: #0000BB;">exp_prr ic2.5    ic ror97.5</span> <span style="color: #00BB00;">exp_prr prr2.5   prr ror97.5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    drug   event      obs exp_rrr ic2.5    ic ic97.5 exp_prr prr2.5   prr prr97.5</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;chr&gt;</span><span style="color: #555555;">    </span><span style="color: #949494; font-style: italic;">&lt;int&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">  </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;"> </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span><span style="color: #555555;">   </span><span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Drug_Z Event_1     88   55.6   0.34  0.66   0.94   49.8    1.5   1.77    2.09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Drug_Z Event_2     75   52.4   0.17  0.51   0.82   48.4    1.28  1.55    1.87</span>
@@ -94,6 +95,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">(Drug-event-combinations sorted according to lower bound of ic) </span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;"># Printing x[['da_df']]</span></span>
 </code></pre></div>
     </div>
