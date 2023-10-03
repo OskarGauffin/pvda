@@ -363,7 +363,7 @@ print.da <- function(x, n=10, ...) {
       )
     }
   } else {
-    message("Your console window is too narrow to support coloured prinouts, reverting to non-coloured output.")
+    warning("Your console window is too narrow to support coloured printouts, reverting to non-coloured output.")
   }
 
   # Second and last two rows should be in grey
