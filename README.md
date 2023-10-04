@@ -1,6 +1,6 @@
 # pvutils
 
-An R package for executing disproportionality analyses. 
+An R package for executing disproportionality analyses with ic, prr and ror. Under development, but hope to release first version within the upcoming months. 
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvutils/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvutils?branch=main)
