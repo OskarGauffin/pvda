@@ -125,13 +125,9 @@ da, as shown below:</p>
 function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">da_1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in print.da(object, ...): Your console window is too narrow to support</span></span>
-<span><span class="co">## coloured printouts, reverting to non-coloured output.</span></span></code></pre>
 <p><img src="summary_console_printout.png" style="width:110.0%"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">da_1</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in print.da(da_1, n = 3): Your console window is too narrow to support</span></span>
-<span><span class="co">## coloured printouts, reverting to non-coloured output.</span></span></code></pre>
 <p><img src="print_console_printout.png" style="width:110.0%"></p>
 <p>(Technical note: As printing of colors in the console is not easily
 reproduced within this vignette , we provide screenshots when
@@ -149,7 +145,7 @@ row reports a Drug_D and an adverse event named Event_5.The next three
 rows are from another report, where for instance drug B has been
 reported for two different events, event 15 and event 33. We can ignore
 the group-column for now.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
 <span><span class="co">##   report_id drug   event    group</span></span>
@@ -168,10 +164,10 @@ the group-column for now.</p>
 containing two objects, the results (“da_df”) and the input parameters
 (“input_params”). At some point you might want to extract the results or
 the input parameters list, here we demonstrate some alternatives:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">da_1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "da_df"        "input_params"</span></span></code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Different ways of extracting the results data frame</span></span>
 <span><span class="co"># da_1$da_df</span></span>
 <span><span class="co"># da_1[['da_df']]</span></span>
@@ -247,7 +243,7 @@ containing the same drug-event pair five times due to repeated events or
 data quality issues. This is demonstrated below, where we duplicate the
 first row of drug_event_df and still arrive at an observed count of
 1.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">first_row</span> <span class="op">&lt;-</span> <span class="va">drug_event_df</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
 <span></span>
 <span><span class="va">first_row</span> <span class="op">|&gt;</span> </span>
@@ -297,14 +293,14 @@ point estimates. Note that the printing defaults of dplyr are not
 overridden in the package, and less digits than expected may be printed.
 However, the additional digits are available and printed if the data
 frame is converted to a data frame first, as demonstrated below:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">output</span>, n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="print_console_few_digits.png"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/da.html">da</a></span><span class="op">(</span></span>
 <span>    rule_of_N <span class="op">=</span> <span class="fl">3</span>,</span>
