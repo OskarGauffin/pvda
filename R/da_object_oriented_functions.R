@@ -2,7 +2,7 @@
 #' @title Disproportionality Analysis
 #' @description The function \code{da} executes disproportionality analyses,
 #' i.e. compares the proportion of reports with a specific adverse event for a drug,
-#' against corresponding event proportion among all other drugs in the passed data frame.
+#' against an event proportion from a comparator based on the passed data frame.
 #' See the vignette for a brief introduction to disproportionality analysis.
 #' Furthermore, \code{da} supports three estimators: Information Component (IC),
 #' Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).
@@ -10,8 +10,9 @@
 #' @inheritParams add_disproportionality
 #' @inheritParams ror
 #' @param number_of_digits Round decimal columns to specified precision, default is two decimals.
-#' @param excel_path To write the output of \code{da} to an excel file, provide a path
-#' to a folder e.g. to write to your current working directory, pass \code{getwd()}.
+#' @param excel_path Intended for users who prefer to work in excel with minimal work in R.
+#' To write the output of \code{da} to an excel file, provide a path
+#' to a folder. For instance, to write to your current working directory, pass \code{getwd()}.
 #'  The excel file will by default be named \code{da.xlsx}. To control the excel file name,
 #'  pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
 #'  do not want to export the output to an excel file, pass NULL (the default).
@@ -197,11 +198,12 @@ da <- function(df = NULL,
 #' @importFrom dplyr group_by summarise pull mutate count distinct slice_head across all_of select
 #' @importFrom purrr pluck
 #' @importFrom rlang sym
-#' @importFrom tibble tibble
+#' @importFrom tibble tibble as_tibble
 #' @importFrom cli col_blue col_grey
 #' @importFrom stats setNames
-summary.da <- function(object, ...) {
-  # object <- drug_event_df |> da()
+summary.da <- function(object, ...){
+
+  # object <- drug_event_df |> da(df_colnames=list(group_by="group"))
 
   NULL -> drug -> event -> da_estimator -> exp_ror -> exp_prr ->
     conf_lvl_digits -> lower_bound_da
@@ -231,31 +233,65 @@ summary.da <- function(object, ...) {
     lower_bound_column_names |>
     stringr::str_replace(ic_col, ic_exp_col)
 
-  da_summary_counts <-
-    object |>
-    purrr::pluck("da_df") |>
-    dplyr::mutate(!!ic_exp_sym := 2^(!!ic_col_sym)) |>
-    dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x){
-      sum(1 < x, na.rm = TRUE)
-    }))
+  name_of_total_col = "Total drug-event combination count"
+  group_is_null = is.null(object$input_params$df_colnames$group_by)
 
-  # Put together an overview count table
+  # If group_by is NULL
+  if(group_is_null){
 
-  # Count total N of DECs in object
-  N_DECs <-
-    object$da_df |>
-    dplyr::count() |>
-    as.numeric()
-  total_df <- tibble::tibble("Name" = "Total DEC count", "Stat sign" = N_DECs)
+    da_summary_counts <-
+      object |>
+      purrr::pluck("da_df") |>
+      dplyr::mutate(!!ic_exp_sym := 2^(!!ic_col_sym)) |>
+      dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x){
+        sum(1 < x, na.rm = TRUE)
+      }))
 
+    # Put together an overview count table
 
-  output <- tibble::tibble(
-    "Name" = colnames(da_summary_counts),
-    "Stat sign" = da_summary_counts[1, ] |>
+    # Count total N of DECs in object
+    N_DECs <-
+      object$da_df |>
+      dplyr::count() |>
       as.numeric()
-  ) |>
-    dplyr::bind_rows(total_df)
+    total_df <- tibble::tibble("Name" = name_of_total_col, "Stat sign" = N_DECs)
 
+    output <- tibble::tibble(
+      "Name" = colnames(da_summary_counts),
+      "Stat sign" = da_summary_counts[1, ] |>
+        as.numeric()
+    ) |>
+      dplyr::bind_rows(total_df)
+
+    # If group_by is not NULL
+  } else {
+
+    group_colname <- rlang::sym(object$input_params$df_colnames$group_by)
+
+    da_summary_counts <-
+      object |>
+      purrr::pluck("da_df") |>
+      dplyr::mutate(!!ic_exp_sym := 2^(!!ic_col_sym)) |>
+      dplyr::group_by(!!group_colname) |>
+      dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x){
+        sum(1 < x, na.rm = TRUE)
+      }))
+
+    # Count total N of DECs in object
+    N_DECs <-
+      object$da_df |>
+      dplyr::group_by(!!group_colname) |>
+      dplyr::count()
+
+    output <- da_summary_counts |>
+      dplyr::left_join(N_DECs, by="group") |>
+      t() |>
+      tibble::as_tibble(.name_repair = "minimal")
+
+    output <- as.data.frame(output)
+    rownames(output) = c(group_colname, unlist(lower_bound_column_names_w_2), name_of_total_col)
+
+  }
 
   # The number of printed columns need to depend on da_estimators, in case
   # not all da estimators are used
@@ -280,7 +316,7 @@ summary.da <- function(object, ...) {
   # top_five_rows <- top_five_rows |> dplyr::select(-exp_prr, -exp_ror)
 
   message(cli::col_blue("Summary of Disproportionality Analysis \nNumber of SDRs \n  "))
-  print(output, row.names = FALSE)
+  print(output, row.names = !group_is_null) #Row names only needed with subgroups
 
   message(c("\n", cli::col_blue(paste0("Top disproportionate DECs"))))
   print(object, ...)
@@ -363,7 +399,7 @@ print.da <- function(x, n=10, ...) {
       )
     }
   } else {
-    warning("Your console window is too narrow to support coloured printouts, reverting to non-coloured output.")
+    message("Your console window is too narrow to support coloured printouts, reverting to non-coloured output.")
   }
 
   # Second and last two rows should be in grey
@@ -390,3 +426,4 @@ print.da <- function(x, n=10, ...) {
 
   message(cli::col_grey(paste0(sorted_by_message, " \n", "# Printing x[['da_df']]")))
 }
+

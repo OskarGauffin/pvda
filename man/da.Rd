@@ -46,8 +46,9 @@ don't want to apply any such rule.}
 \item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
 Default is 0.95 (i.e. 95 \% confidence interval)}
 
-\item{excel_path}{To write the output of \code{da} to an excel file, provide a path
-to a folder e.g. to write to your current working directory, pass \code{getwd()}.
+\item{excel_path}{Intended for users who prefer to work in excel with minimal work in R.
+To write the output of \code{da} to an excel file, provide a path
+to a folder. For instance, to write to your current working directory, pass \code{getwd()}.
  The excel file will by default be named \code{da.xlsx}. To control the excel file name,
  pass a path ending with the desired filename suffixed with \code{.xlsx}. If you
  do not want to export the output to an excel file, pass NULL (the default).}
@@ -60,7 +61,7 @@ corresponds to a drug-event pair.
 \description{
 The function \code{da} executes disproportionality analyses,
 i.e. compares the proportion of reports with a specific adverse event for a drug,
-against corresponding event proportion among all other drugs in the passed data frame.
+against an event proportion from a comparator based on the passed data frame.
 See the vignette for a brief introduction to disproportionality analysis.
 Furthermore, \code{da} supports three estimators: Information Component (IC),
 Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).

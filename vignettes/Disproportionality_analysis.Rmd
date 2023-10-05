@@ -53,9 +53,7 @@ documented in the data object (execute `?df_drug_event`).
 ## Specifying the column names
 
 The da-function will examine the passed data set for column names contained in
-the passed parameter list "df_colnames". The default column names are "report_id", 
-"drug" and "event". If we rename the report-id column in "drug_event_df" 
-we need to specify the new name in the call to da, as shown below:
+the passed parameter list "df_colnames". The default column names are "report_id", "drug" and "event". If we rename the report-id column in "drug_event_df" we need to specify the new name in the call to da, as shown below:
 
 ```{r}
 #| echo = TRUE 

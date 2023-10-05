@@ -159,3 +159,11 @@ test_that("16. print function runs and has the same number of characters in firs
   suppressMessages(invisible(printed <- capture.output(print(pvutils::drug_event_df |> pvutils::da()))))
   expect_equal(nchar(printed[2]), 80L)
 })
+
+test_that("17. Grouped output from summary function works.", {
+  summary_output <- pvutils::drug_event_df |>
+      da(df_colnames = list(group_by = "group"))  |>
+      summary()
+
+  expect_equal(2L, ncol(summary_output))
+})
