@@ -16,8 +16,8 @@ observed count).}
 
 \item{d}{Number of reports without the drug, without the event}
 
-\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
-Default is 0.95 (i.e. 95 \% confidence interval)}
+\item{conf_lvl}{Confidence level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval).}
 }
 \value{
 A tibble with three columns (point estimate and credibility bounds).

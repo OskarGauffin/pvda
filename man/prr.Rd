@@ -22,8 +22,8 @@ observed count).}
 
 \item{n_tot_prr}{Number of reports in the background.}
 
-\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
-Default is 0.95 (i.e. 95 \% confidence interval)}
+\item{conf_lvl}{Confidence level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval).}
 }
 \value{
 A tibble with three columns (point estimate and credibility bounds).
@@ -57,10 +57,10 @@ A confidence interval is derived in Gravel (2009) using the delta method:
 \deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 
 and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
-\deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Q_{\alpha/2} \times \hat{s}),
-\frac{\hat{O}}{\hat{E}} \times \exp(\Q_{1-\alpha/2} \times \hat{s})]}
+\deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(Q_{\alpha/2} \times \hat{s}),
+\frac{\hat{O}}{\hat{E}} \times \exp(Q_{1-\alpha/2} \times \hat{s})]}
 
-where \eqn{\Q_{\alpha}} denotes the quantile function of a
+where \eqn{Q_{\alpha}} denotes the quantile function of a
 standard Normal distribution at significance level \eqn{\alpha}.
 
 Note: For historical reasons, another version of this standard deviation is sometimes used

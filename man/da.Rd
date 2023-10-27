@@ -43,8 +43,8 @@ counts are strictly less than the passed value of \code{rule_of_N}. Default valu
 is 3, 5 is sometimes used as a more liberal alternative. Set to NULL if you
 don't want to apply any such rule.}
 
-\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
-Default is 0.95 (i.e. 95 \% confidence interval)}
+\item{conf_lvl}{Confidence level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval).}
 
 \item{excel_path}{Intended for users who prefer to work in excel with minimal work in R.
 To write the output of \code{da} to an excel file, provide a path

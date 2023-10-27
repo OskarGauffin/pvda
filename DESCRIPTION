@@ -1,6 +1,6 @@
 Package: pvutils
 Type: Package
-Title: Helpful Functions for Pharmacogivilance
+Title: Helpful Functions for Pharmacovigilance
 Version: 0.0.1
 Author: Oskar Gauffin
 Maintainer: Oskar Gauffin <oskar.gauffin@hotmail.com>

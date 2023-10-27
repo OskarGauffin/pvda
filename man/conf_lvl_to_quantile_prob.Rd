@@ -7,8 +7,8 @@
 conf_lvl_to_quantile_prob(conf_lvl = 0.95)
 }
 \arguments{
-\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
-Default is 0.95 (i.e. 95 \% confidence interval)}
+\item{conf_lvl}{Confidence level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval).}
 }
 \value{
 A list with two numerical vectors, "lower" and "upper".

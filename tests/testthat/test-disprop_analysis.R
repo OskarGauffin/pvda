@@ -163,7 +163,7 @@ test_that("16. print function runs and has the same number of characters in firs
 test_that("17. Grouped output from summary function works.", {
   summary_output <- pvutils::drug_event_df |>
       da(df_colnames = list(group_by = "group"))  |>
-      summary()
+      summary(print = FALSE)
 
   expect_equal(2L, ncol(summary_output))
 })

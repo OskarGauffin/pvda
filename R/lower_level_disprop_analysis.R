@@ -41,7 +41,7 @@ count_expected_rrr <- function(df, df_colnames, df_syms) {
     # Note that the as.numeric must be called in the same mutate as we do
     # the multiplication
     dplyr::mutate(exp_rrr = as.numeric(n_drug) * as.numeric(n_event) /
-      as.numeric(n_tot)) |>
+                    as.numeric(n_tot)) |>
     dplyr::select(
       !!df_syms$drug,
       !!df_syms$event,
@@ -67,7 +67,7 @@ count_expected_rrr <- function(df, df_colnames, df_syms) {
 count_expected_prr <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_prr -> n_tot_prr ->
-  n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
+    n_event_prr -> obs -> n -> n_event -> n_drug -> n_tot
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -75,7 +75,7 @@ count_expected_prr <- function(count_dt) {
       n_tot_prr = n_tot - n_drug
     ) |>
     dplyr::mutate(exp_prr = as.numeric(n_drug) * as.numeric(n_event_prr) /
-      as.numeric(n_tot_prr)) |>
+                    as.numeric(n_tot_prr)) |>
     dplyr::select(tidyselect::everything(), n_event_prr, n_tot_prr, exp_prr)
 
   return(count_dt)
@@ -98,7 +98,7 @@ count_expected_prr <- function(count_dt) {
 count_expected_ror <- function(count_dt) {
   # data.table complains if you haven't defined these variables as NULLs
   NULL -> desc -> ends_with -> exp_ror -> d -> b -> n -> n_event -> n_drug ->
-  n_tot -> obs -> n_event_prr -> n_tot_prr
+    n_tot -> obs -> n_event_prr -> n_tot_prr
 
   count_dt <- count_dt |>
     dplyr::mutate(
@@ -192,7 +192,7 @@ ic <- function(obs = NULL,
   }
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
-  ic_colnames <- colnames_da(quantile_prob, da_name = "ic")
+  ic_colnames <- build_colnames_da(quantile_prob, da_name = "ic")
 
   output <- tibble::tibble(
     !!ic_colnames$lower := ci_for_ic(obs, exp, quantile_prob$lower, shrinkage),
@@ -239,10 +239,10 @@ ic <- function(obs = NULL,
 #' \deqn{\hat{s} = \sqrt{ 1/\hat{O} - 1/(\hat{N}_{drug}) + 1/(\hat{N}_{event} - \hat{O}) - 1/(\hat{N}_{TOT} - \hat{N}_{drug})}}
 #'
 #' and \deqn{[\hat{CI}_{\alpha/2}, \hat{CI}_{1-\alpha/2}] = }
-#' \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(\Q_{\alpha/2} \times \hat{s}),
-#' \frac{\hat{O}}{\hat{E}} \times \exp(\Q_{1-\alpha/2} \times \hat{s})]}
+#' \deqn{[\frac{\hat{O}}{\hat{E}} \times \exp(Q_{\alpha/2} \times \hat{s}),
+#' \frac{\hat{O}}{\hat{E}} \times \exp(Q_{1-\alpha/2} \times \hat{s})]}
 #'
-#' where \eqn{\Q_{\alpha}} denotes the quantile function of a
+#' where \eqn{Q_{\alpha}} denotes the quantile function of a
 #' standard Normal distribution at significance level \eqn{\alpha}.
 #'
 #' Note: For historical reasons, another version of this standard deviation is sometimes used
@@ -300,7 +300,7 @@ prr <- function(obs = NULL,
   n_tot_prr <- as.numeric(n_tot_prr)
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
-  prr_colnames <- colnames_da(quantile_prob, "prr")
+  prr_colnames <- build_colnames_da(quantile_prob, "prr")
 
   output <- tibble::tibble(
     !!prr_colnames$lower := ci_for_prr(obs, n_drug, n_event_prr, n_tot_prr, quantile_prob$lower),
@@ -382,7 +382,7 @@ ror <- function(a = NULL,
   }
 
   quantile_prob <- conf_lvl_to_quantile_prob(conf_lvl)
-  ror_colnames <- colnames_da(quantile_prob, "ror")
+  ror_colnames <- build_colnames_da(quantile_prob, "ror")
 
   # Integer overflow on vaers-sized data sets if these are not converted to double
   a <- as.numeric(a)
@@ -392,7 +392,7 @@ ror <- function(a = NULL,
 
   output <- tibble::tibble(
     !!ror_colnames$lower := ci_for_ror(a, b, c, d, quantile_prob$lower),
-    "ror" = a * d / (b * c),
+    "ror" = (a * d) / (b * c),
     !!ror_colnames$upper := ci_for_ror(a, b, c, d, quantile_prob$upper)
   )
 
@@ -403,8 +403,8 @@ ror <- function(a = NULL,
 #' @title Quantile probabilities from confidence level
 #' @description Calculates equi-tailed quantile probabilities from a
 #' confidence level
-#' @param conf_lvl Confidencelevel of confidence or credibility intervals.
-#' Default is 0.95 (i.e. 95 \% confidence interval)
+#' @param conf_lvl Confidence level of confidence or credibility intervals.
+#' Default is 0.95 (i.e. 95 \% confidence interval).
 #' @return A list with two numerical vectors, "lower" and "upper".
 #' @examples
 #' conf_lvl_to_quantile_prob(0.95)
@@ -420,7 +420,7 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 }
 
 
-# 2.2 colnames_da -----
+# 2.2 build_colnames_da -----
 
 #' @title An internal function creating colnames for da confidence/credibility bounds
 #' @description Given the output from quantile_prob, and a da_name string,
@@ -429,7 +429,7 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 #' @param da_name A string, such as "ic", "prr" or "ror". Default: NULL
 #' @return A list with two symbols, to be inserted in the dtplyr-chain
 #' @export
-colnames_da <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
+build_colnames_da <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
                         da_name = NULL) {
   ic_lower_name <- paste0(da_name, 100 * quantile_prob$lower)
   ic_upper_name <- paste0(da_name, 100 * quantile_prob$upper)
@@ -498,7 +498,7 @@ ci_for_prr <- function(obs = NULL,
 #' @export
 ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(conf_lvl_probs) *
-    sqrt(1 / a + 1 / b + 1 / c - 1 / d))
+        sqrt(1 / a + 1 / b + 1 / c + 1 / d))
 }
 
 # 2.6 apply_rule_of_N ----
@@ -595,7 +595,7 @@ round_and_sort_by_lower_da_limit <- function(df = NULL,
 
   sort_by_colname <- conf_lvl |>
     pvutils::conf_lvl_to_quantile_prob() |>
-    pvutils::colnames_da(da_name = sort_by) |>
+    pvutils::build_colnames_da(da_name = sort_by) |>
     purrr::pluck("lower")
 
   # Take the mean lower quantile for the chosen da and sort by it.

@@ -75,7 +75,8 @@ da <- function(df = NULL,
                excel_path = NULL) {
 
   # If null, set the default values of these parameters
-  df_colnames[['report_id']] <- df_colnames[['report_id']] %||% "report_id"
+  df_colnames[['report_id']] <-
+    df_colnames[['report_id']] %||% "report_id"
   df_colnames[['drug']] <- df_colnames[['drug']] %||% "drug"
   df_colnames[['event']] <- df_colnames[['event']] %||% "event"
 
@@ -92,7 +93,7 @@ da <- function(df = NULL,
 
   checkmate::qassert(df_colnames$group_by, c("S1", "N1", "0"))
   checkmate::qassert(excel_path, c("S1", "0"))
-  df_syms <- lapply(df_colnames, \(x){
+  df_syms <- lapply(df_colnames, \(x) {
     if (!is.null(x)) {
       rlang::sym(x)
     }
@@ -130,7 +131,9 @@ da <- function(df = NULL,
       )
   } else {
     if (!df_colnames$group_by %in% colnames(df)) {
-      stop("Passed grouping column name '", df_colnames$group_by, "' not found in passed df.")
+      stop("Passed grouping column name '",
+           df_colnames$group_by,
+           "' not found in passed df.")
     }
 
     drug <- rlang::sym(df_colnames$drug)
@@ -140,20 +143,19 @@ da <- function(df = NULL,
     # When subgroups are provided:
     output <- df |>
       split(f = df[[df_colnames$group_by]]) |>
-      purrr::map(grouped_da,
-                 df_colnames = df_colnames,
-                 df_syms = df_syms,
-                 expected_count_estimators = expected_count_estimators,
-                 da_estimators = da_estimators,
-                 conf_lvl = conf_lvl,
-                 rule_of_N = rule_of_N,
-                 number_of_digits = number_of_digits
+      purrr::map(
+        grouped_da,
+        df_colnames = df_colnames,
+        df_syms = df_syms,
+        expected_count_estimators = expected_count_estimators,
+        da_estimators = da_estimators,
+        conf_lvl = conf_lvl,
+        rule_of_N = rule_of_N,
+        number_of_digits = number_of_digits
       ) |>
       purrr::list_rbind() |>
       dplyr::select(
-        !!drug,
-        !!event,
-        !!group_by,
+        !!drug,!!event,!!group_by,
         obs,
         exp_rrr,
         dplyr::starts_with("ic"),
@@ -176,10 +178,8 @@ da <- function(df = NULL,
   # If excel path is non-NULL
   write_to_excel(output, excel_path)
 
-  output_list <- list(
-    "da_df" = output,
-    "input_params" = input_params
-  )
+  output_list <- list("da_df" = output,
+                      "input_params" = input_params)
   class(output_list) <- "da"
 
   return(invisible(output_list))
@@ -190,6 +190,7 @@ da <- function(df = NULL,
 #' @title Summary function for disproportionality objects
 #' @description Provides summary counts of SDRs and shows the top five DECs
 #' @param object A S3 obj of class "da", output from \code{pvutils::da()}.
+#' @param print Do you want to print the output to the console. Defaults to TRUE.
 #' @param ... For passing additional parameters to extended classes.
 #' @return Passes a tibble with the SDR counts invisibly.
 #' @export
@@ -201,8 +202,7 @@ da <- function(df = NULL,
 #' @importFrom tibble tibble as_tibble
 #' @importFrom cli col_blue col_grey
 #' @importFrom stats setNames
-summary.da <- function(object, ...){
-
+summary.da <- function(object, print = TRUE, ...) {
   # object <- drug_event_df |> da(df_colnames=list(group_by="group"))
 
   NULL -> drug -> event -> da_estimator -> exp_ror -> exp_prr ->
@@ -217,8 +217,8 @@ summary.da <- function(object, ...){
     conf_lvl_to_quantile_prob()
 
   lower_bound_column_names <- split(da_estimators, da_estimators) |>
-    lapply(\(x){
-      as.character(colnames_da(quant_prob_list, x)[[1]])
+    lapply(\(x) {
+      as.character(build_colnames_da(quant_prob_list, x)[[1]])
     }) |>
     purrr::list_c()
 
@@ -237,13 +237,12 @@ summary.da <- function(object, ...){
   group_is_null = is.null(object$input_params$df_colnames$group_by)
 
   # If group_by is NULL
-  if(group_is_null){
-
+  if (group_is_null) {
     da_summary_counts <-
       object |>
       purrr::pluck("da_df") |>
-      dplyr::mutate(!!ic_exp_sym := 2^(!!ic_col_sym)) |>
-      dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x){
+      dplyr::mutate(!!ic_exp_sym := 2 ^ (!!ic_col_sym)) |>
+      dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x) {
         sum(1 < x, na.rm = TRUE)
       }))
 
@@ -254,26 +253,25 @@ summary.da <- function(object, ...){
       object$da_df |>
       dplyr::count() |>
       as.numeric()
-    total_df <- tibble::tibble("Name" = name_of_total_col, "Stat sign" = N_DECs)
+    total_df <-
+      tibble::tibble("Name" = name_of_total_col, "Stat sign" = N_DECs)
 
-    output <- tibble::tibble(
-      "Name" = colnames(da_summary_counts),
-      "Stat sign" = da_summary_counts[1, ] |>
-        as.numeric()
-    ) |>
+    output <- tibble::tibble("Name" = colnames(da_summary_counts),
+                             "Stat sign" = da_summary_counts[1,] |>
+                               as.numeric()) |>
       dplyr::bind_rows(total_df)
 
     # If group_by is not NULL
   } else {
-
-    group_colname <- rlang::sym(object$input_params$df_colnames$group_by)
+    group_colname <-
+      rlang::sym(object$input_params$df_colnames$group_by)
 
     da_summary_counts <-
       object |>
       purrr::pluck("da_df") |>
-      dplyr::mutate(!!ic_exp_sym := 2^(!!ic_col_sym)) |>
+      dplyr::mutate(!!ic_exp_sym := 2 ^ (!!ic_col_sym)) |>
       dplyr::group_by(!!group_colname) |>
-      dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x){
+      dplyr::summarise(across(all_of(lower_bound_column_names_w_2), \(x) {
         sum(1 < x, na.rm = TRUE)
       }))
 
@@ -284,12 +282,14 @@ summary.da <- function(object, ...){
       dplyr::count()
 
     output <- da_summary_counts |>
-      dplyr::left_join(N_DECs, by="group") |>
+      dplyr::left_join(N_DECs, by = "group") |>
       t() |>
       tibble::as_tibble(.name_repair = "minimal")
 
     output <- as.data.frame(output)
-    rownames(output) = c(group_colname, unlist(lower_bound_column_names_w_2), name_of_total_col)
+    rownames(output) = c(group_colname,
+                         unlist(lower_bound_column_names_w_2),
+                         name_of_total_col)
 
   }
 
@@ -304,22 +304,15 @@ summary.da <- function(object, ...){
     end_of_print_df <- end_of_print_df + 1
   }
 
-  # top_five_rows <-
-  #   object |>
-  #   purrr::pluck("da_df") |>
-  #   dplyr::slice_head(n=5) |>
-  #   as.data.frame() |>
-  #   dplyr::mutate(dplyr::across(dplyr::all_of(lower_bound_column_names),
-  #                               \(x){paste0("       ", x)}))
-  #
-  # top_five_rows <- top_five_rows[, 1:end_of_print_df]
-  # top_five_rows <- top_five_rows |> dplyr::select(-exp_prr, -exp_ror)
+  if (print) {
+    message(cli::col_blue("Summary of Disproportionality Analysis \nNumber of SDRs \n  "))
+    print(output, row.names = !group_is_null) #Row names only needed with subgroups
 
-  message(cli::col_blue("Summary of Disproportionality Analysis \nNumber of SDRs \n  "))
-  print(output, row.names = !group_is_null) #Row names only needed with subgroups
-
-  message(c("\n", cli::col_blue(paste0("Top disproportionate DECs"))))
-  print(object, ...)
+    message(c("\n", cli::col_blue(paste0(
+      "Top disproportionate DECs"
+    ))))
+    print(object, ...)
+  }
 
   return(invisible(output))
 }
@@ -336,12 +329,16 @@ summary.da <- function(object, ...){
 #' print(da_1)
 #' @importFrom purrr flatten
 #' @importFrom stringr str_detect
-print.da <- function(x, n=10, ...) {
+print.da <- function(x, n = 10, ...) {
   # x <- drug_event_df |> da()
   # Prevent pillar package from printing negative numbers in red
-  old_option <- getOption("pillar.neg")
+  # and set the number of digits to the da-specified integer.
+  old_neg_option <- getOption("pillar.neg")
+  old_sigfig_option <- getOption("pillar.sigfig")
+  options(pillar.sigfig = x$input_params$number_of_digits)
   options(pillar.neg = FALSE)
-  on.exit(options("pillar.neg" = old_option))
+  on.exit({options("pillar.neg" = old_neg_option)
+          options("pillar.sigfig" = old_sigfig_option)})
 
   # The following code could benefit from using the OO of the pillar package, but
   # this is not priority right now.
@@ -350,65 +347,79 @@ print.da <- function(x, n=10, ...) {
 
   column_group <- list()
   da_estimators <- x$input_params$da_estimators
-  exp_estimators <- da_estimators |> stringr::str_replace("ic", "rrr")
+  exp_estimators <-
+    da_estimators |> stringr::str_replace("ic", "rrr")
 
   for (i in seq_along(da_estimators)) {
-    column_group[[i]] <- colnames_da(quantile_prob_list, da_name = da_estimators[i])
+    column_group[[i]] <-
+      build_colnames_da(quantile_prob_list, da_name = da_estimators[i])
   }
 
   # This should only be done when the last column to colour is present, otherwise
-  # glue_data will throw an error.
-  printed_by_default_tbl <- utils::capture.output(print(x$da_df, n = n, ...))
+  # glue_data will throw an error. An interactive version provided for debugging.
+  if(!interactive()){
+  printed_by_default_tbl <-
+    utils::capture.output(print(x$da_df, n = n, ...))
+  } else {
+  printed_by_default_tbl <-
+  utils::capture.output(print(x$da_df, n = n))
+  }
 
   column_names <- column_group |> purrr::flatten()
-  end_column_names <- column_names[c(2,4,6)] |> as.character()
+  end_column_names <- column_names[c(2, 4, 6)] |> as.character()
 
   all_end_column_names_present <-
     all(stringr::str_detect(printed_by_default_tbl[[2]], end_column_names))
+  cg <- list()
+  start_colour_here <- list()
 
-  if(all_end_column_names_present){
-
+  # This code could probably be compressed
+  if (all_end_column_names_present) {
     for (i in seq_along(column_group)) {
       # i = 1
-      cg_i <- column_group[[i]]
+      cg[[i]] <- column_group[[i]]
       col <- c("red", "green", "magenta")[i]
 
-      start_colour_here <- suppressWarnings(stringr::fixed(paste0("exp_", exp_estimators)))
-      start_with_colour_inserted <- suppressWarnings(stringr::fixed(paste0("{", col, " {start_colour_here[i]}")))
+      start_colour_here[seq_along(column_group)] <-
+        suppressWarnings(stringr::fixed(paste0("exp_", exp_estimators)))
+      start_with_colour_inserted <-
+        suppressWarnings(stringr::fixed(paste0("{", col, " {start_colour_here[[", i, "]]}")))
 
+      # Open with a colour {
+      printed_by_default_tbl[2] <- stringr::str_replace(printed_by_default_tbl[2],
+                                                        start_colour_here[[i]],
+                                                        start_with_colour_inserted)
+
+      # Close the colour }
       printed_by_default_tbl[2] <- stringr::str_replace(
         printed_by_default_tbl[2],
-        start_colour_here[i],
-        start_with_colour_inserted
-      )
-
-      printed_by_default_tbl[2] <- stringr::str_replace(
-        printed_by_default_tbl[2],
-        suppressWarnings(stringr::fixed(cg_i$upper)),
-        stringr::fixed("{cg_i$upper}}")
+        suppressWarnings(stringr::fixed(cg[[i]]$upper)),
+        stringr::fixed(paste0("{cg[[", i, "]]$upper}}"))
       )
 
       # The insertion of the color codes shifts the da estimator column header
       #  slightly, so we adjust:
-      add_this_number_of_spaces <- c(0, rep(1, length(da_estimators) - 1))
+      add_this_number_of_spaces <-
+        c(0, rep(1, length(da_estimators) - 1))
 
       printed_by_default_tbl[2] <- stringr::str_replace(
         printed_by_default_tbl[2],
-        stringr::fixed(paste0(da_estimators[i], add_this_number_of_spaces[i], collapse = "")),
+        stringr::fixed(
+          paste0(da_estimators[i], add_this_number_of_spaces[i], collapse = "")
+        ),
         stringr::fixed(da_estimators[i])
       )
     }
   } else {
-    message("Your console window is too narrow to support coloured printouts, reverting to non-coloured output.")
+    message(
+      "Your console width is too narrow to support coloured printouts, reverting to non-coloured output."
+    )
   }
 
   # Second and last two rows should be in grey
   last_two_rows <- length(printed_by_default_tbl) - 1
 
-  # This needs to be in coarses pieces
-
   for (i in seq_along(printed_by_default_tbl)) {
-
     # print(glue::glue_col(printed_by_default_tbl))
 
     if (!i %in% c(1, 3, last_two_rows:(last_two_rows + 1))) {
@@ -421,9 +432,11 @@ print.da <- function(x, n=10, ...) {
 
   # Print a helpful message about the sorting at the end
   sorted_by_arg <- x$input_params$sort_by
-  sorted_by_message <- paste0(
-    "(Drug-event-combinations sorted according to lower bound of ", sorted_by_arg, ")")
+  sorted_by_message <- paste0("(Drug-event-combinations sorted according to lower bound of ",
+                              sorted_by_arg,
+                              ")")
 
-  message(cli::col_grey(paste0(sorted_by_message, " \n", "# Printing x[['da_df']]")))
+  message(cli::col_grey(paste0(
+    sorted_by_message, " \n", "# Printing x[['da_df']]"
+  )))
 }
-

@@ -131,6 +131,8 @@ The drug_event_df contains two groups, in the column named "group". We can pass
 "group" as the `group_by` parameter in `df_colnames` as below.
 
 ```{r}
+#| echo = TRUE
+
 drug_event_df |> 
   head()
 
@@ -187,46 +189,41 @@ This is as the information component uses the same expected count as the
 Relative Reporting Rate (RRR), which is perhaps more well known in the 
 pharmacovigilande community.
 
+```{r}
+#| echo = TRUE 
+
+# Note the fourth column name:
+drug_event_df |> 
+  da() |> 
+  purrr::pluck("da_df") |> 
+  dplyr::select(drug:ic97.5) |> 
+  print(n=1)
+
+```
+
 ## Rule of N
-The function `da` calls a function `add_disproportionality` with 
-two parameters of interest. One is the `rule_of_N`, by default set to 3, 
+The function `da` has several input parameters. One is the `rule_of_N`, by default set to 3, 
 which is sometimes referred to as "rule of three". This sets ROR and PRR-values 
 to NA if the observed count is less than the specified N. For completeness, note that the default shrinkage 
 in the IC acts as a built in 'rule of 3', (i.e. the shrinkage of +0.5 prevents 
 the lower bound to exceed 0 at the default significance level of 95\%).
 
 ## Controlling the number of digits
-The function `da` has a parameter `number_of_digits` controls the rounding of non-count values in the output, including all expected counts, uncertainty bounds and point estimates. Note that the printing defaults of dplyr are not overridden in the package, and less digits than expected may be printed. 
-However, the additional digits are available and printed if the data frame is
-converted to a data frame first, as demonstrated below:
+The function `da` has a parameter `number_of_digits` controls the rounding of non-count values in the output, including all expected counts, uncertainty bounds and point estimates.
 
 ```{r, echo = TRUE, results = FALSE, message = FALSE}
 #| warning = FALSE
 
-output <- 
-  drug_event_df |>
-  da()
-
-print(output, n=3)
-```
-
-![](print_console_few_digits.png)
-
-```{r, echo = TRUE, results = FALSE, message = FALSE}
-
-output <- drug_event_df |>
+drug_event_df |>
   da(
     rule_of_N = 3,
-    number_of_digits = 10
-  )
-
-as.data.frame(output$da_df)
-
+    number_of_digits = 8
+  ) |> print(n = 3)
 ```
 
 ![](print_console_many_digits.png)
 
-## Can I use pvutils to get IC, PRR or ROR, when I already have the summary counts? 
+## Can I use pvutils to get IC, PRR or ROR, when I already have the observed and expected counts? 
 Yes, you can calculate point estimates with confidence or credibility intervals 
 for specific drug-event-combination if you already have the number of observed 
 reports, and other required counts such as the database total count, number of reports 
@@ -234,6 +231,7 @@ with the exposure and number of reports with the event. This can be helpful
 for instance to quality check results, e.g. from papers or other software.
 
 ```{r}
+#| echo = TRUE
 prr(obs = 10, n_drug = 1000, n_event_prr = 200, n_tot_prr = 10000)
 ror(a = 10, b = 20, c = 200, d = 10000)
 ic(obs = 10, exp = 5)

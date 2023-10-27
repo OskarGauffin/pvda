@@ -18,8 +18,8 @@ to be expected given a comparator or \emph{background}. Note that shrinkage
 \item{shrinkage}{A non-negative numeric value, to be added to
 observed and expected count. Default is 0.5.}
 
-\item{conf_lvl}{Confidencelevel of confidence or credibility intervals.
-Default is 0.95 (i.e. 95 \% confidence interval)}
+\item{conf_lvl}{Confidence level of confidence or credibility intervals.
+Default is 0.95 (i.e. 95 \% confidence interval).}
 }
 \value{
 A tibble with three columns (point estimate and credibility bounds).
