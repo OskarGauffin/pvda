@@ -420,13 +420,11 @@ print.da <- function(x, n = 10, ...) {
   last_two_rows <- length(printed_by_default_tbl) - 1
 
   for (i in seq_along(printed_by_default_tbl)) {
-    # print(glue::glue_col(printed_by_default_tbl))
-
-    if (!i %in% c(1, 3, last_two_rows:(last_two_rows + 1))) {
-      print(glue::glue_col(printed_by_default_tbl[i]))
-
+    # Make first row blue
+    if (i %in% 1) {
+      message(cli::col_blue(printed_by_default_tbl[i]))
     } else {
-      message(cli::col_grey(printed_by_default_tbl[i]))
+      print(glue::glue_col(printed_by_default_tbl[i]))
     }
   }
 
