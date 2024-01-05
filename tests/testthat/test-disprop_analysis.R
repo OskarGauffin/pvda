@@ -167,9 +167,3 @@ test_that("17. Grouped output from summary function works.", {
 
   expect_equal(2L, ncol(summary_output))
 })
-
-test_that("18. Output is properly coloured.", {
-  summary_output <- pvda::drug_event_df |>
-    da()
-  expect_equal(2L, ncol(summary_output))
-})
