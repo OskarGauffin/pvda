@@ -1,4 +1,4 @@
-# pvutils
+# pvda
 
 An R package for executing disproportionality analyses with ic, prr and ror. Under development, but hope to release first version within the upcoming months. 
 
