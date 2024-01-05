@@ -110,12 +110,12 @@ da <- function(df = NULL,
   if (is.null(df_colnames$group_by)) {
     # No subgrouping provided:
     output <- df |>
-      pvutils::add_expected_counts(
+      pvda::add_expected_counts(
         df_colnames = df_colnames,
         df_syms = df_syms,
         expected_count_estimators = expected_count_estimators
       ) |>
-      pvutils::add_disproportionality(
+      pvda::add_disproportionality(
         df_syms = df_syms,
         da_estimators = da_estimators,
         conf_lvl = conf_lvl,
@@ -189,7 +189,7 @@ da <- function(df = NULL,
 
 #' @title Summary function for disproportionality objects
 #' @description Provides summary counts of SDRs and shows the top five DECs
-#' @param object A S3 obj of class "da", output from \code{pvutils::da()}.
+#' @param object A S3 obj of class "da", output from \code{pvda::da()}.
 #' @param print Do you want to print the output to the console. Defaults to TRUE.
 #' @param ... For passing additional parameters to extended classes.
 #' @return Passes a tibble with the SDR counts invisibly.
@@ -319,7 +319,7 @@ summary.da <- function(object, print = TRUE, ...) {
 
 # 1.2 print.da ----
 #' print function for da objects
-#' @param x A S3 obj of class "da", output from \code{pvutils::da()}.
+#' @param x A S3 obj of class "da", output from \code{pvda::da()}.
 #' @param n Control the number of rows to print.
 #' @inheritParams summary.da
 #' @return Nothing, but prints the tibble da_df in the da object.

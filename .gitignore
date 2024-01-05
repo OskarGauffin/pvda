@@ -2,8 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-pvutils.Rcheck/
-pvutils*.tar.gz
-pvutils*.tgz
+pvda.Rcheck/
+pvda*.tar.gz
+pvda*.tgz
 inst/doc
 docs

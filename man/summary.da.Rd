@@ -7,7 +7,7 @@
 \method{summary}{da}(object, print = TRUE, ...)
 }
 \arguments{
-\item{object}{A S3 obj of class "da", output from \code{pvutils::da()}.}
+\item{object}{A S3 obj of class "da", output from \code{pvda::da()}.}
 
 \item{print}{Do you want to print the output to the console. Defaults to TRUE.}
 

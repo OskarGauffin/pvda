@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(pvutils)
+library(pvda)
 
-test_check("pvutils")
+test_check("pvda")

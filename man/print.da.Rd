@@ -7,7 +7,7 @@
 \method{print}{da}(x, n = 10, ...)
 }
 \arguments{
-\item{x}{A S3 obj of class "da", output from \code{pvutils::da()}.}
+\item{x}{A S3 obj of class "da", output from \code{pvda::da()}.}
 
 \item{n}{Control the number of rows to print.}
 

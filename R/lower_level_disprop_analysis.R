@@ -176,7 +176,7 @@ count_expected_ror <- function(count_dt) {
 #' # Note that obs and exp can be vectors (of equal length, no recycling allowed)
 #' ic(obs = c(20, 30), exp = c(10, 10))
 #' @importFrom Rdpack reprompt
-#' @references \insertRef{Nor_n_2011}{pvutils}
+#' @references \insertRef{Nor_n_2011}{pvda}
 #' @export
 
 ic <- function(obs = NULL,
@@ -255,7 +255,7 @@ ic <- function(obs = NULL,
 #'
 #' @examples
 #'
-#' pvutils::prr(
+#' pvda::prr(
 #'   obs = 5,
 #'   n_drug = 10,
 #'   n_event_prr = 20,
@@ -263,16 +263,16 @@ ic <- function(obs = NULL,
 #' )
 #'
 #' # Note that input parameters can be vectors (of equal length, no recycling)
-#' pvutils::prr(
+#' pvda::prr(
 #'   obs = c(5, 10),
 #'   n_drug = c(10, 20),
 #'   n_event_prr = c(15, 30),
 #'   n_tot_prr = c(10000, 10000)
 #' )
 #' @references
-#' \insertRef{Montastruc_2011}{pvutils}
+#' \insertRef{Montastruc_2011}{pvda}
 #'
-#' \insertRef{MscThesis}{pvutils}
+#' \insertRef{MscThesis}{pvda}
 #' @export
 #'
 prr <- function(obs = NULL,
@@ -348,7 +348,7 @@ prr <- function(obs = NULL,
 #'
 #' @examples
 #'
-#' pvutils::ror(
+#' pvda::ror(
 #'   a = 5,
 #'   b = 10,
 #'   c = 20,
@@ -356,14 +356,14 @@ prr <- function(obs = NULL,
 #' )
 #'
 #' # Note that a, b, c and d can be vectors (of equal length, no recycling)
-#' pvutils::ror(
+#' pvda::ror(
 #'   a = c(5, 10),
 #'   b = c(10, 20),
 #'   c = c(15, 30),
 #'   d = c(10000, 10000)
 #' )
 #' @references
-#' \insertRef{Montastruc_2011}{pvutils}
+#' \insertRef{Montastruc_2011}{pvda}
 #' @export
 #'
 ror <- function(a = NULL,
@@ -594,8 +594,8 @@ round_and_sort_by_lower_da_limit <- function(df = NULL,
   }
 
   sort_by_colname <- conf_lvl |>
-    pvutils::conf_lvl_to_quantile_prob() |>
-    pvutils::build_colnames_da(da_name = sort_by) |>
+    pvda::conf_lvl_to_quantile_prob() |>
+    pvda::build_colnames_da(da_name = sort_by) |>
     purrr::pluck("lower")
 
   # Take the mean lower quantile for the chosen da and sort by it.

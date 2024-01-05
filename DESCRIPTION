@@ -1,6 +1,6 @@
-Package: pvutils
+Package: pvda
 Type: Package
-Title: Helpful Functions for Pharmacovigilance
+Title: Helpful Disproportionality Functions for Pharmacovigilance
 Version: 0.0.1
 Author: Oskar Gauffin
 Maintainer: Oskar Gauffin <oskar.gauffin@hotmail.com>
@@ -37,5 +37,5 @@ Imports:
     utils (>= 4.1.3)
 Depends: 
     R (>= 2.10)
-URL: https://oskargauffin.github.io/pvutils/
+URL: https://oskargauffin.github.io/pvda/
 RdMacros: Rdpack

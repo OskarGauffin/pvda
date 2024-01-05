@@ -70,7 +70,7 @@ declared above, i.e. with subtraction.
 }
 \examples{
 
-pvutils::prr(
+pvda::prr(
   obs = 5,
   n_drug = 10,
   n_event_prr = 20,
@@ -78,7 +78,7 @@ pvutils::prr(
 )
 
 # Note that input parameters can be vectors (of equal length, no recycling)
-pvutils::prr(
+pvda::prr(
   obs = c(5, 10),
   n_drug = c(10, 20),
   n_event_prr = c(15, 30),
@@ -86,7 +86,7 @@ pvutils::prr(
 )
 }
 \references{
-\insertRef{Montastruc_2011}{pvutils}
+\insertRef{Montastruc_2011}{pvda}
 
-\insertRef{MscThesis}{pvutils}
+\insertRef{MscThesis}{pvda}
 }

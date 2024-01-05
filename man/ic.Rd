@@ -75,5 +75,5 @@ ic(obs = 20, exp = 10)
 ic(obs = c(20, 30), exp = c(10, 10))
 }
 \references{
-\insertRef{Nor_n_2011}{pvutils}
+\insertRef{Nor_n_2011}{pvda}
 }

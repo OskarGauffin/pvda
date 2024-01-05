@@ -1,0 +1,110 @@
+---
+title: "Omega"
+author: "Oskar Gauffin"
+date: '2023-11-10'
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Introduction
+This document was written to make the process of calculating the drug-drug-interaction estimate $\Omega$ "Omega" a bit less daunting, by demonstrating the calculation of it with numbers. A more mathematical presentation of this estimator is available in Norén et al (1).
+
+## How to calculate the drug-drug interaction measure "Omega"
+
+Table II in (1) provides us with the quantities we require to calculate the $\Omega$ as well as the 
+$\Omega_{025}$, that is the lower limit of a 95\% credibility interval. If the $\Omega_{025}$ is greater than zero, the interaction is statistically significant. $\Omega$ in itself measures the size of the potential interaction (on a log2-scale). 
+We will start with the second column of table II, where counts from Diuretics, NSAIDs and Cardiac events are presented. We first present each count with a description.
+
+$$ n_{111} = 25 $$
+
+
+This means that the number of reports with both drugs and the event of interest is 25. The notation is that the first position is the Diuretics, the second is the NSAIDs and the third position regards the event.
+
+$$ n_{11\cdot} = 278 $$
+This means that the number of reports listing both drugs is 278. The dot in third position means that you have included both those with and without the event. 
+
+$$ n_{1\cdot1} = 78 $$
+
+This means that the number of reports listing Diuretics and the event is 78.
+
+$$ n_{\cdot11} = 67  $$
+
+This means that the number of reports listing NSAIDs and the event is 67.
+
+$$ n_{1\cdot \cdot} = 1775 $$
+
+This means that the total number of reports with Diuretics is 1775.
+
+$$ n_{\cdot 1 \cdot} = 1613 $$
+
+This means that the total number of reports with NSAIDs is 1613.
+
+$$ n_{\cdot\cdot1} = 305 $$
+
+This means that the total number of reports with the event is 305.
+
+$$ n_{\cdot \cdot \cdot}= 9822 $$
+
+This means that the total number of reports, in the database, is 9822. That is, this is one of the two example columns were $\Omega$ was not calculated in the, at that time, 3.2 million reports large VigiBase.
+
+
+Next in the table, values for $f_{00}, f_{01}, f_{10}, f_{11}$ are presented. These are defined in equation 10 in the (1), e.g.
+
+$$f_{00} = \frac{n_{001}}{n_{00\cdot}}$$
+However, several values needed to calculate these, such as $n_{001}$, are not presented in table II. These counts are easily available from the source data, but one can also derive them from the table II, for instance by drawing a Venn Diagram with three circles, one for the event, and two for each of the drugs. This give you all the counts you need, and we list all of them for completeness:
+
+$$ 
+\begin{matrix}
+n_{111} = 25 \\\\ 
+   n_{110} = 253 \\\\
+   n_{101} = 53 \\\\
+   n_{011} = 42 \\\\
+   n_{100} = 1444 \\\\
+   n_{010} = 1293 \\\\
+   n_{001} = 185 \\\\
+   n_{000} = 6527
+\end{matrix}
+$$
+
+
+With these quantities, we can now calculate 
+
+$$ f_{00} = \frac{n_{001}}{n_{00\cdot}} = \frac{n_{001}}{n_{000} + n_{001}} = \frac{185}{6527 + 185} \approx 0.0276$$
+$$ f_{10} = \frac{n_{101}}{n_{10\cdot}} = \frac{n_{101}}{n_{100} + n_{101}} = \frac{53}{1444 + 53} \approx 0.0354 $$ 
+
+
+$$ f_{01} =  \frac{n_{011}}{n_{01\cdot}} = \frac{n_{011}}{n_{010} + n_{011}} = \frac{42}{1293 + 42} \approx 0.0315 $$ 
+
+$$ f_{11} = \frac{n_{111}}{n_{11\cdot}} = \frac{n_{111}}{n_{110} + n_{111}} = \frac{25}{253 + 25} \approx 0.09  $$
+
+From these, we now calculate the $g_{11}$ from equation 16 in (1).
+
+$$g_{11} = 1- \frac{1}{max(\frac{f_{00}}{1-f_{00}}, \frac{f_{10}}{1-f_{10}}) + max(\frac{f_{00}}{1-f_{00}}, \frac{f_{01}}{1-f_{01}}) - \frac{f_{00}}{1-f_{00}} + 1} \approx $$
+
+$$ 1- \frac{1}{max(\frac{0.0276}{1-0.0276}, \frac{0.0354}{1-0.0354}) + max(\frac{0.0276}{1-0.0276}, \frac{0.0315}{1-0.0315}) - \frac{0.0276}{1-0.0276} + 1} \approx 0.0392  $$
+By multiplying this $g_{11}$ with $n_{11\cdot}$ we arrive at the expected number of reports under the assumption that there is no interaction. 
+
+$$ E_{111} = g_{11} \times n_{11\cdot} = 0.0392 \times  278 = 10.91 $$ 
+
+And with this, we can finally calculate the $\Omega$, using the shrinkage parameter $\alpha=0.5$ 
+
+$$\Omega = log_2\frac{n_{111} + \alpha }{E_{111} + \alpha} =  log_2\frac{25 + 0.5 }{10.91 + 0.5} \approx 1.16 $$
+
+For the $\Omega_{025}$ we require the quantiles of the gamma distribution. These are available in most computational software, such as Excel, R, Python, etc. We are looking for the 2.5th quantile of a gamma distribution with shape parameter 25.5 and rate parameter 11.61, and in R this is done by the following line of code: 
+
+```{r, echo=TRUE}
+
+log2(qgamma(p=0.025, shape=25.5, rate=11.41))
+```
+
+That is $\Omega_{025} \approx 0.54$ and $\Omega = 1.16$. This implies, as $\Omega_{025}$ > 0, that the interaction of NSAIDs and Diuretics would be considered statistically significant for the outcome, Cardiac events. 
+
+# References
+Norén GN, Sundberg R, Bate A, Edwards IR. A statistical methodology for drug-drug interaction surveillance. Stat Med. 2008 Jul 20;27(16):3057-70. doi: 10.1002 sim.3247. Erratum in: Stat Med. 2008 Dec 20;27(29):6271-2. PMID: 18344185.
+

@@ -13,13 +13,13 @@ editor_options:
 ---
 # Introduction
 ```{r, include=FALSE}
-library(pvutils)
+library(pvda)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
 During the life cycle of a medicinal product, knowledge of the safety profile 
 continues to accumulate post market introduction. Adverse event reports 
-collected through spontaneous reporting plays an instrumental part in this 
+collected through spontaneous reporting play an instrumental part in this 
 development.
 
 Adverse event report databases often cover a wide range of drugs 
@@ -27,7 +27,7 @@ and events, beyond what can be feasibly monitored through manual work.
 Disproportionality analysis is thus often used to highlight drug-event-combinations 
 of potential interest for further qualitative manual case-by-case assessment. 
 
-The `pvutils` package provides three disproportionality estimators: 
+The `pvda` package provides three disproportionality estimators: 
 the proportional reporting rate (PRR), the reporting odds ratio (ROR) 
 and the information component (IC). It takes report level data as input, and
 outputs estimates for each drug-event-combination, possibly stratified by some
@@ -223,7 +223,7 @@ drug_event_df |>
 
 ![](print_console_many_digits.png)
 
-## Can I use pvutils to get IC, PRR or ROR, when I already have the observed and expected counts? 
+## Can I use pvda to get IC, PRR or ROR, when I already have the observed and expected counts? 
 Yes, you can calculate point estimates with confidence or credibility intervals 
 for specific drug-event-combination if you already have the number of observed 
 reports, and other required counts such as the database total count, number of reports 
@@ -240,19 +240,19 @@ ic(obs = 10, exp = 5)
 For further details on the specific input parameters, consult the documentation 
 of each function. 
 
-## How fast is pvutils?
+## How fast is pvda?
 The data.table-package (through "dtplyr") is used for fast execution. A test of 
 the execution speed was made using the `vaers` R package, available on 
 [gitlab](https://gitlab.com/iembry/vaers.git). The `vaers` package contains 
 data from VAERS from years 1990 - 2018, resulting in 4 146 778 rows to
-be processed by `da` in `pvutils`. Execution time on a regular laptop was less 
+be processed by `da` in `pvda`. Execution time on a regular laptop was less 
 than 10 seconds.
 
 ```{r, include=FALSE}
-# plot_udfs_as_graph <- function(package_name = "pvutils"){
+# plot_udfs_as_graph <- function(package_name = "pvda"){
 
-# library(pvutils)
-# package_name <- "pvutils"
+# library(pvda)
+# package_name <- "pvda"
 # ns_names <- getNamespaceExports(package_name)
 # ns_names_w_id <- dplyr::bind_cols("id" = seq_along(ns_names), "name" = ns_names)
 # edge_output <- list()

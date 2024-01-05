@@ -53,7 +53,7 @@ with the resulting confidence interval for significance level \eqn{\alpha}
 }
 \examples{
 
-pvutils::ror(
+pvda::ror(
   a = 5,
   b = 10,
   c = 20,
@@ -61,7 +61,7 @@ pvutils::ror(
 )
 
 # Note that a, b, c and d can be vectors (of equal length, no recycling)
-pvutils::ror(
+pvda::ror(
   a = c(5, 10),
   b = c(10, 20),
   c = c(15, 30),
@@ -69,5 +69,5 @@ pvutils::ror(
 )
 }
 \references{
-\insertRef{Montastruc_2011}{pvutils}
+\insertRef{Montastruc_2011}{pvda}
 }

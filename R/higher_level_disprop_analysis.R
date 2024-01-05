@@ -44,12 +44,12 @@ grouped_da <- function(df = NULL,
 
   output <-
     df |>
-    pvutils::add_expected_counts(
+    pvda::add_expected_counts(
       df_colnames = df_colnames,
       df_syms = df_syms,
       expected_count_estimators = expected_count_estimators
     ) |>
-    pvutils::add_disproportionality(
+    pvda::add_disproportionality(
       df_syms = df_syms,
       da_estimators = da_estimators,
       conf_lvl = conf_lvl,
@@ -183,7 +183,7 @@ add_disproportionality <- function(df = NULL,
   df <- df
 
   if ("ic" %in% da_estimators) {
-    ic_df <- pvutils::ic(
+    ic_df <- pvda::ic(
       obs = df$obs,
       exp = df$exp_rrr,
       conf_lvl = conf_lvl
@@ -194,7 +194,7 @@ add_disproportionality <- function(df = NULL,
   }
 
   if ("prr" %in% da_estimators) {
-    prr_df <- pvutils::prr(
+    prr_df <- pvda::prr(
       obs = df$obs,
       n_drug = df$n_drug,
       n_event_prr = df$n_event_prr,
@@ -208,7 +208,7 @@ add_disproportionality <- function(df = NULL,
   }
 
   if ("ror" %in% da_estimators) {
-    ror_df <- pvutils::ror(
+    ror_df <- pvda::ror(
       a = df$obs,
       b = df$b,
       c = df$c,
