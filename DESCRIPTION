@@ -1,11 +1,11 @@
 Package: pvda
 Type: Package
-Title: Helpful Disproportionality Functions for Pharmacovigilance
+Title: Disproportionality Functions for Pharmacovigilance
 Version: 0.0.1
 Author: Oskar Gauffin
 Maintainer: Oskar Gauffin <oskar.gauffin@hotmail.com>
-Description: Provides functions useful for statistical signal detection, i.e. disproportionality analysis.
-License: GPL (>= 3) + file LICENSE
+Description: Provides functions for statistical signal detection, i.e. disproportionality analysis.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Suggests: 

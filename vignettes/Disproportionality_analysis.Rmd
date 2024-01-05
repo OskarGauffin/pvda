@@ -322,7 +322,6 @@ than 10 seconds.
 # ))
 ```
 
-
 ```{r, echo=FALSE, fig.height = 8, fig.width = 8}
 # suppressWarnings(DiagrammeR::render_graph(graph,
 #   layout = "tree",
