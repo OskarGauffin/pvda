@@ -1,19 +1,11 @@
 # TODO
 
+# https://cran.r-project.org/web/packages/submission_checklist.html
+# Check the R packages book
+
 # The inheritparams is a bit of a mess right now
-# Rewrite ic docs
 # Fix the license
 
 # Do QC on the ROR; PRR; IC values, in point and bounds
 # Set up pkgdown site
 # commit to CRAN
-
-### Long term, want to, not for now
-# Should not be a "df" object when running? Combine with setDT.
-#  Updates in dtplyr should make it possible to bake in the group by in the
-#  mutate.
-# setDT instead of as.data.frame ?
-# Add wrappers to quantreg on median TTO with xy-bootstrap CIs
-# Temporal disproportionality for a specific set of drug-event-pairs
-# Add possibility to compare two backgrounds
-# Shiny app
