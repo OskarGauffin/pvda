@@ -4,7 +4,7 @@ Title: Disproportionality Functions for Pharmacovigilance
 Version: 0.0.1
 Author: Oskar Gauffin
 Maintainer: Oskar Gauffin <oskar.gauffin@hotmail.com>
-Description: Provides functions for statistical signal detection, i.e. disproportionality analysis.
+Description: Provides functions for performing disproportionality analysis using the information component, proportional reporting rate and the reporting odds ratio. 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
