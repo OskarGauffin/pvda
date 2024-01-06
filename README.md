@@ -11,17 +11,23 @@ An R package for executing disproportionality analyses with information componen
 # Installation
 
 ``` r
-install.packages("pvda")
+# Install from GitHub:
+devtools::install_github("OskarGauffin/pvda")
+
+# Not yet on CRAN, but once there:
+# install.packages("pvda")
 ```
 
 # Example code
 
 ``` r
+library("pvda")
+
 da1 <- 
 drug_event_df |> 
 pvda::da()
 
-da1
+summary(da1)
 ```
 
 
