@@ -1,6 +1,6 @@
 # pvda
 
-An R package for executing disproportionality analyses with information component (IC) proportional reporting rate (PRR) and reporting odds ratio (ROR). 
+An R package for executing disproportionality analyses with information component (IC), proportional reporting rate (PRR) and reporting odds ratio (ROR). 
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvutils/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvutils?branch=main)
@@ -11,7 +11,7 @@ An R package for executing disproportionality analyses with information componen
 # Installation
 
 ``` r
-# Install from GitHub:
+# Install development version from GitHub:
 devtools::install_github("OskarGauffin/pvda")
 
 # Not yet on CRAN, but once there:
@@ -19,17 +19,25 @@ devtools::install_github("OskarGauffin/pvda")
 ```
 
 # Example code
+To run a disproportionality analysis, pass the adverse event report-level data to function *da* as:
 
 ``` r
 library("pvda")
 
 da1 <- 
 drug_event_df |> 
-pvda::da()
+da()
 
 summary(da1)
 ```
 
+The output object contains summary counts, as well as disproportionality point and interval estimates, and can be accessed as a regular list object:
+
+``` r
+
+da_results <- 
+da1$da_df
+```
 
 
 

@@ -5,9 +5,9 @@
 ^\.covrignore$
 ^codecov\.yml$
 ^\.github$
-^pvutils\.Rcheck$
-^pvutils.*\.tar\.gz$
-^pvutils.*\.tgz$
+^pvda\.Rcheck$
+^pvda.*\.tar\.gz$
+^pvda.*\.tgz$
 ^LICENSE\.md$
 ^data-raw$
 ^_pkgdown\.yml$

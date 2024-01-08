@@ -95,9 +95,12 @@ list_of_colnames <-
     group_by = "group"
   )
 
-da_2 <-
+
+\dontrun{
+ da_2 <-
   drug_event_df |>
   da(df_colnames = list_of_colnames)
+}
 
 # If columns in your df have different names than the default ones,
 # you can specify the column names in the df_colnames parameter list:
