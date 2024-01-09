@@ -4,12 +4,14 @@
                   macos-latest (release), 
                   windows-latest (release)
                   
-0 Errors | 0 Warnings | O Notes
-                  
 * rhub - Ubuntu Linux 20.04.1 LTS, R-release, GCC
          Windows Server 2022, R-devel, 64 bit
+         Fedora Linux, R-devel, clang, gfortran
 
-NOTES (both platforms together):
+## Check results 
+NOTES (all platforms together):
+
+0 Errors | 0 Warnings
 
 Possibly misspelled words in DESCRIPTION:
   disproportionality (7:48)
@@ -32,4 +34,5 @@ Found the following files/directories:
   
 COMMENT: From questions and answers on stack overflow, these notes do not seem related to the submitted package. 
 
-
+## Downstream dependencies
+There are currently no downstream dependencies for this package. 
