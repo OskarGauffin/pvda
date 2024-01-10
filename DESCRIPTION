@@ -2,10 +2,11 @@ Package: pvda
 Type: Package
 Title: Disproportionality Functions for Pharmacovigilance
 Version: 0.0.1
-Author: Oskar Gauffin
-Maintainer: Oskar Gauffin <oskar.gauffin@hotmail.com>
+Authors@R: 
+        person("Oskar", "Gauffin", email = "oskar.gauffin@hotmail.com", 
+        role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1593-356X"))
 Description: Provides functions for performing disproportionality analysis using the information component, proportional reporting rate and the reporting odds ratio. 
-License: GPL (>= 3)
+License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 

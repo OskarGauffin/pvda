@@ -17,4 +17,5 @@
 ^udf_network_graph$
 ^debug_scripts$
 ^.tex$
-^crancomments.md$
+^cran-comments.md$
+^backlog$
