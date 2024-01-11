@@ -5,7 +5,7 @@ Version: 0.0.1
 Authors@R: 
         person("Oskar", "Gauffin", email = "oskar.gauffin@hotmail.com", 
         role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1593-356X"))
-Description: Provides functions for performing disproportionality analysis using the information component, proportional reporting rate and the reporting odds ratio. 
+Description: The pvda package provides functions for performing disproportionality analysis using the information component, proportional reporting rate and the reporting odds ratio. The anticipated use is passing data to the da() function, which executed the disproportionality analysis according to the specified function arguments. 
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 LazyData: true

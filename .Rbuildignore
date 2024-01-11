@@ -8,6 +8,7 @@
 ^pvda\.Rcheck$
 ^pvda.*\.tar\.gz$
 ^pvda.*\.tgz$
+^omega.Rmd$
 ^LICENSE\.md$
 ^data-raw$
 ^_pkgdown\.yml$
@@ -19,3 +20,4 @@
 ^.tex$
 ^cran-comments.md$
 ^backlog$
+^CRAN-SUBMISSION$

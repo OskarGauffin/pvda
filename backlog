@@ -3,7 +3,6 @@
 
 # https://cran.r-project.org/web/packages/submission_checklist.html
 # Check the R packages book
-## Write better readme and news
 # devtools::relase()
 
 
