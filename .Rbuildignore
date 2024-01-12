@@ -8,7 +8,7 @@
 ^pvda\.Rcheck$
 ^pvda.*\.tar\.gz$
 ^pvda.*\.tgz$
-^omega.Rmd$
+^How_to_calculate_the_omega.Rmd$
 ^LICENSE\.md$
 ^data-raw$
 ^_pkgdown\.yml$

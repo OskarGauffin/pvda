@@ -3,9 +3,9 @@
 An R package for executing disproportionality analyses with information component (IC), proportional reporting rate (PRR) and reporting odds ratio (ROR). 
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvutils/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvutils?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvda/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvda?branch=main)
 
-[![R-CMD-check](https://github.com/OskarGauffin/pvutils/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OskarGauffin/pvutils/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/OskarGauffin/pvda/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OskarGauffin/pvda/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # Installation
