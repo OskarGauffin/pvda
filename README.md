@@ -11,7 +11,7 @@ An R package for executing disproportionality analyses with information componen
 # Installation
 
 ``` r
-# Install development version from GitHub:
+# Install development version from GitHub using devtools:
 devtools::install_github("OskarGauffin/pvda")
 
 # Not yet on CRAN, but once there:
