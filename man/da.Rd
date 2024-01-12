@@ -82,6 +82,7 @@ Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).
 
 \examples{
 ### Run a disproportionality analysis
+\dontrun{
 da_1 <-
   drug_event_df |>
   da()
@@ -95,12 +96,9 @@ list_of_colnames <-
     group_by = "group"
   )
 
-
-\dontrun{
  da_2 <-
   drug_event_df |>
   da(df_colnames = list_of_colnames)
-}
 
 # If columns in your df have different names than the default ones,
 # you can specify the column names in the df_colnames parameter list:
@@ -114,5 +112,6 @@ list_of_colnames$report_id <- "ReportID"
 da_3 <-
   renamed_df |>
   da(df_colnames = list_of_colnames)
+}
 
 }

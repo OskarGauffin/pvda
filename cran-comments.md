@@ -1,3 +1,22 @@
+## Resubmission
+
+This is a resubmission. In this version I have: 
+
+* Corrected four URLs in the README.md file. An old github repo name caused an "possibly invalid URL" as those URLs were redirected automatically to the new github repo name.
+
+* Wrapped time consuming examples in the noted function in \dontrun. 
+
+* For these two notes: 
+
+"Running R code in ‘testthat.R’ had CPU time 10.2 times elapsed time" 
+"Re-building vignettes had CPU time 7.3 times elapsed time"
+
+I've followed advice from stack overflow and included an onLoad-function which limits the number of cores used (OMP_THREAD_LIMIT" = 2). 
+
+For completeness, this is the post I followed https://stackoverflow.com/questions/77323811/r-package-to-cran-had-cpu-time-5-times-elapsed-time 
+and this post suggests that it should cover the vignette note as well:
+https://www.mail-archive.com/r-package-devel@r-project.org/msg08734.html
+
 ## Test environments
 * local windows 10 machine, R 4.3.1
 * github actions: ubuntu-latest (devel, release, oldrel-1), 

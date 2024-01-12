@@ -26,6 +26,7 @@
 #' corresponds to a drug-event pair.
 #' @examples
 #' ### Run a disproportionality analysis
+#' \dontrun{
 #' da_1 <-
 #'   drug_event_df |>
 #'   da()
@@ -39,12 +40,9 @@
 #'     group_by = "group"
 #'   )
 #'
-#'
-#' \dontrun{
 #'  da_2 <-
 #'   drug_event_df |>
 #'   da(df_colnames = list_of_colnames)
-#' }
 #'
 #' # If columns in your df have different names than the default ones,
 #' # you can specify the column names in the df_colnames parameter list:
@@ -58,6 +56,7 @@
 #' da_3 <-
 #'   renamed_df |>
 #'   da(df_colnames = list_of_colnames)
+#' }
 #'
 #' @export
 #' @importFrom checkmate qassert
@@ -328,8 +327,13 @@ summary.da <- function(object, print = TRUE, ...) {
 #' @return Nothing, but prints the tibble da_df in the da object.
 #' @export
 #' @examples
-#' da_1 <- drug_event_df |> da()
+#'
+#' \dontrun{
+#' da_1 <-
+#' drug_event_df |>
+#' da()
 #' print(da_1)
+#' }
 #' @importFrom purrr flatten
 #' @importFrom stringr str_detect
 print.da <- function(x, n = 10, ...) {

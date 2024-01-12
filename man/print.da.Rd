@@ -20,6 +20,11 @@ Nothing, but prints the tibble da_df in the da object.
 print function for da objects
 }
 \examples{
-da_1 <- drug_event_df |> da()
+
+\dontrun{
+da_1 <-
+drug_event_df |>
+da()
 print(da_1)
+}
 }
