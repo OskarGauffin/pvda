@@ -18,5 +18,7 @@ Calculates equi-tailed quantile probabilities from a
 confidence level
 }
 \examples{
+\dontrun{
 conf_lvl_to_quantile_prob(0.95)
+}
 }

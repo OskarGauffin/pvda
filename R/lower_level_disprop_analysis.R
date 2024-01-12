@@ -171,8 +171,9 @@ count_expected_ror <- function(count_dt) {
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #'
 #' @examples
+#' \dontrun{
 #' ic(obs = 20, exp = 10)
-#'
+#' }
 #' # Note that obs and exp can be vectors (of equal length, no recycling allowed)
 #' ic(obs = c(20, 30), exp = c(10, 10))
 #' @importFrom Rdpack reprompt
@@ -254,13 +255,14 @@ ic <- function(obs = NULL,
 #' Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.
 #'
 #' @examples
-#'
-#' pvda::prr(
+#' \dontrun{
+#' prr(
 #'   obs = 5,
 #'   n_drug = 10,
 #'   n_event_prr = 20,
 #'   n_tot_prr = 10000
 #' )
+#'
 #'
 #' # Note that input parameters can be vectors (of equal length, no recycling)
 #' pvda::prr(
@@ -269,6 +271,7 @@ ic <- function(obs = NULL,
 #'   n_event_prr = c(15, 30),
 #'   n_tot_prr = c(10000, 10000)
 #' )
+#' }
 #' @references
 #' \insertRef{Montastruc_2011}{pvda}
 #'
@@ -348,7 +351,8 @@ prr <- function(obs = NULL,
 #'
 #' @examples
 #'
-#' pvda::ror(
+#' \dontrun{
+#' ror(
 #'   a = 5,
 #'   b = 10,
 #'   c = 20,
@@ -362,6 +366,7 @@ prr <- function(obs = NULL,
 #'   c = c(15, 30),
 #'   d = c(10000, 10000)
 #' )
+#' }
 #' @references
 #' \insertRef{Montastruc_2011}{pvda}
 #' @export
@@ -407,7 +412,9 @@ ror <- function(a = NULL,
 #' Default is 0.95 (i.e. 95 \% confidence interval).
 #' @return A list with two numerical vectors, "lower" and "upper".
 #' @examples
+#' \dontrun{
 #' conf_lvl_to_quantile_prob(0.95)
+#' }
 #' @export
 conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
   checkmate::qassert(conf_lvl, "N1[0,1]")

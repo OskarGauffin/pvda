@@ -12,6 +12,7 @@ test_that("1-3. Function ic works", {
   expect_equal(test_df[, 2], expected_output[, 2])
   expect_equal(test_df[, 3], expected_output[, 3])
 })
+
 test_that("4. Function ror works", {
   test_df <- ror(1:2, 2:3, 3:4, 4:5)
 
@@ -25,6 +26,7 @@ test_that("4. Function ror works", {
   expect_equal(test_df[, 2], expected_output[, 2])
   # expect_equal(test_df[, 3], expected_output[, 3])
 })
+
 test_that("5-10. Function add_expected_count works", {
   df_colnames <- list(
     report_id = "report_id",
@@ -39,9 +41,9 @@ test_that("5-10. Function add_expected_count works", {
   })
 
   produced_output <- pvda::add_expected_counts(pvda::drug_event_df,
-    df_colnames,
-    df_syms = df_syms,
-    expected_count_estimators = c("rrr", "prr", "ror")
+                                               df_colnames,
+                                               df_syms = df_syms,
+                                               expected_count_estimators = c("rrr", "prr", "ror")
   )
 
   # Should return as many rows as there are unique report_ids in drug_event_df
@@ -59,6 +61,7 @@ test_that("5-10. Function add_expected_count works", {
   expect_equal(first_row$n_event_prr, first_row$c)
   expect_equal(first_row$n_tot_prr, diff(as.numeric(first_row[, c("n_drug", "n_tot")])))
 })
+
 test_that("11. The whole disproportionality function chain runs without NA output except in PRR and ROR", {
   output <- pvda::drug_event_df |>
     pvda::da() |>
@@ -69,6 +72,7 @@ test_that("11. The whole disproportionality function chain runs without NA outpu
 
   expect_equal(FALSE, any(is.na(output)))
 })
+
 test_that("12. The grouping functionality runs", {
   drug_event_df_with_grouping <- pvda::drug_event_df |>
     dplyr::mutate("group" = report_id %% 2)
@@ -91,6 +95,7 @@ test_that("12. The grouping functionality runs", {
 
   expect_equal(first_row_ic_group_0, manual_calc_ic_first_row_group_0)
 })
+
 test_that("13. Custom column names can be passed through the df_colnames list", {
   drug_event_df_custom_names <- pvda::drug_event_df |>
     dplyr::rename(RepId = report_id, Drug = drug, Event = event)
@@ -107,6 +112,7 @@ test_that("13. Custom column names can be passed through the df_colnames list", 
 
   expect_equal(custom_colnames, c("Drug", "Event"))
 })
+
 test_that("14. Sorting works as expected", {
   # Repeated from test above on grouping
   da_1 <- drug_event_df |>
@@ -144,11 +150,12 @@ test_that("14. Sorting works as expected", {
     dplyr::pull("ic2.5") |>
     (\(x){
       all(x == da_1 |>
-        dplyr::filter(n == 1) |>
-        dplyr::pull(ic2.5))
+            dplyr::filter(n == 1) |>
+            dplyr::pull(ic2.5))
     })()
   expect_equal(c(desc_order_status, group_order_status), c(TRUE, TRUE))
 })
+
 test_that("15. Summary table contains a prr2.5 by default", {
   suppressMessages(invisible(capture.output(summary_output <- summary.da(pvda::drug_event_df |> pvda::da()))))
   has_prr2.5 <- as.character(summary_output[, 1]) |> stringr::str_detect("prr2.5")
@@ -156,14 +163,16 @@ test_that("15. Summary table contains a prr2.5 by default", {
   expect_equal(has_prr2.5, TRUE)
 })
 test_that("16. print function runs and has the same number of characters in first row as it has before", {
+
+
   suppressMessages(invisible(printed <- capture.output(print(pvda::drug_event_df |> pvda::da()))))
   expect_equal(nchar(printed[2]), 80L)
 })
 
 test_that("17. Grouped output from summary function works.", {
   summary_output <- pvda::drug_event_df |>
-      da(df_colnames = list(group_by = "group"))  |>
-      summary(print = FALSE)
+    da(df_colnames = list(group_by = "group"))  |>
+    summary(print = FALSE)
 
   expect_equal(2L, ncol(summary_output))
 })

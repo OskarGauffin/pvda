@@ -13,6 +13,11 @@ editor_options:
 ---
 # Introduction
 ```{r, include=FALSE}
+
+# There are notes about data.table using too many cores when you try to submit a table with data.table-dependencies
+# to cran. This is supposed to prevent that note. Also included in tests. 
+data.table::setDTthreads(1)
+
 library(pvda)
 knitr::opts_chunk$set(echo = FALSE)
 ```

@@ -69,13 +69,14 @@ with negligible practical implications in large databases. This function uses th
 declared above, i.e. with subtraction.
 }
 \examples{
-
-pvda::prr(
+\dontrun{
+prr(
   obs = 5,
   n_drug = 10,
   n_event_prr = 20,
   n_tot_prr = 10000
 )
+
 
 # Note that input parameters can be vectors (of equal length, no recycling)
 pvda::prr(
@@ -84,6 +85,7 @@ pvda::prr(
   n_event_prr = c(15, 30),
   n_tot_prr = c(10000, 10000)
 )
+}
 }
 \references{
 \insertRef{Montastruc_2011}{pvda}
