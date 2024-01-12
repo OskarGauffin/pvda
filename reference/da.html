@@ -160,6 +160,7 @@ corresponds to a drug-event pair.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">### Run a disproportionality analysis</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="va">da_1</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">da</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -173,12 +174,9 @@ corresponds to a drug-event pair.</p>
 <span class="r-in"><span>    group_by <span class="op">=</span> <span class="st">"group"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span> <span class="va">da_2</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">da</span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="va">list_of_colnames</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If columns in your df have different names than the default ones,</span></span></span>
 <span class="r-in"><span><span class="co"># you can specify the column names in the df_colnames parameter list:</span></span></span>
@@ -192,6 +190,7 @@ corresponds to a drug-event pair.</p>
 <span class="r-in"><span><span class="va">da_3</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="va">renamed_df</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">da</span><span class="op">(</span>df_colnames <span class="op">=</span> <span class="va">list_of_colnames</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
