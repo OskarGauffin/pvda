@@ -1,6 +1,6 @@
 # pvda <a href="https://oskargauffin.github.io/pvda/"><img src="man/figures/logo.png" align="right" height="120" alt="pvda website" /></a>
 
-An R package for executing disproportionality analyses with information component (IC), proportional reporting rate (PRR) and reporting odds ratio (ROR). 
+An R package for executing disproportionality analyses in pharmacovigilance, using the information component (IC), proportional reporting rate (PRR) and reporting odds ratio (ROR). 
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvda/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvda?branch=main)
