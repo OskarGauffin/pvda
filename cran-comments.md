@@ -1,8 +1,13 @@
 ## Resubmission
 
-This is a resubmission. In this version I have tried to adress NOTES about data.table using too many cores, e.g. "Re-building vignettes had CPU time 7.4 times elapsed time" by: 
+This is a resubmission. In this version:
 
-* Wrapping all examples with \dontrun. 
+* I've removed the "+ file LICENSE" from DESCRIPTION as well as the LICENSE-file.
+
+------------------------------------------------------
+This is a resubmission. In this version I've adressed data-table using too many cores by:
+
+* I've wrapped all examples with \dontrun. 
 * Set the Sys.setenv("OMP_THREAD_LIMIT" = 2) in my testthat.R-file
 * Set data.table::setDTthreads(1) in the beginning of the vignette.
 
