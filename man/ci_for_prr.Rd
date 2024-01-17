@@ -27,6 +27,9 @@ a passed confidence level (\code{conf_lvl}) in \code{\link{prr}}. If
 \code{sgn_lvl = .95} in \code{prr}, quantiles of the normal distribution will
 be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.}
 }
+\value{
+The confidence interval specified by input parameters.
+}
 \description{
 Mainly for use in \code{\link{prr}}. Produces (symmetric,
 normality based) confidence bounds for the PRR, for a passed probability.

@@ -27,8 +27,7 @@ Simulated data.
 drug_event_df
 }
 \description{
-drug_event_df contains report_ids with drugs and events. You can use these
-with the package tools to arrive at for instance observed counts and
-disproportionality analysis-estimates.
+drug_event_df is a simulated dataset, slightly larger than the "tiny_dataset"
+which is also contained in this package.
 }
 \keyword{datasets}

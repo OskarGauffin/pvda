@@ -69,7 +69,6 @@ with negligible practical implications in large databases. This function uses th
 declared above, i.e. with subtraction.
 }
 \examples{
-\dontrun{
 prr(
   obs = 5,
   n_drug = 10,
@@ -85,7 +84,6 @@ pvda::prr(
   n_event_prr = c(15, 30),
   n_tot_prr = c(10000, 10000)
 )
-}
 }
 \references{
 \insertRef{Montastruc_2011}{pvda}

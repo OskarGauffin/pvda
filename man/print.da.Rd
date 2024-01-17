@@ -21,10 +21,8 @@ print function for da objects
 }
 \examples{
 
-\dontrun{
 da_1 <-
-drug_event_df |>
+tiny_dataset |>
 da()
 print(da_1)
-}
 }

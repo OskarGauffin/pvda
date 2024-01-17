@@ -16,7 +16,10 @@
 #' @importFrom dtplyr lazy_dt
 #' @importFrom dplyr distinct mutate n_distinct group_by ungroup count rename select
 count_expected_rrr <- function(df, df_colnames, df_syms) {
-  NULL -> desc -> ends_with -> exp_rrr -> obs -> n -> n_event -> n_drug -> n_tot
+
+  # data.table complains if you haven't defined these variables as NULLs
+  NULL -> exp_rrr -> exp_prr -> obs -> n -> n_event -> n_drug -> n_tot
+
   assign(df_colnames$report_id, NULL)
   assign(df_colnames$event, NULL)
   assign(df_colnames$drug, NULL)
@@ -171,9 +174,8 @@ count_expected_ror <- function(count_dt) {
 #' @return A tibble with three columns (point estimate and credibility bounds).
 #'
 #' @examples
-#' \dontrun{
 #' ic(obs = 20, exp = 10)
-#' }
+
 #' # Note that obs and exp can be vectors (of equal length, no recycling allowed)
 #' ic(obs = c(20, 30), exp = c(10, 10))
 #' @importFrom Rdpack reprompt
@@ -255,7 +257,6 @@ ic <- function(obs = NULL,
 #' Number of rows equals length of inputs obs, n_drug, n_event_prr and n_tot_prr.
 #'
 #' @examples
-#' \dontrun{
 #' prr(
 #'   obs = 5,
 #'   n_drug = 10,
@@ -271,7 +272,6 @@ ic <- function(obs = NULL,
 #'   n_event_prr = c(15, 30),
 #'   n_tot_prr = c(10000, 10000)
 #' )
-#' }
 #' @references
 #' \insertRef{Montastruc_2011}{pvda}
 #'
@@ -351,7 +351,6 @@ prr <- function(obs = NULL,
 #'
 #' @examples
 #'
-#' \dontrun{
 #' ror(
 #'   a = 5,
 #'   b = 10,
@@ -366,7 +365,6 @@ prr <- function(obs = NULL,
 #'   c = c(15, 30),
 #'   d = c(10000, 10000)
 #' )
-#' }
 #' @references
 #' \insertRef{Montastruc_2011}{pvda}
 #' @export
@@ -412,9 +410,7 @@ ror <- function(a = NULL,
 #' Default is 0.95 (i.e. 95 \% confidence interval).
 #' @return A list with two numerical vectors, "lower" and "upper".
 #' @examples
-#' \dontrun{
 #' conf_lvl_to_quantile_prob(0.95)
-#' }
 #' @export
 conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
   checkmate::qassert(conf_lvl, "N1[0,1]")
@@ -457,6 +453,7 @@ build_colnames_da <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.
 #' extracted at \code{sgn_lvl_probs} 0.025 and 0.975.
 #' @seealso \code{\link{ic}}
 #' @inheritParams ic
+#' @return The credibility interval specified by input parameters.
 #' @export
 ci_for_ic <- function(obs,
                       exp,
@@ -481,6 +478,7 @@ ci_for_ic <- function(obs,
 #' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
 #' @seealso \code{\link{prr}}
 #' @inheritParams prr
+#' @return The confidence interval specified by input parameters.
 #' @export
 ci_for_prr <- function(obs = NULL,
                        n_drug = NULL,
@@ -502,6 +500,7 @@ ci_for_prr <- function(obs = NULL,
 #' be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.
 #' @seealso \code{\link{ror}}
 #' @inheritParams ror
+#' @return The credibility interval specified by input parameters.
 #' @export
 ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
   exp(log((a * d) / (b * c)) + stats::qnorm(conf_lvl_probs) *

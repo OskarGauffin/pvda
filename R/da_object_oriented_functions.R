@@ -26,9 +26,9 @@
 #' corresponds to a drug-event pair.
 #' @examples
 #' ### Run a disproportionality analysis
-#' \dontrun{
+#'
 #' da_1 <-
-#'   drug_event_df |>
+#'   tiny_dataset |>
 #'   da()
 #'
 #' ### Run a disproportionality across subgroups
@@ -41,14 +41,14 @@
 #'   )
 #'
 #'  da_2 <-
-#'   drug_event_df |>
+#'   tiny_dataset |>
 #'   da(df_colnames = list_of_colnames)
 #'
 #' # If columns in your df have different names than the default ones,
 #' # you can specify the column names in the df_colnames parameter list:
 #'
 #' renamed_df <-
-#'   drug_event_df |>
+#'   tiny_dataset |>
 #'   dplyr::rename(ReportID = report_id)
 #'
 #' list_of_colnames$report_id <- "ReportID"
@@ -56,7 +56,7 @@
 #' da_3 <-
 #'   renamed_df |>
 #'   da(df_colnames = list_of_colnames)
-#' }
+#'
 #'
 #' @export
 #' @importFrom checkmate qassert
@@ -328,12 +328,10 @@ summary.da <- function(object, print = TRUE, ...) {
 #' @export
 #' @examples
 #'
-#' \dontrun{
 #' da_1 <-
-#' drug_event_df |>
+#' tiny_dataset |>
 #' da()
 #' print(da_1)
-#' }
 #' @importFrom purrr flatten
 #' @importFrom stringr str_detect
 print.da <- function(x, n = 10, ...) {

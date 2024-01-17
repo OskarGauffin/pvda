@@ -53,7 +53,6 @@ with the resulting confidence interval for significance level \eqn{\alpha}
 }
 \examples{
 
-\dontrun{
 ror(
   a = 5,
   b = 10,
@@ -68,7 +67,6 @@ pvda::ror(
   c = c(15, 30),
   d = c(10000, 10000)
 )
-}
 }
 \references{
 \insertRef{Montastruc_2011}{pvda}

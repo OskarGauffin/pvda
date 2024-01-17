@@ -21,6 +21,9 @@ a passed confidence level (\code{conf_lvl}) in \code{\link{ror}}. If
 \code{sgn_lvl = .95} in \code{ror}, quantiles of the normal distribution will
 be extracted at \code{sgn_lvl_probs} of 0.025 and 0.975.}
 }
+\value{
+The credibility interval specified by input parameters.
+}
 \description{
 Mainly for use in \code{\link{ror}}. Produces (symmetric,
 normality based) confidence bounds for the ROR, for a passed probability.

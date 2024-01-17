@@ -1,6 +1,14 @@
 ## Resubmission
 
-This is a resubmission. In this version:
+This is a resubmission. In this version I've adressed all comments the last reviewer,
+
+* I've updated the package description to be more informative, omitting "the pvda package" from the beginning.
+* Added the references I had in the function documentation to the DESCRIPTION. 
+* Included the \Value in the three functions which missed these. 
+* Beni thought the \dontrun on examples seemed unwarranted. I've removed it now, and run examples on a smaller dataset to reduce the runtime, hopefully now below 5 sec in the automated CRAN checks.  
+
+------------------------------------------------------
+This is a resubmission. In this version I addressed a comment from the last reviewer,
 
 * I've removed the "+ file LICENSE" from DESCRIPTION as well as the LICENSE-file.
 

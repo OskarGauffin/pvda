@@ -23,6 +23,9 @@ extracted at \code{sgn_lvl_probs} 0.025 and 0.975.}
 \item{shrinkage}{A non-negative numeric value, to be added to
 observed and expected count. Default is 0.5.}
 }
+\value{
+The credibility interval specified by input parameters.
+}
 \description{
 Mainly used in \code{link{ic}}. Produces quantiles of the
 posterior gamma distribution. Called twice in \code{ic} to create a

@@ -1,8 +1,7 @@
 #' A simulated ICSR database
 #'
-#' drug_event_df contains report_ids with drugs and events. You can use these
-#' with the package tools to arrive at for instance observed counts and
-#' disproportionality analysis-estimates.
+#' drug_event_df is a simulated dataset, slightly larger than the "tiny_dataset"
+#' which is also contained in this package.
 #'
 #' @format `drug_event_df`
 #' A data frame with 3,971 rows and 3 columns. In total 1000 unique report_ids,
