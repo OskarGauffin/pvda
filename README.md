@@ -11,15 +11,12 @@ An R package for executing disproportionality analyses in pharmacovigilance, usi
 # Installation
 
 ``` r
-# Install development version from GitHub using devtools:
-devtools::install_github("OskarGauffin/pvda")
-
-# Not yet on CRAN, but once there:
-# install.packages("pvda")
+# Install stable version from CRAN 
+install.packages("pvda")
 ```
 
 # Example code
-To run a disproportionality analysis, pass the adverse event report-level data to function *da* as:
+To run a disproportionality analysis, pass the adverse event report-level data (here, drug_event_df) to function *da* as:
 
 ``` r
 library("pvda")
@@ -31,7 +28,7 @@ da()
 summary(da1)
 ```
 
-The output object contains summary counts, as well as disproportionality point and interval estimates, and can be accessed as a regular list object:
+The output object contains summary counts, disproportionality point and interval estimates. To extract the results in a data frame, access "da_df" as a list object:
 
 ``` r
 
