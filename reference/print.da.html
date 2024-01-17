@@ -79,12 +79,30 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="va">da_1</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="va">drug_event_df</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="va">tiny_dataset</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="da.html">da</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">da_1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Your console width is too narrow to support coloured printouts, reverting to non-coloured output.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 107 × 23</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    drug   event      obs exp_rrr ic2.5    ic ic97.5 exp_prr prr2.5   prr prr97.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Drug_A Event_1      4    1.2  -0.34   1.4    2.5    0.63    1.6   6.4     26.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Drug_B Event_60     1    0.01 -2.2    1.6    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Drug_G Event_80     1    0.01 -2.2    1.6    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Drug_H Event_57     1    0.01 -2.2    1.6    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Drug_C Event_52     1    0.02 -2.3    1.5    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Drug_C Event_92     1    0.02 -2.3    1.5    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Drug_D Event_20     1    0.02 -2.3    1.5    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Drug_D Event_25     1    0.02 -2.3    1.5    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Drug_I Event_37     1    0.02 -2.3    1.5    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Drug_I Event_97     1    0.02 -2.3    1.5    3.2    0      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 97 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more variables: exp_ror &lt;dbl&gt;, ror2.5 &lt;dbl&gt;, ror &lt;dbl&gt;, ror97.5 &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_drug &lt;int&gt;, n_event &lt;int&gt;, n_tot &lt;int&gt;, n_event_prr &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_tot_prr &lt;int&gt;, b &lt;int&gt;, c &lt;int&gt;, d &lt;int&gt;</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">(Drug-event-combinations sorted according to lower bound of ic) </span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;"># Printing x[['da_df']]</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
