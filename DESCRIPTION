@@ -39,4 +39,5 @@ Imports:
 Depends: 
     R (>= 2.10)
 URL: https://oskargauffin.github.io/pvda/
+BugReports: https://github.com/OskarGauffin/pvda/issues
 RdMacros: Rdpack
