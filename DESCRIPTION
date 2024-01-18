@@ -5,7 +5,7 @@ Version: 0.0.2
 Authors@R: 
         person("Oskar", "Gauffin", email = "oskar.gauffin@hotmail.com", 
         role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1593-356X"))
-Description: Tools for performing disproportionality analysis using the information component, proportional reporting rate and the reporting odds ratio. The anticipated use is passing data to the da() function, which executes the disproportionality analysis. See Norén G.N., Hopstadius J. and Bate A. (2011) <doi:10.1177/0962280211403604> and Montastruc J.-L., Sommet A., Bagheri H. and Lapeyre-Mestre, M. (2011) <doi:10.1111/j.1365-2125.2011.04037.x> for further details.
+Description: Tools for performing disproportionality analysis using the information component, proportional reporting rate and the reporting odds ratio. The anticipated use is passing data to the da() function, which executes the disproportionality analysis. See Norén et al (2011) <doi:10.1177/0962280211403604> and Montastruc et al (2011) <doi:10.1111/j.1365-2125.2011.04037.x> for further details.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
