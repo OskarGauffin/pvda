@@ -1,8 +1,8 @@
 #' A 110 reports big, simulated ICSR database
 #'
-#' tiny_dataset is used to demonstrate the package in examples. The larger
-#' drug_event_df-dataset, also included in the package, took too long time
-#' to run at, to be allowed at CRAN.
+#' The dataframe tiny_dataset is used to demonstrate the functionality
+#' of the package in examples. The larger drug_event_df-dataset can also
+#' be used.
 #'
 #' @format `tiny_dataset`
 #' A data frame with 110 rows and 3 columns. In total 110 unique report_ids.
