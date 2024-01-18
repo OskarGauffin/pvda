@@ -1,5 +1,10 @@
 ## Resubmission
 
+This is a resubmission. One unix build (r-devel-linux-x86_64-fedora-gcc) failed at the Vignette-building after the package had been sent to CRAN.
+
+I think the issue was a suffix of a png-file which was written with capital letters (".PNG") which I've now corrected. Resubmitting and hoping that does the trick.  
+
+-------------------------------------------------------
 This is a resubmission. In this version I've adressed all comments the last reviewer,
 
 * I've updated the package description to be more informative, omitting "the pvda package" from the beginning.
