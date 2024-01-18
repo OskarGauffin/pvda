@@ -3,10 +3,9 @@
 An R package for executing disproportionality analyses in pharmacovigilance, using the information component (IC), proportional reporting rate (PRR) and reporting odds ratio (ROR). 
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvda/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvda?branch=main)
-
-[![R-CMD-check](https://github.com/OskarGauffin/pvda/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OskarGauffin/pvda/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/pvda)](https://CRAN.R-project.org/package=pvda)
+[![R-CMD-check](https://github.com/OskarGauffin/pvda/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/OskarGauffin/pvda/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/OskarGauffin/pvda/branch/main/graph/badge.svg)](https://app.codecov.io/gh/OskarGauffin/pvda?branch=main)
 <!-- badges: end -->
 
 # Installation
