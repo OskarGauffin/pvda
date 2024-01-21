@@ -30,7 +30,7 @@ summary(da1)
 
 ![Summary console output](vignettes/summary_console_printout.png)
 
-The output object contains summary counts, disproportionality point and interval estimates. To extract the results in a data frame, access "da_df" as a list object:
+To extract the results in a data frame, access "da_df" as a list object:
 
 ``` r
 
