@@ -37,7 +37,7 @@ The output object contains summary counts, disproportionality point and interval
 da_results <- 
 da1$da_df
 ```
-
+![Print console output](vignettes/print_console_printout.png)
 
 
 
