@@ -1,4 +1,4 @@
-## Resubmission
+## New version submission
 
 In this version I've fixed a bug related to the grouping. 
 
