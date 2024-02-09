@@ -1,14 +1,8 @@
 # TODO
 
 
-# https://cran.r-project.org/web/packages/submission_checklist.html
-# Check the R packages book
-# devtools::relase()
-
 
 # The inheritparams is a bit of a mess right now
-# Fix the license
 
-# Do QC on the ROR; PRR; IC values, in point and bounds
 # Set up pkgdown site
-# commit to CRAN
+
