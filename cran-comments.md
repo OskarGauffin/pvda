@@ -2,6 +2,10 @@
 
 In this version I've fixed a bug related to the grouping. 
 
+I've checked the package locally, and using the standard github CI-tools, 
+i.e. macos, windows, ubuntu. I also ran a devtools::rhub_check() to get a R-devel
+check as well.
+
 ---------------------------------------------------------------------------
 Below this line are old comments, not related to this recent submission to CRAN. 
 ---------------------------------------------------------------------------
