@@ -2,7 +2,6 @@
 
 In this version I've fixed a bug related to the grouping. 
 
-
 ---------------------------------------------------------------------------
 Below this line are old comments, not related to this recent submission to CRAN. 
 ---------------------------------------------------------------------------
