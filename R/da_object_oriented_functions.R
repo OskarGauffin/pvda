@@ -198,7 +198,7 @@ da <- function(df = NULL,
 #' @export
 #' @importFrom stringr str_subset regex str_which str_replace
 #' @importFrom tidyr separate_wider_delim unite
-#' @importFrom dplyr group_by summarise pull mutate count distinct slice_head across all_of select
+#' @importFrom dplyr group_by summarise pull mutate count distinct slice_head across all_of select join_by
 #' @importFrom purrr pluck
 #' @importFrom rlang sym
 #' @importFrom tibble tibble as_tibble
@@ -284,7 +284,7 @@ summary.da <- function(object, print = TRUE, ...) {
       dplyr::count()
 
     output <- da_summary_counts |>
-      dplyr::left_join(N_DECs, by = "group") |>
+      dplyr::left_join(N_DECs, dplyr::join_by(!!group_colname)) |>
       t() |>
       tibble::as_tibble(.name_repair = "minimal")
 

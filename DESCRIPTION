@@ -1,7 +1,7 @@
 Package: pvda
 Type: Package
 Title: Disproportionality Functions for Pharmacovigilance
-Version: 0.0.2
+Version: 0.0.2.9000
 Authors@R: 
         person("Oskar", "Gauffin", email = "oskar.gauffin@hotmail.com", 
         role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1593-356X"))

@@ -176,3 +176,14 @@ test_that("17. Grouped output from summary function works.", {
 
   expect_equal(2L, ncol(summary_output))
 })
+
+test_that("18. It's possible to name the group_by something else than 'group'", {
+
+  summary_output <-
+    pvda::drug_event_df |>
+    dplyr::rename(another_group_name = group) |>
+    da(df_colnames = list(group_by = "another_group_name"))  |>
+    summary(print = FALSE)
+
+  expect_equal(2L, ncol(summary_output))
+})

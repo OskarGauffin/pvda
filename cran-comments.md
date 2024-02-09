@@ -1,5 +1,14 @@
 ## Resubmission
 
+In this version I've fixed a bug related to the grouping. 
+
+
+---------------------------------------------------------------------------
+Below this line are old comments, not related to this recent submission to CRAN. 
+---------------------------------------------------------------------------
+
+## Resubmission
+
 This is a resubmission. One unix build (r-devel-linux-x86_64-fedora-gcc) failed at the Vignette-building after the package had been sent to CRAN.
 
 * I think the issue was a suffix of a png-file which was written with capital letters (".PNG") which I've now corrected. Resubmitting and hoping that does the trick.  
