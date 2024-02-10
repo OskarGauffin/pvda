@@ -173,7 +173,6 @@ test_that("17. Grouped output from summary function works.", {
   summary_output <- pvda::drug_event_df |>
     da(df_colnames = list(group_by = "group"))  |>
     summary(print = FALSE)
-
   expect_equal(2L, ncol(summary_output))
 })
 
