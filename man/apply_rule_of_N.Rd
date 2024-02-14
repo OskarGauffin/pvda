@@ -15,13 +15,13 @@ apply_rule_of_N(
 
 \item{da_estimators}{Default is c("ic", "prr", "ror").}
 
-\item{rule_of_N}{PARAM_DESCRIPTION}
+\item{rule_of_N}{An length one integer between 0 and 10.}
 }
 \value{
-OUTPUT_DESCRIPTION
+The input data frame (da_df) with potentially some cells set to NA.
 }
 \description{
-Internal fcn to set da-columns to NA when observed count < 3
+Internal function to set disproportionality cells for ROR and PRR to NA when observed count < 3
 }
 \details{
 Sometimes, you want to protect yourself from spurious findings based

@@ -431,7 +431,6 @@ conf_lvl_to_quantile_prob <- function(conf_lvl = 0.95) {
 #' @param quantile_prob A list with two parameters, lower and upper. Default: list(lower = 0.025, upper = 0.975)
 #' @param da_name A string, such as "ic", "prr" or "ror". Default: NULL
 #' @return A list with two symbols, to be inserted in the dtplyr-chain
-#' @export
 build_colnames_da <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.975),
                         da_name = NULL) {
   ic_lower_name <- paste0(da_name, 100 * quantile_prob$lower)
@@ -444,9 +443,9 @@ build_colnames_da <- function(quantile_prob = list("lower" = 0.025, "upper" = 0.
 }
 # 2.3 ci_for_ic ----
 #' @title Confidence intervals for Information Component (IC)
-#' @description Mainly used in \code{link{ic}}. Produces quantiles of the
-#' posterior gamma distribution. Called twice in \code{ic} to create a
-#' credibility interval.
+#' @description Mainly used in function \code{\link{ic}}. Produces quantiles of the
+#' posterior gamma distribution. Called twice in \code{ic} to create
+#' credibility intervals.
 #' @param conf_lvl_probs The probabilities of the posterior, based on
 #' a passed confidence level (\code{conf_lvl}) in \code{\link{ic}}. For
 #' instance, if \code{sgn_lvl = .95} in \code{ic} is used, quantiles will be
@@ -509,24 +508,29 @@ ci_for_ror <- function(a, b, c, d, conf_lvl_probs) {
 
 # 2.6 apply_rule_of_N ----
 #' @title apply_rule_of_N
-#' @description Internal fcn to set da-columns to NA when observed count < 3
+#' @description Internal function to set disproportionality cells for ROR and PRR to NA when observed count < 3
 #' @param da_df See the intermediate object da_df in add_disproportionality
 #' @param da_estimators Default is c("ic", "prr", "ror").
-#' @param rule_of_N PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
+#' @param rule_of_N An length one integer between 0 and 10.
+#' @return The input data frame (da_df) with potentially some cells set to NA.
 #' @details Sometimes, you want to protect yourself from spurious findings based
 #' on small observed counts combined with infinitesimal expected counts.
 #' @importFrom stringr str_subset
 #' @importFrom dplyr mutate across starts_with cur_column
-#' @export
+#' @importFrom checkmate qassert
 apply_rule_of_N <- function(da_df = NULL,
                             da_estimators = c("ic", "prr", "ror"),
                             rule_of_N = NULL) {
+
+
   if (!is.null(rule_of_N)) {
-    # Rule of N = 3 is built into the IC
+    # This only applies to PRR and ROR columns, as the shrinkage takes care of this for the IC
     da_estimators_not_ic <- stringr::str_subset(da_estimators, "ic", negate = T)
 
-    # We only need to check the observed once
+    # Check that rule_of_N input is an integer between 0 and 10
+    checkmate::qassert(rule_of_N, "X1[0,10]")
+
+    # We only need to check the observed once, it does not change between PRR and ROR.
     replace_these_rows <- da_df[["obs"]] < rule_of_N
 
     da_df <-
@@ -549,7 +553,6 @@ apply_rule_of_N <- function(da_df = NULL,
 #' @param number_of_digits See add_disproportionality
 #' @return A df with rounded columns
 #' @importFrom dplyr mutate across starts_with
-#' @export
 round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL, number_of_digits = NULL) {
   if (!is.null(number_of_digits)) {
     da_df <-
@@ -573,7 +576,6 @@ round_columns_with_many_decimals <- function(da_df = NULL, da_estimators = NULL,
 #' @param number_of_digits Numeric value. Set the number of digits to show in output by passing
 #' an integer. Default value is 2 digits. Set to NULL to avoid rounding.
 #' @return The df object, sorted.
-#' @export
 #' @importFrom checkmate qassert
 #' @importFrom purrr pluck
 #' @importFrom dplyr group_by summarise left_join arrange select
@@ -600,8 +602,8 @@ round_and_sort_by_lower_da_limit <- function(df = NULL,
   }
 
   sort_by_colname <- conf_lvl |>
-    pvda::conf_lvl_to_quantile_prob() |>
-    pvda::build_colnames_da(da_name = sort_by) |>
+    conf_lvl_to_quantile_prob() |>
+    build_colnames_da(da_name = sort_by) |>
     purrr::pluck("lower")
 
   # Take the mean lower quantile for the chosen da and sort by it.

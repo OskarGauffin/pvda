@@ -27,9 +27,9 @@ observed and expected count. Default is 0.5.}
 The credibility interval specified by input parameters.
 }
 \description{
-Mainly used in \code{link{ic}}. Produces quantiles of the
-posterior gamma distribution. Called twice in \code{ic} to create a
-credibility interval.
+Mainly used in function \code{\link{ic}}. Produces quantiles of the
+posterior gamma distribution. Called twice in \code{ic} to create
+credibility intervals.
 }
 \seealso{
 \code{\link{ic}}
