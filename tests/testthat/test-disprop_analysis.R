@@ -238,10 +238,6 @@ test_that("19. The IC values match manually calculated IC-values", {
 
   all_the_same <- all(compare_pvda_to_manual$same)
 
-
-
-
-
   expect_equal(all_the_same, TRUE)
 })
 

@@ -28,7 +28,7 @@ da()
 summary(da1)
 ```
 
-![Summary console output](vignettes/summary_console_printout.png)
+![](vignettes/summary_console_printout.png)
 
 To extract the results in a data frame, access "da_df" as a list object:
 
@@ -37,7 +37,7 @@ To extract the results in a data frame, access "da_df" as a list object:
 da_results <- 
 da1$da_df
 ```
-![Print console output](vignettes/print_console_printout.png)
+![](vignettes/print_console_printout.png)
 
 
 
