@@ -28,16 +28,15 @@ da()
 summary(da1)
 ```
 
-![](vignettes/summary_console_printout.png)
+![Screenshot of the summary print output.](vignettes/summary_console_printout.png)
 
 To extract the results in a data frame, access "da_df" as a list object:
 
 ``` r
-
 da_results <- 
 da1$da_df
 ```
-![](vignettes/print_console_printout.png)
+![Screenshot of the da_df data frame.](vignettes/print_console_printout.png)
 
 
 
