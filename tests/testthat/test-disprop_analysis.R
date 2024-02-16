@@ -186,3 +186,64 @@ test_that("18. It's possible to name the group_by something else than 'group'", 
 
   expect_equal(2L, ncol(summary_output))
 })
+
+test_that("19. The IC values match manually calculated IC-values", {
+
+  report_dt <-
+    data.table::as.data.table(pvda::drug_event_df) |>
+    dplyr::select(report_id, drug, event)
+
+  counts_dt <-
+    report_dt |>
+    dplyr::group_by(drug) |>
+    dplyr::mutate(n_drugs = dplyr::n_distinct(report_id)) |>
+    dplyr::group_by(event) |>
+    dplyr::mutate(n_events = dplyr::n_distinct(report_id)) |>
+    dplyr::distinct(drug, event, report_id, .keep_all = TRUE) |>
+    dplyr::group_by(drug, event, n_drugs, n_events) |> # Setting n_drugs and n_pts in the group_by preserves them in the count-step
+    dplyr::count(name="obs")
+
+  # Need a total count, probably easiest to do it separately
+  n_tot <-
+    report_dt |>
+    dplyr::distinct(report_id) |>
+    dplyr::count() |>
+    dplyr::pull(n)
+
+  # Calculate the 2.5th percentiles of the posterior
+  ic_dt <-
+    counts_dt |>
+    dplyr::mutate(n_tot = n_tot) |>
+    dplyr::mutate(exp = as.numeric(n_drugs)*as.numeric(n_events)/as.numeric(n_tot)) |>
+    dplyr::mutate(ic025 = log2(qgamma(0.025, obs + 0.5, exp + 0.5)))
+
+  ic_dt |>
+    dplyr::mutate(sign = ifelse(ic025>0, TRUE, FALSE)) |>
+    dplyr::group_by(sign) |>
+    dplyr::count()
+
+  ic_dt <-
+    ic_dt |>
+    dplyr::ungroup() |>
+    dplyr::select(drug, event, ic025)
+
+  ##############################################
+  da1 <- pvda::drug_event_df |> pvda::da()
+  output_pvda <- da1$da_df |> dplyr::select(drug, event, ic2.5)
+
+  compare_pvda_to_manual <-
+    ic_dt |>
+    dplyr::left_join(output_pvda, dplyr::join_by(drug==drug, event==event)) |>
+    dplyr::mutate(same = ifelse(round(ic025,2) == round(ic2.5,2), TRUE, FALSE))
+
+  all_the_same <- all(compare_pvda_to_manual$same)
+
+
+
+
+
+  expect_equal(all_the_same, TRUE)
+})
+
+
+
