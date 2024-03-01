@@ -1,6 +1,6 @@
-## New version submission
+## New version (0.0.3)
 
-In this version I've fixed a bug related to the grouping. 
+In this version I've fixed a bug related to the grouping and improved documentation. 
 
 I've checked the package locally, and using the standard github CI-tools, 
 i.e. macos, windows, ubuntu. I also ran a devtools::rhub_check() to get a R-devel
