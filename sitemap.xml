@@ -1,96 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/404.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/articles/Disproportionality_analysis.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/index.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/add_disproportionality.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/add_expected_counts.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/apply_rule_of_N.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/build_colnames_da.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/ci_for_ic.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/ci_for_prr.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/ci_for_ror.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/conf_lvl_to_quantile_prob.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/count_expected_prr.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/count_expected_ror.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/count_expected_rrr.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/da.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/drug_event_df.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/grouped_da.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/ic.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/print.da.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/prr.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/ror.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/round_and_sort_by_lower_da_limit.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/round_columns_with_many_decimals.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/summary.da.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/tiny_dataset.html</loc>
-  </url>
-  <url>
-    <loc>https://oskargauffin.github.io/pvutils/reference/write_to_excel.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://oskargauffin.github.io/pvutils/404.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/LICENSE.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/articles/Disproportionality_analysis.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/articles/index.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/authors.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/index.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/news/index.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/add_disproportionality.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/add_expected_counts.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/apply_rule_of_N.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/build_colnames_da.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/ci_for_ic.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/ci_for_prr.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/ci_for_ror.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/conf_lvl_to_quantile_prob.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/count_expected_prr.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/count_expected_ror.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/count_expected_rrr.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/da.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/drug_event_df.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/grouped_da.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/ic.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/index.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/print.da.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/prr.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/ror.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/round_and_sort_by_lower_da_limit.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/round_columns_with_many_decimals.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/summary.da.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/tiny_dataset.html</loc></url>
+<url><loc>https://oskargauffin.github.io/pvutils/reference/write_to_excel.html</loc></url>
 </urlset>
+
