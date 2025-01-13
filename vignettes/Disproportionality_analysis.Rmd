@@ -38,7 +38,7 @@ and the information component (IC). It takes report level data as input, and
 outputs estimates for each drug-event-combination, possibly stratified by some
 variable of interest, e.g. age group and/or sex. 
 
-# Running a disproportionality analysis
+# Executing a disproportionality analysis
 The workhorse of this package is the function `da`. The `da`-function takes 
 patient level data in a data frame as input (here `drug_event_df`) and produces 
 estimates and summary counts as demonstrated below.
@@ -87,7 +87,7 @@ print(da_1, n=3)
 
 (Technical note: As printing of colors in the console is not easily reproduced within this vignette , we provide screenshots when applicable. )
 
-## Passing a correctly structured input data
+## Passing correctly structured input data
 The input data needs to be in a report-level format. every line in the data 
 frame corresponds to a drug-event pair from a specific report.
 
