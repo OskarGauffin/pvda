@@ -1,3 +1,17 @@
+## New version (0.0.4)
+
+In this version I'm changing the maintainer to Michele Fusaroli as described in the DESCRIPTION file, and as communicated to Uwe at CRAN
+in an email sent January the 10th, 2025.
+
+Also contains two minor bug fixes, one related to the cli package (changed version to latest) and newer versions of R,
+and another to fix some incorrect screenshots in documentation. 
+
+And devtools::check() runs without any issues on my environment.
+
+---------------------------------------------------------------------------
+Below this line are old comments, not related to this recent submission to CRAN. 
+---------------------------------------------------------------------------
+
 ## New version (0.0.3)
 
 In this version I've fixed a bug related to the grouping and improved documentation. 
@@ -5,10 +19,6 @@ In this version I've fixed a bug related to the grouping and improved documentat
 I've checked the package locally, and using the standard github CI-tools, 
 i.e. macos, windows, ubuntu. I also ran a devtools::rhub_check() to get a R-devel
 check as well.
-
----------------------------------------------------------------------------
-Below this line are old comments, not related to this recent submission to CRAN. 
----------------------------------------------------------------------------
 
 ## Resubmission
 

@@ -160,7 +160,7 @@ average "ic2.5".
 
 # Frequently Asked Questions
 
-## How are drug-event pairs occurrings several times in one report counted?
+## How are drug-event pairs occurring several times in one report counted?
 If the same drug-event pair occurs several times in one report, these contributes 
 to counts only once. That is, an observed count of five means that there were 
 five different reports containing the drug-event-pair (at least once). It cannot
@@ -192,7 +192,7 @@ also the grouping parameter.
 A common question regards the output column names, ic is preceded by "exp_prr". 
 This is as the information component uses the same expected count as the 
 Relative Reporting Rate (RRR), which is perhaps more well known in the 
-pharmacovigilande community.
+pharmacovigilance community.
 
 ```{r}
 #| echo = TRUE 
