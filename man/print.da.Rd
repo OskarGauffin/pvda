@@ -21,8 +21,10 @@ print function for da objects
 }
 \examples{
 
+\donttest{
 da_1 <-
 tiny_dataset |>
 da()
 print(da_1)
+}
 }

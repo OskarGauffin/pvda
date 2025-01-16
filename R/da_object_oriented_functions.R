@@ -25,6 +25,7 @@
 #' estimates related to supported disproportionality estimators. Each row
 #' corresponds to a drug-event pair.
 #' @examples
+#' \donttest{
 #' ### Run a disproportionality analysis
 #'
 #' da_1 <-
@@ -56,7 +57,7 @@
 #' da_3 <-
 #'   renamed_df |>
 #'   da(df_colnames = list_of_colnames)
-#'
+#'}
 #'
 #' @export
 #' @importFrom checkmate qassert
@@ -328,10 +329,12 @@ summary.da <- function(object, print = TRUE, ...) {
 #' @export
 #' @examples
 #'
+#'\donttest{
 #' da_1 <-
 #' tiny_dataset |>
 #' da()
 #' print(da_1)
+#' }
 #' @importFrom purrr flatten
 #' @importFrom stringr str_detect
 print.da <- function(x, n = 10, ...) {

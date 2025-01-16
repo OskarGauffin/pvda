@@ -81,6 +81,7 @@ Proportional Reporting Rate (PRR) and the Reporting Odds Ratio (ROR).
 }
 
 \examples{
+\donttest{
 ### Run a disproportionality analysis
 
 da_1 <-
@@ -112,6 +113,6 @@ list_of_colnames$report_id <- "ReportID"
 da_3 <-
   renamed_df |>
   da(df_colnames = list_of_colnames)
-
+}
 
 }
