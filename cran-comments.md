@@ -1,4 +1,11 @@
-## New version (0.0.4)
+## New version (0.0.4) - Resubmission
+
+The automated tests did not pass, as two examples took too long time to execute
+on the CRAN-servers.  This was surprising to me, as those examples are unchanged 
+and have passed the checks in earlier submissions. I've now wrapped those 
+examples in \donttest-tags.
+
+From the original submission of 0.0.4:
 
 In this version I'm changing the maintainer to Michele Fusaroli as described in the DESCRIPTION file, and as communicated to Uwe at CRAN
 in an email sent January the 10th, 2025.
